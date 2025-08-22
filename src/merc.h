@@ -2613,7 +2613,6 @@ void	printf_to_buf	args( ( BUFFER *buf, char *fmt, ...) ) __attribute__ ((format
 */
 
 void bugf args ((char * fmt, ...));
-void logf args ((char * fmt, ...));
 void    printf_to_char  args( ( CHAR_DATA *ch, char *fmt, ...) );
 void	printf_to_buf	args( ( BUFFER *buf, char *fmt, ...) );
 
@@ -2907,10 +2906,6 @@ void display_map( CHAR_DATA *ch );
 /* olc_save.c */
 void save_area_list args (());
 void save_area args (( AREA_DATA *pArea ));
-
-#if !defined( WIN32 )
-char * crypt (char *, char *);
-#endif
 
 #undef	CD
 #undef	MID
