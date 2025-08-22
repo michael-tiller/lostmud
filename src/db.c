@@ -3111,84 +3111,78 @@ char *fread_word( FILE *fp )
  * Allocate some ordinary memory,
  *   with the expectation of freeing it someday.
  */
-void *alloc_mem( int sMem )
+void *alloc_mem(int sMem)
 {
-    void *pMem;
-    int *magic;
-    int iList;
+	void *pMem;
+	int *magic;
+	int iList;
 
-    sMem += sizeof(*magic);
+	sMem += sizeof(*magic);
 
-    for ( iList = 0; iList < MAX_MEM_LIST; iList++ )
-    {
-        if ( sMem <= rgSizeList[iList] )
-            break;
-    }
+	for (iList = 0; iList < MAX_MEM_LIST; iList++)
+	{
+		if (sMem <= rgSizeList[iList])
+			break;
+	}
 
-    if ( iList == MAX_MEM_LIST )
-    {
-        bug( "Alloc_mem: size %d too large.", sMem );
-        exit( 1 );
-    }
+	if (iList == MAX_MEM_LIST)
+	{
+		bug("Alloc_mem: size %d too large.", sMem);
+		exit(1);
+	}
 
-    if ( rgFreeList[iList] == NULL )
-    {
-        pMem              = alloc_perm( rgSizeList[iList] );
-    }
-    else
-    {
-        pMem              = rgFreeList[iList];
-        rgFreeList[iList] = * ((void **) rgFreeList[iList]);
-    }
+	if (rgFreeList[iList] == NULL)
+	{
+		pMem = alloc_perm(rgSizeList[iList]);
+	}
+	else
+	{
+		pMem = rgFreeList[iList];
+		rgFreeList[iList] = *((void **)rgFreeList[iList]);
+	}
 
-    magic = (int *) pMem;
-    *magic = MAGIC_NUM;
-    (char *) pMem += sizeof(*magic);
+	/* write magic header */
+	magic = (int *)pMem;
+	*magic = MAGIC_NUM;
 
-    return pMem;
+	/* skip over magic header */
+	pMem = (char *)pMem + sizeof(*magic);
+
+	return pMem;
 }
 
-
-
-/*
- * Free some memory.
- * Recycle it back onto the free list for blocks of that size.
- */
-void free_mem( void *pMem, int sMem )
+void free_mem(void *pMem, int sMem)
 {
-    int iList;
-    int *magic;
+	int iList;
+	int *magic;
 
-    (char *) pMem -= sizeof(*magic);
-    magic = (int *) pMem;
+	/* back up over magic header */
+	pMem = (char *)pMem - sizeof(*magic);
+	magic = (int *)pMem;
 
-    if (*magic != MAGIC_NUM)
-    {
-        bug("Attempt to recyle invalid memory of size %d.",sMem);
-        bug((char*) pMem + sizeof(*magic),0);
-	abort( );
-        return;
-    }
+	if (*magic != MAGIC_NUM)
+	{
+		bug("Attempt to recycle invalid memory of size %d.", sMem);
+		abort();
+		return;
+	}
 
-    *magic = 0;
-    sMem += sizeof(*magic);
+	*magic = 0;
 
-    for ( iList = 0; iList < MAX_MEM_LIST; iList++ )
-    {
-        if ( sMem <= rgSizeList[iList] )
-            break;
-    }
+	for (iList = 0; iList < MAX_MEM_LIST; iList++)
+	{
+		if (sMem <= rgSizeList[iList])
+			break;
+	}
 
-    if ( iList == MAX_MEM_LIST )
-    {
-        bug( "Free_mem: size %d too large.", sMem );
-        exit( 1 );
-    }
+	if (iList == MAX_MEM_LIST)
+	{
+		bug("Free_mem: size %d too large.", sMem);
+		exit(1);
+	}
 
-    * ((void **) pMem) = rgFreeList[iList];
-    rgFreeList[iList]  = pMem;
-
-    return;
+	*((void **)pMem) = rgFreeList[iList];
+	rgFreeList[iList] = pMem;
 }
 
 
