@@ -1626,8 +1626,9 @@ void do_notran(CHAR_DATA *ch, char *argument)
     }
 }
 
-void do_map (CHAR_DATA *ch) {
+void do_map (CHAR_DATA *ch, char *argument) {
 	
+	(void)argument;
 	if (IS_SET(ch->in_room->room_flags,ROOM_NOMAP)
 		 && !IS_SET(ch->act, PLR_HOLYLIGHT)
 	) {		
