@@ -1190,7 +1190,7 @@ bool read_from_descriptor( DESCRIPTOR_DATA *d )
 	}
 	else if ( iErr == EWOULDBLOCK )
 	    break;
-	else if (iErr == WSAEWOULDBLOCK) 
+	else if (iErr == WOULD_BLOCK) 
 		break;
 	else
 	{
@@ -3973,13 +3973,10 @@ void bugf (char * fmt, ...)
 	bug (buf, 0);
 }
 
-void logf (char * fmt, ...)
-{
-	char buf [2*MSL];
+void mudlogf(const char *fmt, ...) {
 	va_list args;
-	va_start (args, fmt);
-	vsnprintf (buf, 2*MSL, fmt, args);
-	va_end (args);
-	
-	log_string (buf);
+	va_start(args, fmt);
+	vfprintf(stderr, fmt, args);
+	fprintf(stderr, "\n");
+	va_end(args);
 }

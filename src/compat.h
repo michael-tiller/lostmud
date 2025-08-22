@@ -56,4 +56,13 @@ static inline char *crypt(const char *key, const char *salt) {
 #define logf mudlogf
 void mudlogf(const char *fmt, ...);
 
+
+#ifdef _WIN32
+#define WOULD_BLOCK WSAEWOULDBLOCK
+#else
+#include <errno.h>
+#define WOULD_BLOCK EWOULDBLOCK
+#endif
+
+
 #endif /* COMPAT_H */
