@@ -912,7 +912,7 @@ void save_helps( FILE *fp, HELP_AREA *ha )
 }
 */
 
-void save_helps()
+void save_helps(FILE *fp, HELP_AREA *ha)
 {
     HELP_DATA * pHelp;
     FILE * fp;
