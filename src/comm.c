@@ -172,17 +172,14 @@ int	socket		args( ( int domain, int type, int protocol ) );
 #include <sys/fnctl.h>
 #endif
 
-#if	defined(linux)
-int	close		args( ( int fd ) );
-int	getpeername	args( ( int s, struct sockaddr *name, int *namelen ) );
-int	getsockname	args( ( int s, struct sockaddr *name, int *namelen ) );
-int	gettimeofday	args( ( struct timeval *tp, struct timezone *tzp ) );
-/* int	listen		args( ( int s, int backlog ) ); */
-/* int	read		args( ( int fd, char *buf, int nbyte ) ); */
-int	select		args( ( int width, fd_set *readfds, fd_set *writefds,
-			    fd_set *exceptfds, struct timeval *timeout ) );
-int	socket		args( ( int domain, int type, int protocol ) );
-/* int	write		args( ( int fd, char *buf, int nbyte ) ); */
+#if defined(ANCIENT_LINUX) /* define manually if targeting libc4/libc5 */
+int close(int fd);
+int getpeername(int s, struct sockaddr *name, int *namelen);
+int getsockname(int s, struct sockaddr *name, int *namelen);
+int gettimeofday(struct timeval *tp, struct timezone *tzp);
+int select(int width, fd_set *readfds, fd_set *writefds,
+		   fd_set *exceptfds, struct timeval *timeout);
+int socket(int domain, int type, int protocol);
 #endif
 
 #if	defined(macintosh)
