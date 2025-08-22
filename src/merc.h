@@ -30,7 +30,7 @@
 *       By using this code, you have agreed to follow the terms of the     * 
 *       ROT license, in the file doc/rot.license                           * 
 ***************************************************************************/
-
+#include "compat.h"
 
 /*
  * Accommodate old non-Ansi compilers.
