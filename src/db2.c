@@ -49,8 +49,6 @@
 #include "lookup.h"
 #include "tables.h"
 
-extern int flag_lookup args((const char *name, const struct flag_type *flag_table));
-
 /* values for db2.c */
 struct		social_type	*social_table;
 int		social_count;
