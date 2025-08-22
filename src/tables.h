@@ -131,3 +131,5 @@ struct chan_type
 	char *chan_say;
 	int bit;
 };
+
+extern const struct clan_type clan_table[MAX_CLAN];
