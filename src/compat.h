@@ -64,5 +64,6 @@ void mudlogf(const char *fmt, ...);
 #define WOULD_BLOCK EWOULDBLOCK
 #endif
 
+#define getline mud_getline
 
 #endif /* COMPAT_H */
