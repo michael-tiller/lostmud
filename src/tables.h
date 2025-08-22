@@ -32,6 +32,9 @@
 *       ROT license, in the file doc/rot.license                           * 
 ***************************************************************************/
 
+#ifndef TABLES_H
+#define TABLES_H
+
 #include "merc.h"
 
 /* game tables */
@@ -135,3 +138,5 @@ struct chan_type
 };
 
 extern const struct clan_type clan_table[MAX_CLAN];
+
+#endif /* TABLES_H */

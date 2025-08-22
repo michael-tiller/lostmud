@@ -30,6 +30,10 @@
 *       By using this code, you have agreed to follow the terms of the     * 
 *       ROT license, in the file doc/rot.license                           * 
 ***************************************************************************/
+
+#ifndef MERC_H
+#define MERC_H
+
 #include "compat.h"
 
 /*
@@ -2976,3 +2980,6 @@ extern		char			str_empty       [1];
 extern		MOB_INDEX_DATA *	mob_index_hash  [MAX_KEY_HASH];
 extern		OBJ_INDEX_DATA *	obj_index_hash  [MAX_KEY_HASH];
 extern		ROOM_INDEX_DATA *	room_index_hash [MAX_KEY_HASH];
+
+
+#endif /* MERC_H */
