@@ -48,20 +48,20 @@
  * The OS-dependent functions are Read_from_descriptor and Write_to_descriptor.
  * -- Furey  26 Jan 1993
  */
+#include "compat.h"   /* Always include this first for platform fixes */
 
 #include <errno.h>
 
 #if defined(macintosh)
-#include <types.h>
-#elif defined(WIN32)
+  #include <types.h>
+#elif defined(_WIN32)
   #include <sys/types.h>
-  #include <winsock.h>
   #include <io.h>
   #include <direct.h>
   #define NOCRYPT
 #else
-#include <sys/types.h>
-#include <sys/time.h>
+  #include <sys/types.h>
+  #include <sys/time.h>
 #endif
 
 #include <ctype.h>

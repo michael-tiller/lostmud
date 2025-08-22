@@ -1,43 +1,59 @@
 #ifndef COMPAT_H
 #define COMPAT_H
 
-/* Cross-platform includes */
+/* =========================
+ * Windows
+ * ========================= */
 #ifdef _WIN32
+  #ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+  #endif
+  #ifndef _WINSOCKAPI_
+    #define _WINSOCKAPI_
+  #endif
+
   #include <winsock2.h>
+  #include <ws2tcpip.h>
   #include <windows.h>
   #include <io.h>
-  #define close_socket(s) closesocket(s)
-  #define strcasecmp _stricmp
-  #define strncasecmp _strnicmp
-  typedef int socklen_t;
-#else
-  #include <sys/types.h>
-  #include <sys/socket.h>
-  #include <netinet/in.h>
-  #include <arpa/inet.h>
-  #include <unistd.h>
-  #define close_socket(s) close(s)
-#endif
 
-/* Logging fix: avoid conflict with <math.h> logf() */
+  typedef int socklen_t;
+
+/* Socket close alias (different from your game’s close_socket() function) */
+#define close_fd(fd) closesocket(fd)
+
+/* String compares */
+#define strcasecmp  _stricmp
+#define strncasecmp _strnicmp
+
+/* Windows has no crypt(); just stub it */
+static inline char *crypt(const char *key, const char *salt) {
+  (void)key; (void)salt;
+  return "NOCRYPT";
+}
+
+#else /* =========================
+* POSIX / Linux
+* ========================= */
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <strings.h>
+
+#define close_fd(fd) close(fd)
+
+/* System provides crypt() in unistd.h */
+#include <unistd.h>
+
+#endif /* _WIN32 */
+
+/* =========================
+ * Shared logging fix
+ * ========================= */
 #define logf mudlogf
 void mudlogf(const char *fmt, ...);
-
-/* Crypt fix */
-#ifndef NOCRYPT
-  /* Ensure prototype matches system crypt() */
-  #include <unistd.h>
-  /* Some systems hide crypt() unless feature macros set */
-  #ifndef _XOPEN_SOURCE
-    #define _XOPEN_SOURCE
-  #endif
-  char *crypt(const char *key, const char *salt);
-#else
-  /* Stub crypt for builds with -DNOCRYPT */
-  static inline char *crypt(const char *key, const char *salt) {
-      (void)key; (void)salt;
-      return "NOCRYPT";
-  }
-#endif
 
 #endif /* COMPAT_H */

@@ -1905,13 +1905,6 @@ struct	obj_index_data
     sh_int		class;
 };
 
-
-struct clan_type {
-    const char *name;
-    int hall;
-    /* etc */
-};
-
 /*
  * One object.
  */

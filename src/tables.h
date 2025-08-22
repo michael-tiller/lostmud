@@ -2,6 +2,7 @@
 #define TABLES_H
 
 #include "merc.h"
+#include "types.h"
 
 /* game tables */
 extern const struct clan_type       clan_table[MAX_CLAN];
