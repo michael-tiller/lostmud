@@ -2129,8 +2129,9 @@ void do_exits( CHAR_DATA *ch, char *argument )
     return;
 }
 
-void do_age(CHAR_DATA *ch)
+void do_age(CHAR_DATA *ch, char *argument)
 {
+	(void)argument;
     char buf[MAX_STRING_LENGTH];
 	sprintf(buf, "You are {G%d{x years old, played {G%d{x hours.\n\r",get_age(ch), (int)(ch->played)/3600);
 	send_to_char(buf,ch);
