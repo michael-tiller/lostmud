@@ -891,53 +891,6 @@ void save_shops( FILE *fp, AREA_DATA *pArea )
     return;
 }
 
-/*
-void save_helps( FILE *fp, HELP_AREA *ha )
-{
-	HELP_DATA *help = ha->first;
-
-	fprintf( fp, "#HELPS\n" );
-
-	for ( ; help; help = help->next_area )
-	{
-		fprintf( fp, "%d %s~\n", help->level, help->keyword );
-		fprintf( fp, "%s~\n\n", fix_string( help->text ) );
-	}
-
-	fprintf( fp, "-1 $~\n\n" );
-
-	ha->changed = FALSE;
-
-	return;
-}
-*/
-
-void save_helps(FILE *fp, HELP_AREA *ha)
-{
-	HELP_DATA * pHelp;
-
-	if (! (fp = fopen( "help.are", "w") ) )
-	{
-		bug( "Open_help: fopen", 0);
-		perror( "help.are");
-	}
-
-	fprintf(fp, "#HELPS\n");
-
-	for ( pHelp = help_first; pHelp != NULL; pHelp = pHelp->next )
-	{
-		if(pHelp->delete)
-			continue;
-            
-		fprintf(fp, "%d %s~\n\n%s~\n",
-				pHelp->level, pHelp->keyword, fix_string(pHelp->text));
-	}
-
-	fprintf(fp,"0 $~\n\n#$\n");
-	fclose(fp);
-	return;
-}
-
 void save_help_area()
 {
     HELP_DATA * pHelp;
@@ -982,7 +935,7 @@ void save_other_helps( CHAR_DATA *ch )
 				return;
 			}
 
-			save_helps( fp, ha );
+			save_help_area();
 
 			if (ch)
 				printf_to_char( ch, "%s\n\r", ha->filename );
@@ -1028,7 +981,7 @@ void save_area( AREA_DATA *pArea )
     save_mobprogs( fp, pArea );
 
     if ( pArea->helps && pArea->helps->first )
-	save_helps( fp, pArea->helps );
+	save_help_area();
 
     fprintf( fp, "#$\n" );
 

@@ -342,6 +342,6 @@ void		free_mpcode		args ( ( MPROG_CODE *pMcode));
 
 HELP_DATA *new_help args ( (void) );
 void free_help  args( ( HELP_DATA * pHelp));
-void save_helps args( (void) );
+void save_help_area args( (void) );
 
 
