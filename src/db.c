@@ -75,20 +75,25 @@ extern	PC_DATA		*pcdata_free;
 extern  AFFECT_DATA	*affect_free;
 
 /*
+ * Memory management.
+ * Increase MAX_STRING if you have too.
+ * Tune the others only if you understand what you're doing.
+ */
+#define			MAX_STRING	2099200
+#define			MAX_PERM_BLOCK	131072
+#define			MAX_MEM_LIST	11
+
+/*
  * Globals.
  */
 HELP_DATA *		help_first;
 HELP_DATA *		help_last;
-
 HELP_AREA *		had_list;
-
 SHOP_DATA *		shop_first;
 SHOP_DATA *		shop_last;
-
 NOTE_DATA *		note_free;
-
-MPROG_CODE *	mprog_list;
-
+NOTE_DATA *		note_list;
+MPROG_CODE *		mprog_list;
 char			bug_buf		[2*MAX_INPUT_LENGTH];
 CHAR_DATA *		char_list;
 char *			help_greetinga;
@@ -101,12 +106,10 @@ char *			help_login;
 char			log_buf		[2*MAX_INPUT_LENGTH];
 char			boot_buf	[MAX_STRING_LENGTH];
 KILL_DATA		kill_table	[MAX_LEVEL];
-NOTE_DATA *		note_list;
 OBJ_DATA *		object_list;
 TIME_INFO_DATA		time_info;
 WEATHER_DATA		weather_info;
 int			chain;
-
 sh_int			gsn_backstab;
 sh_int			gsn_circle;
 sh_int			gsn_dodge;
@@ -117,7 +120,6 @@ sh_int			gsn_peek;
 sh_int			gsn_pick_lock;
 sh_int			gsn_sneak;
 sh_int			gsn_steal;
-
 sh_int			gsn_disarm;
 sh_int			gsn_dual_wield;
 sh_int			gsn_enhanced_damage;
@@ -128,7 +130,6 @@ sh_int			gsn_second_attack;
 sh_int			gsn_third_attack;
 sh_int			gsn_fourth_attack;
 sh_int			gsn_fifth_attack;
-
 sh_int			gsn_blindness;
 sh_int			gsn_charm_person;
 sh_int			gsn_curse;
@@ -139,8 +140,6 @@ sh_int			gsn_plague;
 sh_int			gsn_sleep;
 sh_int			gsn_sanctuary;
 sh_int			gsn_fly;
-/* new gsns */
-
 sh_int  		gsn_axe;
 sh_int  		gsn_dagger;
 sh_int  		gsn_flail;
@@ -150,19 +149,15 @@ sh_int			gsn_shield_block;
 sh_int  		gsn_spear;
 sh_int  		gsn_sword;
 sh_int  		gsn_whip;
- 
 sh_int  		gsn_bash;
 sh_int  		gsn_berserk;
 sh_int  		gsn_dirt;
-sh_int  		gsn_feed;
 sh_int  		gsn_hand_to_hand;
 sh_int  		gsn_trip;
- 
 sh_int  		gsn_fast_healing;
 sh_int  		gsn_haggle;
 sh_int  		gsn_lore;
 sh_int  		gsn_meditation;
- 
 sh_int  		gsn_scrolls;
 sh_int  		gsn_staves;
 sh_int  		gsn_wands;
@@ -171,25 +166,16 @@ sh_int  		gsn_stun;
 sh_int  		gsn_track;
 sh_int  		gsn_gouge;
 sh_int  		gsn_grip;
-
-
-
-/*
- * Locals.
- */
 MOB_INDEX_DATA *	mob_index_hash		[MAX_KEY_HASH];
 OBJ_INDEX_DATA *	obj_index_hash		[MAX_KEY_HASH];
 ROOM_INDEX_DATA *	room_index_hash		[MAX_KEY_HASH];
 char *			string_hash		[MAX_KEY_HASH];
-
 AREA_DATA *		area_first;
 AREA_DATA *		area_last;
 AREA_DATA *		current_area;
-
 char *			string_space;
 char *			top_string;
 char			str_empty	[1];
-
 int			top_affect;
 int			top_area;
 int			top_ed;
@@ -200,44 +186,38 @@ int			top_obj_index;
 int			top_reset;
 int			top_room;
 int			top_shop;
-int         top_vnum_room;		/* OLC */
-int         top_vnum_mob;		/* OLC */
-int         top_vnum_obj;		/* OLC */
+int         		top_vnum_room;		/* OLC */
+int         		top_vnum_mob;		/* OLC */
+int         		top_vnum_obj;		/* OLC */
 int			top_mprog_index;	/* OLC */
 int			top_vnum = 0;
 int 			mobile_count = 0;
 int			newmobs = 0;
 int			newobjs = 0;
-
-
-/*
- * Memory management.
- * Increase MAX_STRING if you have too.
- * Tune the others only if you understand what you're doing.
- */
-#define			MAX_STRING	2099200
-#define			MAX_PERM_BLOCK	131072
-#define			MAX_MEM_LIST	11
-
 void *			rgFreeList	[MAX_MEM_LIST];
 const int		rgSizeList	[MAX_MEM_LIST]	=
 {
     16, 32, 64, 128, 256, 1024, 2048, 4096, 8192, 16384, 32768-64
 };
-
 int			nAllocString;
 int			sAllocString;
 int			nAllocPerm;
 int			sAllocPerm;
-
-
-
-/*
- * Semi-locals.
- */
 bool			fBootDb;
 FILE *			fpArea;
 char			strArea[MAX_INPUT_LENGTH];
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

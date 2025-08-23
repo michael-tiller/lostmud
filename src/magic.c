@@ -302,6 +302,7 @@ int mana_cost (CHAR_DATA *ch, int min_mana, int level)
 char *target_name;
 char *third_name;
 
+
 void do_cast( CHAR_DATA *ch, char *argument )
 {
     char arg1[MAX_INPUT_LENGTH];

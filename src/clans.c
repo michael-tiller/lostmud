@@ -51,6 +51,8 @@ DECLARE_DO_FUN(	do_clanlist	);
 
 CLN_DATA *cln_list;
 
+
+
 const struct clan_type clan_table[MAX_CLAN] =
 {
 /*	name,		who entry,

@@ -40,6 +40,8 @@ void do_skedit(CHAR_DATA *ch ,char * argument);
 
 int max_groups;
 
+
+
 struct group_type *group_table;
 
 /**/

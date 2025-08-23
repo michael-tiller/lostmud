@@ -48,6 +48,7 @@
 #include "recycle.h"
 
 extern char                    boot_buf[MAX_STRING_LENGTH]; 
+
 BAN_DATA *ban_list;
 
 void save_bans(void)

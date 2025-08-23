@@ -301,20 +301,7 @@ int	write		args( ( int fd, char *buf, int nbyte ) );
   #define close closesocket
 #endif
 
-/*
- * Global variables.
- */
-DESCRIPTOR_DATA *   descriptor_list;	/* All open descriptors		*/
-DESCRIPTOR_DATA *   d_next;		/* Next descriptor in loop	*/
-FILE *		    fpReserve;		/* Reserved file handle		*/
-bool		    god;		/* All new chars are gods!	*/
-bool		    merc_down;		/* Shutdown			*/
-bool		    wizlock;		/* Game is wizlocked		*/
-bool		    newlock;		/* Game is newlocked		*/
-char		    str_boot_time[MAX_INPUT_LENGTH];
-time_t		    current_time;	/* time of this pulse */	
-bool		    MOBtrigger = TRUE;  /* act() switch                 */	
-char		    clcode[ MAX_INPUT_LENGTH ];
+
 
 
 
@@ -352,10 +339,25 @@ void	read_from_buffer	args( ( DESCRIPTOR_DATA *d ) );
 void	stop_idling		args( ( CHAR_DATA *ch ) );
 void    bust_a_prompt           args( ( CHAR_DATA *ch ) );
 
+/*
+ * Global variables.
+ */
+DESCRIPTOR_DATA *   descriptor_list;	/* All open descriptors		*/
+DESCRIPTOR_DATA *   d_next;		/* Next descriptor in loop	*/
+FILE *		    fpReserve;		/* Reserved file handle		*/
+bool		    god;		/* All new chars are gods!	*/
+bool		    merc_down;		/* Shutdown			*/
+bool		    wizlock;		/* Game is wizlocked		*/
+bool		    newlock;		/* Game is newlocked		*/
+char		    str_boot_time[MAX_INPUT_LENGTH];
+time_t		    current_time;	/* time of this pulse */	
+bool		    MOBtrigger = TRUE;  /* act() switch                 */	
+char		    clcode[ MAX_INPUT_LENGTH ];
+int 		    port, control;
+
 
  
-/* Needs to be global because of do_copyover */
-int port, control;
+
 
 int main( int argc, char **argv )
 {

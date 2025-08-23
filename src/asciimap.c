@@ -113,6 +113,8 @@ int c_list[MAX_BFS][3];
 char * room_wall;
 char * room_floor;
 
+
+
 int rev_dirs[4][2] = {{ 0,-1},
                       { 1, 0},
                       { 0, 1},

@@ -69,6 +69,7 @@ NOTE_DATA *news_list;
 NOTE_DATA *changes_list;
 NOTE_DATA *weddings_list;
 
+
 int count_spool(CHAR_DATA *ch, NOTE_DATA *spool)
 {
     int count = 0;

@@ -49,6 +49,24 @@
 
 /* stuff for recyling notes */
 NOTE_DATA *note_free;
+EXTRA_DESCR_DATA *extra_descr_free;
+HELP_DATA *help_free;
+BAN_DATA *ban_free;
+WIZ_DATA *wiz_free;
+CLN_DATA *cln_free;
+MBR_DATA *mbr_free;
+DESCRIPTOR_DATA *descriptor_free;
+GEN_DATA *gen_data_free;
+AFFECT_DATA *affect_free;
+OBJ_DATA *obj_free;
+CHAR_DATA *char_free;
+PC_DATA *pcdata_free;
+long last_pc_id;
+long last_mob_id;
+MEM_DATA *mem_data_free;
+BUFFER *buf_free;
+MPROG_LIST *mprog_free;
+HELP_AREA *had_free;
 
 NOTE_DATA *new_note()
 {
@@ -83,7 +101,6 @@ void free_note(NOTE_DATA *note)
 
     
 /* stuff for recycling ban structures */
-BAN_DATA *ban_free;
 
 BAN_DATA *new_ban(void)
 {
@@ -117,7 +134,6 @@ void free_ban(BAN_DATA *ban)
 }
 
 /* stuff for recycling wizlist structures */
-WIZ_DATA *wiz_free;
 
 WIZ_DATA *new_wiz(void)
 {
@@ -151,7 +167,7 @@ void free_wiz(WIZ_DATA *wiz)
 }
 
 /* stuff for recycling clanlist structures */
-CLN_DATA *cln_free;
+
 
 CLN_DATA *new_cln(void)
 {
@@ -172,7 +188,7 @@ CLN_DATA *new_cln(void)
     return cln;
 }
 
-MBR_DATA *mbr_free;
+
 
 MBR_DATA *new_mbr(void)
 {
@@ -206,7 +222,6 @@ void free_mbr(MBR_DATA *mbr)
 }
 
 /* stuff for recycling descriptors */
-DESCRIPTOR_DATA *descriptor_free;
 
 DESCRIPTOR_DATA *new_descriptor(void)
 {
@@ -246,7 +261,6 @@ void free_descriptor(DESCRIPTOR_DATA *d)
 }
 
 /* stuff for recycling gen_data */
-GEN_DATA *gen_data_free;
 
 GEN_DATA *new_gen_data(void)
 {
@@ -277,7 +291,6 @@ void free_gen_data(GEN_DATA *gen)
 } 
 
 /* stuff for recycling extended descs */
-EXTRA_DESCR_DATA *extra_descr_free;
 
 EXTRA_DESCR_DATA *new_extra_descr(void)
 {
@@ -312,7 +325,6 @@ void free_extra_descr(EXTRA_DESCR_DATA *ed)
 
 
 /* stuff for recycling affects */
-AFFECT_DATA *affect_free;
 
 AFFECT_DATA *new_affect(void)
 {
@@ -345,7 +357,6 @@ void free_affect(AFFECT_DATA *af)
 }
 
 /* stuff for recycling objects */
-OBJ_DATA *obj_free;
 
 OBJ_DATA *new_obj(void)
 {
@@ -400,7 +411,7 @@ void free_obj(OBJ_DATA *obj)
 
 
 /* stuff for recyling characters */
-CHAR_DATA *char_free;
+
 
 CHAR_DATA *new_char (void)
 {
@@ -492,7 +503,7 @@ void free_char (CHAR_DATA *ch)
     return;
 }
 
-PC_DATA *pcdata_free;
+
 
 PC_DATA *new_pcdata(void)
 {
@@ -570,8 +581,7 @@ void free_pcdata(PC_DATA *pcdata)
 
 
 /* stuff for setting ids */
-long	last_pc_id;
-long	last_mob_id;
+
 
 long get_pc_id(void)
 {
@@ -588,11 +598,11 @@ long get_mob_id(void)
     return last_mob_id;
 }
 
-MEM_DATA *mem_data_free;
+
 
 /* procedures and constants needed for buffering */
 
-BUFFER *buf_free;
+
 
 MEM_DATA *new_mem_data(void)
 {
@@ -769,7 +779,6 @@ char *buf_string(BUFFER *buffer)
 }
 
 /* stuff for recycling mobprograms */
-MPROG_LIST *mprog_free;
 
 MPROG_LIST *new_mprog(void)
 {
@@ -802,7 +811,7 @@ void free_mprog(MPROG_LIST *mp)
 	mprog_free = mp;
 }
  
-HELP_AREA * had_free;
+
  	
 HELP_AREA * new_had ( void )
 {
@@ -822,7 +831,7 @@ HELP_AREA * new_had ( void )
 	return had;
 }
  
-HELP_DATA * help_free;
+
 
 /*
 HELP_DATA * new_help ( void )

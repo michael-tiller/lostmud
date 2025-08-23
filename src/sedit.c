@@ -59,10 +59,10 @@
                                 }
 
 
+
 int maxSocial; /* max number of socials */
 
 #ifndef CONST_SOCIAL
-struct social_type *social_table;	   /* and social table */
 
 void load_social (FILE *fp, struct social_type *social)
 {

@@ -50,8 +50,8 @@
 #include "tables.h"
 
 /* values for db2.c */
-struct		social_type	*social_table;
-int		social_count;
+struct social_type *social_table;
+int social_count;
 
 /* snarf a socials file */
 /*

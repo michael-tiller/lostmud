@@ -45,7 +45,9 @@
 #include "recycle.h"
 
 extern char                    boot_buf[MAX_STRING_LENGTH]; 
+
 WIZ_DATA *wiz_list;
+
 
 char *	const	wiz_titles	[] =
 {
