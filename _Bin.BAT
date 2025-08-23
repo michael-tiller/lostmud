@@ -1,3 +1,2 @@
-copy /Y Debug\WinRot.exe .\build
-copy /Y Debug\WinRot.exe .\live
+copy /Y Debug\WinRot.exe .\
 pause

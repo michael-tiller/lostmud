@@ -1,2 +1,2 @@
-.\build\WinRot 5000
+.\WinRot 5000
 pause
