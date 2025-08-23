@@ -1,0 +1,51 @@
+# .cursorrules for ROT/ROM MUD project
+# Purpose: Guide AI editing agents to preserve legacy C89 style and MUD-specific idioms.
+# Inspired by awesome-cursorrules structure.
+
+rules:
+  language:
+    - Primary language: "C89"
+    - No C99/C11 features (no // comments, no inline, no stdbool.h, no designated initializers).
+    - No C++ features.
+
+  formatting:
+    - Indentation must use tabs, not spaces.
+    - Maximum line length: 80 chars.
+    - Opening braces on same line for functions and control statements.
+    - Pointer style: `type *name`, never `type* name`.
+
+  compatibility:
+    - Must compile cleanly with gcc on Linux and MSVC on Windows.
+    - Use system calls like `crypt()` as is; do not replace with modern libraries.
+    - Preserve `args()` macro usage from merc.h.
+    - Do not remove or alter legacy macros such as `IS_NPC`, `UMAX`, etc.
+
+  memory:
+    - Preserve custom memory system (`alloc_mem`, `free_mem`, `alloc_perm`).
+    - Do not replace with malloc wrappers or standard allocators.
+
+  functions:
+    - Maintain original function signatures.
+    - Avoid introducing inline or static inline unless already present.
+    - Do not change return types (e.g., keep `void` vs `int` as in legacy).
+
+  error_handling:
+    - Use `bug()` and `perror()` as in original code.
+    - Do not introduce exceptions, asserts, or C++ style error handling.
+
+  comments:
+    - Use classic `/* ... */` style only.
+    - No Doxygen or modern docstring conventions.
+
+  agent_behavior:
+    - Prefer small, targeted edits over refactors.
+    - Preserve global variable usage where present.
+    - Avoid introducing new dependencies or restructuring file layout.
+    - When fixing, patch in-place; do not rewrite unrelated code.
+
+  # MUD-specific constraints
+  mud:
+    - Preserve linked list patterns for `help_first`, `note_list`, etc.
+    - Keep save/load system using plain text `.plr` files.
+    - Respect existing file structure (db.c, save.c, mem.c, recycle.c).
+    - Do not rename commands, socials, or game constants.

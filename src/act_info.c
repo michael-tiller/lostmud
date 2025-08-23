@@ -1508,6 +1508,8 @@ void do_prompt(CHAR_DATA *ch, char *argument)
  
    if( !strcmp( argument, "all" ) )
       strcpy( buf, "<%hhp %mm %vmv> {Y(%X) {R(%e){x> ");
+	else if (!strcmp(argument, "olc"))
+		strcpy( buf, "<@:{W%z{x-{W%r{x ({W%R{x)> <Exits:{W%e{x>%c%o>");
    else
    {
       if ( strlen(argument) > 50 )

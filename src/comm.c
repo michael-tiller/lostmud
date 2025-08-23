@@ -75,6 +75,7 @@
 #include "interp.h"
 #include "recycle.h"
 #include "tables.h"
+#include "olc.h"
 
 /*
  * Malloc debugging stuff.
@@ -1649,6 +1650,13 @@ void bust_a_prompt( CHAR_DATA *ch )
     else
 	sprintf( buf, " " );
     str_replace_c(buf2, "%z", buf);
+
+    /* OLC parameter - shows OLC when in building mode */
+    if (ch->desc && ch->desc->editor != ED_NONE)
+	sprintf(buf, "{Y[OLC]{x");
+    else
+	sprintf(buf, " ");
+    str_replace_c(buf2, "%o", buf);
 
    send_to_char( buf2, ch );
 
