@@ -1,36 +1,40 @@
-#!/bin/csh
+#!/bin/bash
+#
+# Bash startup script for LostMUD
+#
 
-set areapath = data/area
-set port = 4000
+areapath="data/area"
+port=4000
 
-cd $areapath
+cd "$areapath" || exit 1
 
-# Set limits.
-if ( -e shutdown.txt ) rm -f shutdown.txt
+# Clean shutdown flag if present
+[ -e shutdown.txt ] && rm -f shutdown.txt
 
-while ( 1 )
-    # If you want to have logs in a different directory,
-    #   change the 'set logfile' line to reflect the directory name.
-    set index = 1000
-    while ( 1 )
-	set logfile = ../log/$index.log
-	if ( ! -e $logfile ) break
-	@ index++
-    end
+while true; do
+    # Pick next logfile name
+    index=1000
+    while true; do
+        logfile="../log/${index}.log"
+        if [ ! -e "$logfile" ]; then
+            break
+        fi
+        index=$((index + 1))
+    done
 
-    # Copy rot binary from bin directory.
-    # after a compile, place the new binary in the bin directory,
-    # this way a reboot will install the new binary, instead of
-    # of having to shut down.
+    # Copy rot binary from bin directory
     rm -f ./rot
     cp ../../bin/rot .
-    # Run rot.
-    ./rot $port >&! $logfile
 
-    # Restart, giving old connections a chance to die.
-    if ( -e shutdown.txt ) then
-	rm -f shutdown.txt
-	exit 0
-    endif
+    # Run rot with port and log redirection
+    ./rot "$port" >> "$logfile" 2>&1
+
+    # If shutdown.txt exists, exit gracefully
+    if [ -e shutdown.txt ]; then
+        rm -f shutdown.txt
+        exit 0
+    fi
+
+    # Restart after a pause to let connections clear
     sleep 15
-end
+done
