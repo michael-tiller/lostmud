@@ -1,9 +1,8 @@
 #!/bin/bash
 
-areapath=.
+areapath="./area"
 port=4000
-
-cd "$(dirname "$0")/.." || exit 1   # go to ~/lostmud, not ~/lostmud/area
+cd $areapath
 
 rm -f shutdown.txt
 
@@ -18,7 +17,7 @@ do
     done
 
     rm -f ./rot
-    cp src/rot .
+    cp ../bin/rot .
     ./rot $port >& "$logfile"
 
     if [ -e shutdown.txt ]; then
