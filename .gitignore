@@ -5,10 +5,26 @@
 /WinRot.sdf
 /WinRot.v11.suo
 /WinRot.vcxproj.user
-/build/player/*.bak
-/build/player/*.plr
-/live/player/*.bak
-/live/player/*.plr
 /build/WinRot.exe
 /live/WinRot.exe
 /WinRot.exe
+
+# player save files
+player/*.plr
+player/*.bak
+
+# area logs
+log/*.log
+
+# compiled binaries
+rot
+*.o
+*.exe
+
+# temp files
+*.swp
+*~
+
+nohelp.txt
+shutdown.txt
+
