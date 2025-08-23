@@ -1,0 +1,138 @@
+#PLAYER
+Name Chaos~
+Id   1755976521
+LogO 1755976918
+Vers 5
+Prom <@:{W%z{x-{W%r{x ({W%R{x)> <Exits:{W%e{x>%c%o>~
+Race human~
+Sex  1
+Clas vampire~
+Levl 210
+Tier 1
+Ctier 1
+Sec  9
+Plyd 148
+Tpld 3
+Notb  0 0 0 0 0 0
+Scro 22
+Room 1
+HMV  200 200 200 200 100 100
+Plat 0
+Gold 0
+Silv 0
+Exp  1000
+Act  BCDEFGHKOQ
+Comm NOb
+Pos  8
+Prac 25
+Trai 23
+Alig  -750
+ACs 92 92 92 96
+Attr 13 13 13 13 16
+AMod 0 0 0 0 0
+Pass ChUWl/k3p7YN2~
+Titl  Incarnate~
+Pnts 40
+TSex 1
+LLev 0
+Reca 0
+HMVP 200 200 100
+Cnd  0 48 48 48
+Sk 1 'animate'
+Sk 1 'blindness'
+Sk 1 'calm'
+Sk 1 'change sex'
+Sk 1 'charm person'
+Sk 1 'curse'
+Sk 1 'detect evil'
+Sk 1 'detect good'
+Sk 1 'detect hidden'
+Sk 1 'detect invis'
+Sk 1 'detect magic'
+Sk 1 'detect poison'
+Sk 1 'energy drain'
+Sk 1 'farsight'
+Sk 1 'fly'
+Sk 1 'gate'
+Sk 1 'giant strength'
+Sk 1 'haste'
+Sk 1 'identify'
+Sk 1 'infravision'
+Sk 1 'invisibility'
+Sk 1 'know alignment'
+Sk 1 'locate object'
+Sk 1 'mass invis'
+Sk 1 'nexus'
+Sk 1 'pass door'
+Sk 1 'plague'
+Sk 1 'poison'
+Sk 1 'portal'
+Sk 1 'refresh'
+Sk 1 'resurrect'
+Sk 1 'sleep'
+Sk 1 'slow'
+Sk 1 'summon'
+Sk 1 'teleport'
+Sk 1 'transport'
+Sk 1 'ventriloquate'
+Sk 1 'voodoo'
+Sk 1 'weaken'
+Sk 1 'word of recall'
+Sk 40 'dagger'
+Sk 1 'shield block'
+Sk 1 'backstab'
+Sk 1 'disarm'
+Sk 1 'dodge'
+Sk 1 'feed'
+Sk 1 'hand to hand'
+Sk 1 'fast healing'
+Sk 1 'hide'
+Sk 1 'sneak'
+Sk 1 'scrolls'
+Sk 1 'staves'
+Sk 1 'wands'
+Sk 50 'recall'
+Gr 'rom basics'
+Gr 'vampire basics'
+Gr 'vampire default'
+Gr 'beguiling'
+Gr 'detection'
+Gr 'enhancement'
+Gr 'illusion'
+Gr 'maladictions'
+Gr 'transportation'
+End
+
+#O
+Vnum 220
+Nest 0
+Cond 0
+Wear 0
+Cost 0
+End
+
+#O
+Vnum 221
+Nest 0
+Cond 0
+Wear 5
+Cost 0
+End
+
+#O
+Vnum 200
+Nest 0
+Cond 0
+Wear 16
+Cost 5
+End
+
+#O
+Vnum 208
+Nest 0
+Cond 0
+Wear 11
+Cost 0
+End
+
+#END

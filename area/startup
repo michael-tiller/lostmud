@@ -1,6 +1,6 @@
 #!/bin/bash
 
-areapath=.
+areapath="../area"
 port=4000
 cd $areapath
 
