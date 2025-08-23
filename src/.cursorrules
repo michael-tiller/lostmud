@@ -1,51 +1,82 @@
-# .cursorrules for ROT/ROM MUD project
-# Purpose: Guide AI editing agents to preserve legacy C89 style and MUD-specific idioms.
-# Inspired by awesome-cursorrules structure.
+# .cursorrules
+# ROT/ROM MUD Legacy Codebase
+#
+# Description:
+#   This project is a derivative of the Diku/ROM/ROT MUD family. It is a legacy
+#   C89 codebase with custom allocators, global state, and linked-list based data
+#   structures. These rules are designed to constrain AI assistants to *patching*
+#   and *maintaining* the existing code, not modernizing or rewriting it.
+#
+# Common Pitfalls (DO NOT DO THESE):
+#   - Do NOT replace `crypt()` with a modern password hash unless explicitly requested.
+#   - Do NOT replace `alloc_mem`/`free_mem` with malloc/free.
+#   - Do NOT change `%d` → `%ld` blindly; only fix when warnings explicitly demand it.
+#   - Do NOT remove global variables (e.g., `help_first`, `note_list`).
+#   - Do NOT introduce C99/C11 features (`//` comments, `inline`, `stdbool.h`).
+#   - Do NOT rename commands, socials, or gameplay constants.
+#   - Do NOT alter file formats for players, areas, or help files.
+#   - Do NOT modularize or split files into new libraries.
+#   - Do NOT add dependencies outside of the base system headers.
+#
+# Usage:
+#   Place this file at the root of your repository. Cursor/AI agents will then
+#   apply these rules when generating or editing code.
+#
+# Example allowed edit:
+#   Fixing a format specifier from `%d` → `%ld` when warnings indicate mismatched types.
+# Example disallowed edit:
+#   Replacing alloc_mem/free_mem with malloc/free or introducing C++ STL containers.
 
 rules:
   language:
     - Primary language: "C89"
-    - No C99/C11 features (no // comments, no inline, no stdbool.h, no designated initializers).
-    - No C++ features.
+    - Strictly disallow C99/C11 features:
+      - No // comments
+      - No inline or static inline unless already present
+      - No designated initializers
+      - No `stdbool.h`
+    - Never introduce C++.
 
   formatting:
-    - Indentation must use tabs, not spaces.
-    - Maximum line length: 80 chars.
-    - Opening braces on same line for functions and control statements.
-    - Pointer style: `type *name`, never `type* name`.
+    - Indentation: tabs only
+    - Maximum line length: 80 characters
+    - Opening braces: same line for functions and control structures
+    - Pointer style: `type *name`, never `type* name`
 
   compatibility:
-    - Must compile cleanly with gcc on Linux and MSVC on Windows.
-    - Use system calls like `crypt()` as is; do not replace with modern libraries.
-    - Preserve `args()` macro usage from merc.h.
-    - Do not remove or alter legacy macros such as `IS_NPC`, `UMAX`, etc.
+    - Must compile cleanly with GCC on Linux and MSVC on Windows.
+    - Preserve system calls like `crypt()`.
+    - Do not replace legacy macros (`args`, `IS_NPC`, `UMAX`, etc.).
+    - Respect platform-specific behavior (file I/O, sockets, signals).
 
   memory:
     - Preserve custom memory system (`alloc_mem`, `free_mem`, `alloc_perm`).
-    - Do not replace with malloc wrappers or standard allocators.
+    - Do not substitute with malloc/free or modern allocators.
+    - Do not alter block sizing or free list mechanics.
 
   functions:
-    - Maintain original function signatures.
-    - Avoid introducing inline or static inline unless already present.
-    - Do not change return types (e.g., keep `void` vs `int` as in legacy).
+    - Maintain existing function signatures.
+    - Avoid adding new parameters unless required by bug fix.
+    - Do not change return types (keep `void`, `int`, etc.).
+    - No inline or lambda functions.
 
   error_handling:
-    - Use `bug()` and `perror()` as in original code.
-    - Do not introduce exceptions, asserts, or C++ style error handling.
+    - Use `bug()`, `perror()`, and existing logging style.
+    - Do not add exceptions, assertions, or modern frameworks.
 
   comments:
-    - Use classic `/* ... */` style only.
-    - No Doxygen or modern docstring conventions.
+    - Only use `/* ... */`.
+    - Do not introduce Doxygen or Markdown doc comments.
 
   agent_behavior:
-    - Prefer small, targeted edits over refactors.
-    - Preserve global variable usage where present.
-    - Avoid introducing new dependencies or restructuring file layout.
-    - When fixing, patch in-place; do not rewrite unrelated code.
+    - Prefer surgical edits over large refactors.
+    - Preserve global variable patterns and linked lists.
+    - Do not restructure file layout or modularize into new libraries.
+    - Avoid introducing new dependencies.
+    - Fix in-place; do not rewrite unrelated code.
 
-  # MUD-specific constraints
-  mud:
-    - Preserve linked list patterns for `help_first`, `note_list`, etc.
-    - Keep save/load system using plain text `.plr` files.
-    - Respect existing file structure (db.c, save.c, mem.c, recycle.c).
-    - Do not rename commands, socials, or game constants.
+  mud_specific:
+    - Preserve text save/load format for `.plr` player files.
+    - Maintain linked list conventions (`help_first`, `note_list`, etc.).
+    - Keep core systems: socials, commands, area files, OLC.
+    - Do not rename commands or change gameplay constants.
