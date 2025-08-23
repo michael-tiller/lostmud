@@ -2,7 +2,7 @@ CC      = gcc
 PROF    = -O2 -g
 NOCRYPT =
 C_FLAGS = -Wall $(PROF) $(NOCRYPT)
-L_FLAGS = $(PROF) -lm
+L_FLAGS = $(PROF) -lm -lcrypt
 
 ROT_FILES = act_comm.o act_enter.o act_info.o act_move.o act_obj.o act_wiz.o \
           alias.o ban.o clans.o comm.o const.o curse.o db.o db2.o effects.o \

@@ -91,8 +91,7 @@ HELP_DATA *		help_last;
 HELP_AREA *		had_list;
 SHOP_DATA *		shop_first;
 SHOP_DATA *		shop_last;
-NOTE_DATA *		note_free;
-NOTE_DATA *		note_list;
+
 MPROG_CODE *		mprog_list;
 char			bug_buf		[2*MAX_INPUT_LENGTH];
 CHAR_DATA *		char_list;
