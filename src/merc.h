@@ -2639,9 +2639,9 @@ char *	crypt		args( ( const char *key, const char *salt ) );
 #endif
 
 #if defined(unix)
-#define PLAYER_DIR      "player/"        	/* Player files */
-#define GOD_DIR         "gods/"  		/* list of gods */
-#define TEMP_FILE	"player/t"
+#define PLAYER_DIR      "../player/"        	/* Player files */
+#define GOD_DIR         "../gods/"  		/* list of gods */
+#define TEMP_FILE	"../player/t"
 #define NULL_FILE	"/dev/null"		/* To reserve one stream */
 #endif
 
