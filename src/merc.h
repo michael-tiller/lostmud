@@ -2646,9 +2646,9 @@ char *	crypt		args( ( const char *key, const char *salt ) );
 #endif
 
 #if defined(WIN32)
-#define PLAYER_DIR      "player/"        	/* Player files */
-#define GOD_DIR         "gods/"  		/* list of gods */
-#define TEMP_FILE	"player/t"
+#define PLAYER_DIR      "../player/"        	/* Player files */
+#define GOD_DIR         "../gods/"  		/* list of gods */
+#define TEMP_FILE	"../player/t"
 #define NULL_FILE	"proto.are"		/* To reserve one stream        */
 #pragma warning( disable: 4018 4244 4761)
 void gettimeofday(struct timeval *tv, struct timezone *tz);
