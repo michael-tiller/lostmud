@@ -18,7 +18,7 @@ do
     done
 
     rm -f ./rot
-    cp bin/rot .
+    cp src/rot .
     ./rot $port >& "$logfile"
 
     if [ -e shutdown.txt ]; then
