@@ -5645,7 +5645,11 @@ void do_prefix (CHAR_DATA *ch, char *argument)
 #define COPYOVER_FILE "copyover.data"
 
 /* This is the executable file */
-#define EXE_FILE	  "../WinRot.exe"
+#ifdef WIN32
+#define EXE_FILE	  "WinRot.exe"
+#else
+#define EXE_FILE	  "rot"
+#endif
 
 
 /*  Copyover - Original idea: Fusion of MUD++
