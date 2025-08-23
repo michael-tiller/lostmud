@@ -25,3 +25,9 @@ $(TARGET): $(ROT_FILES)
 
 clean:
 	rm -f *.o $(TARGET)
+
+move: 
+	cp rot -f ../bin
+	
+start:
+	../area/startup &
