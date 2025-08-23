@@ -3,7 +3,7 @@
 # Bash startup script for LostMUD
 #
 
-areapath="data/area"
+areapath="./area"
 port=4000
 
 cd "$areapath" || exit 1
