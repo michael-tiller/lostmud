@@ -10,11 +10,14 @@
 /WinRot.exe
 
 # player save files
-player/*.plr
-player/*.bak
+/player/*.plr
+/player/*.bak
 
 # area logs
-log/*.log
+/gods/*.gsf
+
+# area logs
+/log/*.log
 
 # compiled binaries
 rot
