@@ -32,11 +32,19 @@ void do_group_info( CHAR_DATA *ch, char *argument);
 void do_skedit(CHAR_DATA *ch ,char * argument);
 
 // macro definitions
+#ifdef WIN32
 #define CLASS_TEMP "../data/class/t"
 #define CLASS_DIR "../data/class/"
 #define GROUP_TEMP "../data/group/t"
 #define GROUP_DIR "../data/group/"
 #define GROUP_LIST "../data/group/group.lst"
+#else
+#define CLASS_TEMP "data/class/t"
+#define CLASS_DIR "data/class/"
+#define GROUP_TEMP "data/group/t"
+#define GROUP_DIR "data/group/"
+#define GROUP_LIST "data/group/group.lst"
+#endif
 
 int max_groups;
 
