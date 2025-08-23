@@ -24,7 +24,7 @@ while true; do
 
     # Copy rot binary from bin directory
     rm -f ./rot
-    cp ../../bin/rot .
+    cp ../src/rot .y
 
     # Run rot with port and log redirection
     ./rot "$port" >> "$logfile" 2>&1
