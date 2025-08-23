@@ -1,40 +1,30 @@
 #!/bin/bash
-#
-# Bash startup script for LostMUD
-#
 
 areapath=.
 port=4000
 
-cd "$areapath" || exit 1
+cd "$(dirname "$0")/.." || exit 1   # go to ~/lostmud, not ~/lostmud/area
 
-# Clean shutdown flag if present
-[ -e shutdown.txt ] && rm -f shutdown.txt
+rm -f shutdown.txt
 
-while true; do
-    # Pick next logfile name
+while true
+do
     index=1000
-    while true; do
-        logfile="../log/${index}.log"
-        if [ ! -e "$logfile" ]; then
-            break
-        fi
-        index=$((index + 1))
+    while true
+    do
+        logfile=log/$index.log
+        [ ! -e "$logfile" ] && break
+        index=$((index+1))
     done
 
-    # Copy rot binary from bin directory
     rm -f ./rot
-    cp ../src/rot ./
+    cp bin/rot .
+    ./rot $port >& "$logfile"
 
-    # Run rot with port and log redirection
-    ./rot "$port" >> "$logfile" 2>&1
-
-    # If shutdown.txt exists, exit gracefully
     if [ -e shutdown.txt ]; then
         rm -f shutdown.txt
         exit 0
     fi
 
-    # Restart after a pause to let connections clear
     sleep 15
 done
