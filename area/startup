@@ -1,6 +1,6 @@
 #!/bin/bash
 
-areapath="./area"
+areapath=.
 port=4000
 cd $areapath
 
@@ -11,7 +11,7 @@ do
     index=1000
     while true
     do
-        logfile=log/$index.log
+        logfile=../log/$index.log
         [ ! -e "$logfile" ] && break
         index=$((index+1))
     done

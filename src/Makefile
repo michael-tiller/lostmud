@@ -27,7 +27,7 @@ clean:
 	rm -f *.o $(TARGET)
 
 move: 
-	cp rot -f ../bin
+	cp rot -f ../bin/rot
 	
 start:
 	../area/startup &
