@@ -31,3 +31,6 @@ rot
 nohelp.txt
 shutdown.txt
 
+/.idea
+/.vs
+/*.suo
