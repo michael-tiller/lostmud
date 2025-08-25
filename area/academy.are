@@ -23,8 +23,8 @@ ABZ DFJVa CDEHNO 751 0
 0 0 0 0
 stand stand male 0
 AHMV ABCDEFGHIJK medium unknown
-M RANDOM 201 10~
 M GREET 200 100~
+M RANDOM 201 10~
 #201
 instructor~
 The Instructor of {8Chaos{x~
@@ -179,8 +179,8 @@ A nightingale apprentice stands here.
 ~
 human~
 ACR 0 0 -250 0
-12 20 0 43d6+182 20d9+2 2d2+2 stab
--2 -2 -2 1
+22 11 0 23d3+24 11d9+1 1d2+1 stab
+2 2 2 4
 I 0 0 0
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -192,8 +192,8 @@ A nightingale student stands here.
 ~
 human~
 ACT 0 0 -250 0
-15 20 0 43d6+182 20d9+2 2d2+2 pound
--2 -2 -2 1
+20 11 0 27d3+46 11d10+2 1d2+3 pound
+1 1 1 4
 I 0 0 0
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -205,8 +205,8 @@ A lazy student is here, hiding from class.
 ~
 human~
 ACS 0 0 -500 0
-15 20 0 43d6+182 20d9+2 2d2+2 stab
--2 -2 -2 1
+20 10 0 21d3+21 10d9+1 1d2+1 stab
+3 3 3 5
 F 0 0 0
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -218,8 +218,8 @@ A student wanders here, looking focused.
 ~
 human~
 ACQ 0 0 500 0
-15 20 0 43d6+182 20d9+2 2d2+2 pound
--2 -2 -2 1
+25 15 0 37d5+62 15d10+3 2d2+4 pound
+0 0 0 2
 K 0 0 0
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -232,8 +232,8 @@ It's a tiny little bit of white fluff.
 ~
 fox~
 AG Z 0 600 0
-10 10 0 25d3+102 10d10+2 1d2+3 bite
-2 2 2 4
+12 5 0 12d2+21 5d10+1 1d2+3 bite
+5 5 5 7
 FH 0 0 0
 stand stand either 0
 AGV ACDEFHJKQV small unknown
@@ -259,9 +259,9 @@ A boar is here, rooting for tubers.
 ~
 pig~
 AG 0 0 600 0
-15 10 0 30d4+102 10d11+4 3d2+11 charge
-1 1 1 3
-0 0 0 0
+15 8 0 20d2+33 8d10+1 1d2+3 charge
+3 3 3 5
+D 0 0 0
 stand stand either 0
 AGV ACDEFHJK medium unknown
 #253
@@ -271,13 +271,13 @@ A fluffy white rabbit hops through the snow.
 ~
 ~
 rabbit~
-AG 0 0 -600 0
-10 10 0 25d3+102 10d10+2 1d2+3 claw
-2 2 2 4
-0 0 0 0
+AG 0 0 600 0
+10 5 0 10d2+11 5d9+0 1d2+1 claw
+6 6 6 7
+H 0 0 0
 stand stand none 0
 AGV ACDEFHJK medium unknown
-F off FH
+F off F
 #254
 deer doe~
 a doe~
@@ -286,11 +286,12 @@ A doe stands here.
 ~
 deer~
 AG 0 0 0 0
-10 10 0 25d3+102 10d10+2 1d2+3 pound
-2 2 2 4
-HI 0 0 0
+15 5 0 12d2+21 5d10+1 1d2+3 pound
+5 5 5 7
+I 0 0 0
 stand stand female 0
 AGV ACDEFHJKQW medium unknown
+F off H
 #255
 huge buck~
 a huge buck~
@@ -299,8 +300,8 @@ A huge buck stands here.
 ~
 deer~
 AT 0 0 600 0
-15 10 0 30d4+102 10d11+4 3d2+11 charge
-1 1 1 3
+20 10 0 21d3+21 10d9+1 1d2+1 charge
+3 3 3 5
 IR 0 0 0
 stand stand male 0
 AGV ACDEFHJKQW large unknown
@@ -414,9 +415,9 @@ weapon 0 AN
 dagger 1 7 stab 0
 0 6 1 5 P
 A
-19 1
-A
 18 1
+A
+19 1
 #211
 apprentice short sword~
 an apprentice's shortsword~
@@ -578,9 +579,9 @@ jewelry U AB
 0 0 0 0 0
 0 5 1 0 P
 A
-20 -1
-A
 17 -1
+A
+20 -1
 #231
 trainee pendant~
 a trainee's pendant~
@@ -590,9 +591,9 @@ jewelry U AC
 0 0 0 0 0
 1 1 1 0 P
 A
-17 -1
-A
 20 -1
+A
+17 -1
 #232
 trainee stone~
 a trainee's stone~
@@ -619,7 +620,7 @@ a Nightingale Academy Biscuit~
 A crusty old biscuit has been discarded here.~
 bread~
 food V A
-C C 0 0 0
+D C 0 0 0
 1 1 1 50 P
 #235
 nightingale canteen~
@@ -734,9 +735,9 @@ jewelry 0 AB
 0 0 0 0 0
 1 1 1 0 P
 A
-20 -1
-A
 17 -3
+A
+20 -1
 #251
 apprentice pendant~
 an apprentice's pendant~
@@ -746,9 +747,9 @@ jewelry 0 AC
 0 0 0 0 0
 1 1 1 0 P
 A
-17 -3
-A
 20 -1
+A
+17 -3
 #252
 apprentice stone~
 an apprentice's stone~

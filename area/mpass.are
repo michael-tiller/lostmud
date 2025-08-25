@@ -87,7 +87,7 @@ A black worm roughly the size of a banana is making an awful racket.
 ~
 unique~
 ACFUY DFO H 0 0
-26 19 6 40d6+173 19d9+1 1d2+1 bite
+36 19 6 40d6+173 19d9+1 1d2+1 bite
 -2 -2 -2 1
 AH ABQSUW GLSUW E
 stand stand none 0
@@ -126,8 +126,8 @@ A giant yellow cat is here.
 ~
 cat~
 AFG Z 0 0 0
-30 20 0 60d7+243 20d11+8 6d2+14 scratch
--5 -5 -5 -1
+30 20 0 43d6+42 20d9+2 2d2+2 scratch
+-2 -2 -2 1
 FH 0 EFG 0
 stand stand either 0
 AGV ACDEFHJKQUV large unknown
@@ -139,7 +139,7 @@ An old orc is here, resting on a cane.
 ~
 orc~
 AB J 0 -300 0
-25 20 0 50d6+203 20d10+4 3d2+5 pound
+30 20 0 50d6+203 20d10+4 3d2+5 pound
 -3 -3 -3 0
 IQR 0 Q S
 stand stand male 0
@@ -152,8 +152,8 @@ A huge orc glares at you from behind a hide mask.
 ~
 orc~
 ABF J 0 -500 0
-25 15 0 37d5+152 15d10+3 2d2+4 punch
-0 0 0 2
+30 20 0 50d6+83 20d10+4 3d2+5 punch
+-3 -3 -3 0
 INR 0 Q S
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -164,8 +164,8 @@ A gigantic and fat orc sits on a chair fashioned from bones.
 ~
 ~
 orc~
-ABH DFJ 0 -1000 0
-27 25 0 62d8+253 25d10+5 3d2+6 slap
+ABH DFJ H -1000 0
+40 25 0 62d8+253 25d10+5 3d2+6 slap
 -7 -7 -7 -1
 CIO AB Q S
 stand stand male 0
@@ -192,7 +192,7 @@ An orc laborer toils away.
 ~
 orc~
 ACH J 0 -600 0
-23 12 0 25d4+110 12d9+1 1d2+1 punch
+25 12 0 25d4+110 12d9+1 1d2+1 punch
 1 1 1 4
 IR 0 Q S
 stand stand either 0
@@ -206,7 +206,7 @@ A huge orc in battered plate is standing here, glaring at you.
 ~
 orc~
 ABCF DFJa 0 -800 0
-25 20 0 50d6+83 20d10+4 3d2+5 punch
+30 20 0 50d6+83 20d10+4 3d2+5 punch
 -3 -3 -3 0
 FKRU 0 Q S
 stand stand male 0
@@ -221,7 +221,7 @@ she is also very naked.  She blushes as you inspect her predicament.
 ~
 human~
 AB 0 H 100 0
-20 10 0 21d3+21 10d9+1 1d2+1 scratch
+30 10 0 21d3+21 10d9+1 1d2+1 scratch
 3 3 3 5
 FH AB EFG 0
 stand stand none 0
@@ -259,15 +259,15 @@ A pair of hide sleeves have been left here.~
 hide~
 armor 0 AI
 AC AC AC B 0
-15 20 21 0 P
+15 20 21 15 P
 #704
 orc lumberjack axe~
 a {Dblack iron {raxe{x~
 A large axe meant for cutting logs has been left here.~
 black iron~
 weapon 0 AN
-axe 2 6 cleave DF
-15 10 1 5 P
+axe 3 6 cleave DF
+15 10 1 15 P
 #705
 orc work hammer~
 a work hammer~
@@ -275,7 +275,7 @@ A large stone construction hammer is here.~
 stone~
 weapon 0 AN
 mace 2 10 crush F
-15 15 1 5 P
+15 15 1 15 P
 A
 18 1
 A
@@ -287,7 +287,7 @@ A pair of leather gloves has been left here.~
 hide~
 armor 0 AH
 AC AC AC B 0
-15 20 1 5 P
+15 20 1 15 P
 #707
 bear claw~
 a bear claw~
@@ -307,14 +307,14 @@ A long wooden cane is discarded here.~
 wood~
 weapon 0 AN
 polearm 2 8 thwack F
-15 10 1 5 P
+15 10 1 15 P
 #709
 black iron shortsword short sword~
 a {Dblack iron{x short sword~
 A ragged looking orcish sword is here.~
 black iron~
 weapon 0 AN
-sword 2 6 slash D
+sword 2 8 slash D
 15 10 1 5 P
 A
 19 1
@@ -327,7 +327,7 @@ A pile of leather scraps lays here.~
 hide~
 armor 0 AR
 AC AC AC B 0
-15 20 1 5 P
+15 20 1 15 P
 #711
 orc hide armor~
 hide armor~
@@ -335,7 +335,7 @@ A suit of rough leather armor rests here, undisturbed.~
 hide~
 armor 0 AD
 AC AC AC B 0
-15 20 1 5 P
+15 20 1 15 P
 #712
 very airy robes~
 very airy robes~
@@ -361,7 +361,7 @@ An old pair of pants which reeks of goat lays here.~
 hide~
 armor 0 AF
 AC AC AC B 0
-15 20 1 5 P
+15 20 1 12 P
 A
 2 1
 A
@@ -373,7 +373,7 @@ A pair of old work boots has been left here. At least they're both together.~
 hide~
 armor 0 AG
 AC AC AC B 0
-10 20 1 5 P
+10 20 1 14 P
 #716
 silken cord~
 a silken cord~
@@ -2146,6 +2146,7 @@ M 0 714 20 763 1
 E 0 714 0 7
 M 0 700 40 764 1
 M 0 714 20 767 1
+E 0 715 0 8
 M 0 715 10 768 1
 E 0 709 0 16
 M 0 712 1 769 1

@@ -29,7 +29,7 @@ detect magic~
 detect poison~
 18 2
 invisibility~
-17 2
+68 2
 pass door~
 49 2
 ventriloquate~
@@ -53,11 +53,11 @@ sword~
 whip~
 1 5
 backstab~
-31 2
+39 2
 circle~
-38 4
+100 4
 dirt kicking~
-22 4
+19 4
 disarm~
 18 6
 dodge~
@@ -67,21 +67,21 @@ dual wield~
 envenom~
 15 4
 gouge~
-52 2
+59 2
 hand to hand~
 22 4
 kick~
-21 6
+9 6
 parry~
-19 4
+29 4
 trip~
 2 4
 second attack~
-18 5
+26 5
 third attack~
-36 9
+79 9
 fourth attack~
-90 10
+150 10
 haggle~
 1 3
 hide~
@@ -95,7 +95,7 @@ pick lock~
 sneak~
 6 4
 steal~
-7 4
+15 4
 scrolls~
 1 5
 staves~

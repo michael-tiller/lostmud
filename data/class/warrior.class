@@ -39,15 +39,15 @@ whip~
 bash~
 10 2
 berserk~
-27 2
+42 2
 dirt kicking~
 22 4
 disarm~
 18 3
 dodge~
-51 6
+99 6
 dual wield~
-20 2
+60 2
 enhanced damage~
 180 3
 grip~
@@ -57,7 +57,7 @@ hand to hand~
 kick~
 30 3
 parry~
-5 4
+51 4
 rescue~
 35 4
 trip~
@@ -65,7 +65,7 @@ trip~
 stun~
 45 3
 second attack~
-30 3
+48 3
 third attack~
 80 4
 fourth attack~

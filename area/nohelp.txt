@@ -26,3 +26,7 @@
 [  200] Chaos: newbie info
 [  200] Chaos: newbie info
 [  200] Chaos: newbie info
+[  200] Clyde: newbie info
+[  200] Dracnos: newbie info
+[  333] Chaos: load obj 304
+[   60] Chaos: gnills
