@@ -1,16 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "src"
-		},
-		{
-			"path": "data"
-		},
-		{
-			"path": "area"
-		},
-		{
-			"path": "player"
+			"path": "."
 		}
 	],
 	"settings": {}
