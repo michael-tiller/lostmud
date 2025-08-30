@@ -2655,23 +2655,41 @@ int xp_compute( CHAR_DATA *gch, CHAR_DATA *victim, int total_levels )
     switch (level_range)
     {
  	default : 	base_exp =   0;		break;
-	case -9 :	base_exp =   2;		break;
-	case -8 :	base_exp =   4;		break;
-	case -7 :	base_exp =  8;		break;
-	case -6 : base_exp = 16;		break;
-	case -5 :	base_exp = 32;		break;
-	case -4 :	base_exp = 48;		break;
-	case -3 :	base_exp = 64;		break;
-	case -2 :	base_exp = 80;		break;
-	case -1 :	base_exp = 96;		break;
-	case  0 :	base_exp = 128;		break;
-	case  1 :	base_exp = 196;		break;
-	case  2 :	base_exp = 256;		break;
-	case  3 :	base_exp = 320;		break;
-	case  4 :	base_exp = 384;		break;
+	case -9 :	base_exp =   4;		break;
+	case -8 :	base_exp =   8;		break;
+	case -7 :	base_exp =  16;		break;
+	case -6 : base_exp = 32;		break;
+	case -5 :	base_exp = 64;		break;
+	case -4 :	base_exp = 96;		break;
+	case -3 :	base_exp = 128;		break;
+	case -2 :	base_exp = 160;		break;
+	case -1 :	base_exp = 224;		break;
+	case  0 :	base_exp = 256;		break;
+	case  1 :	base_exp = 288;		break;
+	case  2 :	base_exp = 352;		break;
+	case  3 :	base_exp = 384;		break;
+	case  4 :	base_exp = 416;		break;
 	case  5 :	base_exp = 448;		break;
 	case  6 :	base_exp = 512;		break;
 	case  7 :	base_exp = 640;		break;
+	case  8 :	base_exp = 768;		break;
+	case  9 :	base_exp = 896;		break;
+	case  10 :	base_exp = 1024;		break;
+	case  11 :	base_exp = 1152;		break;
+	case  12 :	base_exp = 1280;		break;
+	case  13 :	base_exp = 1408;		break;
+	case  14 :	base_exp = 1536;		break;
+	case  15 :	base_exp = 1664;		break;
+	case  16 :	base_exp = 1792;		break;
+	case  17 :	base_exp = 1920;		break;
+	case  18 :	base_exp = 2048;		break;
+	case  19 :	base_exp = 2176;		break;
+	case  20 :	base_exp = 2304;		break;
+	case  21 :	base_exp = 2432;		break;
+	case  22 :	base_exp = 2560;		break;
+	case  23 :	base_exp = 2688;		break;
+	case  24 :	base_exp = 2816;		break;
+	case  25 :	base_exp = 2944;		break;
     } 
     
     if (level_range > 7)

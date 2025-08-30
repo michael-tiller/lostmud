@@ -675,7 +675,7 @@ bool spec_cast_adept( CHAR_DATA *ch )
     {
 	v_next = victim->next_in_room;
 	if ( victim != ch && can_see( ch, victim ) && number_bits( 1 ) == 0 
-	     && !IS_NPC(victim) && victim->level < 31)
+	     && !IS_NPC(victim) && victim->level < 61)
 	    break;
     }
 
@@ -756,7 +756,7 @@ bool spec_cast_clan_adept( CHAR_DATA *ch )
     {
 	v_next = victim->next_in_room;
 	if ( victim != ch && can_see( ch, victim ) && number_bits( 1 ) == 0 
-	     && !IS_NPC(victim) && (victim->level < 51)
+	     && !IS_NPC(victim) && (victim->level < 121)
 	    && (victim->clan == ch->in_room->clan))
 	    break;
     }

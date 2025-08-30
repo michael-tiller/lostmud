@@ -1925,9 +1925,9 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			}
 			break;
 		}
-        else
+        else if (argument[0] != '\0')
         {
-            send_to_desc("Do you want ANSI? (Y/n) ",d);
+            /* Invalid input - just ignore and wait for valid response */
             return;
         }
 	break;
