@@ -49,9 +49,9 @@ A 0 0 -600 0
 FI 0 Q 0
 stand stand either 0
 AGV ACDEFHJKLQW medium unknown
-M RANDOM 702 1~
-M RANDOM 703 10~
 M GREET 703 20~
+M RANDOM 703 10~
+M RANDOM 702 1~
 #703
 domestic mountain goat~
 A mountain goat~
@@ -249,9 +249,9 @@ armor 0 AJ
 BC BC BC AB 0
 20 25 1 5 P
 A
-13 100
-A
 14 50
+A
+13 100
 #703
 orc hide sleeves~
 some hide sleeves~
@@ -277,9 +277,9 @@ weapon 0 AN
 mace 2 10 crush F
 15 15 1 15 P
 A
-18 1
-A
 19 1
+A
+18 1
 #706
 orc labor gloves~
 some labor gloves~
@@ -297,9 +297,9 @@ weapon M AN
 exotic 1 14 claw D
 10 9 1 5 P
 A
-19 1
-A
 18 1
+A
+19 1
 #708
 orc shepherd cane~
 shepherd cane~
@@ -317,9 +317,9 @@ weapon 0 AN
 sword 2 8 slash D
 15 10 1 5 P
 A
-19 1
-A
 18 1
+A
+19 1
 #710
 orc hide mask~
 a hide mask~
@@ -363,9 +363,9 @@ armor 0 AF
 AC AC AC B 0
 15 20 1 12 P
 A
-2 1
-A
 18 2
+A
+2 1
 #715
 orc work boots~
 some old work boots~
@@ -397,13 +397,13 @@ claw ring~
 a claw ring~
 A small ring fashioned from a claw has been left here.~
 unknown~
-jewelry G AB
+jewelry GY AB
 0 0 0 0 0
 20 30 0 0 P
 A
-19 1
-A
 2 1
+A
+19 1
 #719
 beaten iron pants~
 beaten iron pants~
@@ -433,9 +433,9 @@ jewelry BM AL
 0 0 0 0 0
 10 15 1 1000 P
 A
-5 1
-A
 6 2
+A
+5 1
 #722
 serpentine cord~
 a serpentine cord~

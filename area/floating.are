@@ -18,8 +18,8 @@ A huge and brightly plumed birdman glances at you.
 ~
 avian~
 AB DFJLT 0 800 0
-80 70 13 210d24+1695 70d11+28 18d2+59 wrath
--41 -41 -41 -26
+85 70 6 175d23+575 70d10+14 10d2+27 wrath
+-37 -37 -37 -22
 FHI 0 J LQ
 stand stand male 2300
 AHMV ABCDEFGHIJKP large unknown
@@ -31,8 +31,8 @@ A large and bulky birdman dressed in black armor stands here, glaring at you.
 ~
 avian~
 AB DFJLT 0 400 0
-65 55 3 137d18+451 55d10+11 8d2+17 claw
--27 -27 -27 -16
+80 50 2 125d16+411 50d10+10 7d2+15 claw
+-24 -24 -24 -14
 HIR 0 J LQ
 stand stand either 1200
 AHMW ABCDEFGHIJKP large unknown
@@ -45,7 +45,7 @@ There is a birdman dressed in colorful flowing robes here.
 ~
 avian~
 AG DFJLT 0 400 0
-60 40 1 100d13+165 40d10+8 6d2+11 claw
+68 40 1 100d13+165 40d10+8 6d2+11 claw
 -17 -17 -17 -9
 R 0 J LQ
 stand stand either 630
@@ -59,8 +59,8 @@ There is a thin birdman here, clad in leather rags.
 ~
 avian~
 AGH DFHJLOT 0 600 0
-55 35 0 87d11+144 35d10+7 5d2+8 peck
--13 -13 -13 -6
+60 35 0 75d11+74 35d9+3 3d2+3 peck
+-12 -12 -12 -5
 HR SUW JSUW LQ
 stand stand either 250
 AHMW ABCDEFGHIJKP medium unknown
@@ -75,8 +75,8 @@ under-cooked turkey.  It's at the same time disgusting and very intriguing.
 ~
 avian~
 AFSY DFJLT 0 -200 0
-60 40 1 100d13+165 40d10+8 6d2+11 slap
--17 -17 -17 -9
+80 35 0 87d11+144 35d10+7 5d2+8 slap
+-13 -13 -13 -6
 FHR AB J LQ
 stand stand male 1000
 ABHMW ABCDEFGHIJKP medium unknown
@@ -89,8 +89,8 @@ A huge birdman is here, clad in decorative robes.
 ~
 avian~
 ABCFR DFJLT DE -600 0
-65 55 3 137d18+451 55d10+11 8d2+17 none
--27 -27 -27 -16
+80 50 2 125d16+411 50d10+10 7d2+15 none
+-24 -24 -24 -14
 R 0 J LQ
 stand stand either 1250
 AHMV ABCDEFGHIJKP medium unknown
@@ -102,7 +102,7 @@ There is a large and armored birdman here, patrolling the streets.
 ~
 avian~
 AW HLO 0 200 0
-58 50 2 125d16+411 50d10+10 7d2+15 peck
+68 50 2 125d16+411 50d10+10 7d2+15 peck
 -24 -24 -24 -14
 ACR SUW JSUW LQ
 stand stand either 0
@@ -117,8 +117,8 @@ A huge heavily armored birdman is here glaring at you.
 ~
 avian~
 A DFJLT 0 0 0
-70 60 8 180d21+1453 60d11+24 16d2+46 none
--33 -33 -33 -21
+80 60 4 150d20+493 60d10+12 9d2+21 none
+-30 -30 -30 -18
 CKR 0 J LQ
 stand stand either 0
 AHMV ABCDEFGHIJKP huge unknown
@@ -130,10 +130,36 @@ A colorful female bird in a frilly pink dress waddles about uncomfortably.
 ~
 avian~
 AY DFJLT 0 0 0
-75 65 10 195d22+1573 65d11+26 17d2+51 slap
--37 -37 -37 -24
+75 65 1 139d21+271 65d9+6 6d2+11 slap
+-31 -31 -31 -18
 0 0 J LQ
+stand stand female 0
+AHMV ABCDEFGHIJKP medium unknown
+#1009
+clay golem living statue~
+a clay golem~
+You see a living statue made from clay.
+~
+~
+titan~
+A Da 0 0 0
+80 35 1 105d12+424 35d11+14 9d2+21 none
+-15 -15 -15 -8
+CH B D 0
 stand stand none 0
+AHMV ABCDEFGHIJK medium unknown
+#1099
+avi priest~
+The Avi Healer~
+A beautiful glowing Avi stands here wearing in flowing robes.
+~
+~
+avian~
+Aa DFJLT H 0 0
+300 300 1080 900d101+25411 300d11+120 76d15+910 none
+-205 -205 -205 -144
+0 0 J LQ
+stand stand either 0
 AHMV ABCDEFGHIJKP medium unknown
 #0
 
@@ -153,45 +179,45 @@ avi crown~
 the Avi Crown~
 A huge feathered headdress decorated with gems is here.~
 gold~
-jewelry GM AE
+jewelry GMY AE
 0 0 0 0 0
 80 80 8 2100 P
 A
-20 -3
-A
 5 2
+A
+20 -3
 #1002
 winged blade sword~
 {xa {Wwinged{w blade{x~
 There's a sword here, but it literally has wings. Still looks mean.~
 steel~
 weapon 0 AN
-sword 5 10 slice E
-30 40 1 120 P
+sword 9 13 slice E
+60 80 8 83 P
 A
-19 2
+19 7
 A
-18 2
+18 7
 #1003
-servants loincloth~
+servants loincloth rag~
 a servant's loincloth~
 There is a smelly old rag laying here.~
 burlap~
 armor 0 AF
-BD BD BD AC 0
-40 45 2 20 P
-A
-2 2
+AE AE AE D 0
+60 80 8 0 P
 A
 4 -1
+A
+2 2
 #1004
 purple robes~
 {mpurple {xrobes~
 A large pile of purple cloth is here.~
 linen~
 armor 0 AK
-AD AD AD C 0
-40 40 2 200 P
+AE AE AE D 0
+60 80 8 20 P
 A
 5 1
 #1005
@@ -202,62 +228,62 @@ nether~
 jewelry Y AC
 0 0 0 0 0
 55 60 0 500 P
-A
-3 1
 F
 A 0 0 L
+A
+3 1
 #1006
 flowing red robes~
 {rflowing {Rred{x {rrobes{x~
 A huge pile of red cloth lays slumped on the floor.~
 unknown~
 armor G AK
-ACD ACD ACD BC 0
-60 60 4 500 P
+AE AE AE D 0
+60 80 8 20 P
 A
-5 -1
+3 2
 A
 4 1
 A
-3 2
+5 -1
 #1007
 steel ankle bracelet~
 a set of steel ankle bracelets~
 A bulky but protective looking set of ankle guards have been left behind.~
 steel~
 armor Y AG
-ACD ACD ACD BC 0
-50 60 4 200 P
+AE AE AE D 0
+60 80 8 20 P
 A
-5 1
+14 100
 A
 13 50
 A
-14 100
+5 1
 #1008
 storm pillar spear~
 {bS{Btor{bm {CP{cilla{Cr{x~
 A jagged blue spear lays here, discarded.~
-steel~
+skysteel~
 weapon G AN
-staff 9 15 stab DFG
+staff 11 15 stab DFG
 70 80 8 300 P
 A
-19 7
-A
 18 7
+A
+19 7
 #1009
 kitchen knife~
 a kitchen knife~
 A sharp looking kitchen knife has been left here.~
 steel~
 weapon Y AN
-dagger 6 12 stab DH
-65 65 5 200 P
+dagger 8 12 stab DH
+60 80 8 83 P
 A
-18 5
+18 7
 A
-19 5
+19 7
 #1010
 jewel encrusted ring~
 {cA {CJewel {WEncrusted {cRing{x~
@@ -265,11 +291,11 @@ A small hoop of silver just covered in gemstones lays here, abandoned.~
 unknown~
 jewelry Y AB
 0 0 0 0 0
-60 60 2 1200 P
-A
-20 2
+60 80 2 1200 P
 A
 5 2
+A
+20 2
 #1011
 jade owl~
 {cA {gjade{c owl{x~
@@ -286,6 +312,34 @@ pink goo~
 potion ABG AO
 74 'heal' 'heal' 'refresh' 'shockshield'
 70 70 1 650 P
+#1013
+lodestone lode stone pendant~
+a lodestone pendant~
+A stone pendant has been discarded here.~
+lodestone~
+jewelry BY AC
+0 0 0 0 0
+60 80 3 1000 P
+A
+5 2
+A
+20 -7
+#1097
+portal~
+a {Yglowing {xportal~
+A strange glowing portal floats here.~
+unknown~
+portal 0 0
+0 0 0 CEFGHI 0
+0 0 0 0 P
+#1098
+regeneration pool~
+a regeneration pool~
+A strange viscous pool rests in the center of the room.~
+arkstone~
+furniture A 0
+D 0 CFI BCEH DEFG
+0 0 0 0 P
 #1099
 enchanted well~
 an {cenchanted{x well~
@@ -321,13 +375,13 @@ D3
 0 0 1023
 S
 #1025
-Atop a Floating Island~
+Avi Temple~
 ~
-0 0 2
-D1
+0 0 0
+D2
 ~
 ~
-0 0 1026
+0 0 1056
 S
 #1026
 Atop a Floating Island~
@@ -337,10 +391,6 @@ D1
 ~
 ~
 0 0 1027
-D3
-~
-~
-0 0 1025
 S
 #1027
 Atop a Floating Island~
@@ -835,6 +885,10 @@ S
 North Wall~
 ~
 0 0 1
+D0
+~
+~
+0 0 1025
 D1
 ~
 ~
@@ -1777,6 +1831,8 @@ D 0 1079 2 2
 D 0 1085 2 1
 D 0 1089 0 1
 D 0 1096 2 1
+O 0 1098 0 1025
+M 0 1099 1 1025 1
 M 0 1001 30 1028 4
 M 0 1001 30 1028 4
 M 0 1003 40 1029 2
@@ -1854,8 +1910,9 @@ M 0 1001 30 1084 2
 E 0 1002 0 16
 M 0 1001 30 1085 2
 E 0 1002 0 16
-M 0 1004 3 1086 1
-E 0 1003 0 7
+M 0 1009 1 1086 1
+E 0 1013 0 3
+O 0 1097 0 1087
 M 0 1005 1 1087 1
 E 0 1006 0 12
 E 0 1005 0 3
