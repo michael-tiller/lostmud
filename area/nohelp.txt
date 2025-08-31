@@ -34,3 +34,5 @@
 [ 1081] Chaos: ITEM_FOUNTAIN
 [ 1025] Chaos: ITEM_FURNITURE
 [ 1087] Chaos: ITEM_PORTAL
+[  200] Topaz: newbie info
+[  200] Topaz: newbie info
