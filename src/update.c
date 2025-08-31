@@ -125,6 +125,18 @@ void advance_level( CHAR_DATA *ch )
 	add_prac,	ch->practice
 	);
     send_to_char( buf, ch );
+
+	
+	affect_strip(ch,gsn_plague);
+	affect_strip(ch,gsn_poison);
+	affect_strip(ch,gsn_blindness);
+	affect_strip(ch,gsn_sleep);
+	affect_strip(ch,gsn_curse);
+					
+	ch->hit 	= ch->max_hit;
+	ch->mana	= ch->max_mana;
+	ch->move	= ch->max_move;
+	
     for (loc = 0; loc < MAX_WEAR; loc++)
     {
 	obj = get_eq_char(ch,loc);
@@ -227,15 +239,6 @@ void gain_exp( CHAR_DATA *ch, int gain )
 	sprintf(buf,"$N has attained level %d!",ch->level);
 	wiznet(buf,ch,NULL,WIZ_LEVELS,0,0);
 	advance_level( ch );
-	affect_strip(ch,gsn_plague);
-	affect_strip(ch,gsn_poison);
-	affect_strip(ch,gsn_blindness);
-	affect_strip(ch,gsn_sleep);
-	affect_strip(ch,gsn_curse);
-					
-	ch->hit 	= ch->max_hit;
-	ch->mana	= ch->max_mana;
-	ch->move	= ch->max_move;
 	update_pos( ch);
 	save_char_obj(ch);
     }
