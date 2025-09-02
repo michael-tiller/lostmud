@@ -332,7 +332,8 @@ bool show_help( CHAR_DATA *ch, char *argument )
     return FALSE;
 }
 
-REDIT( redit_rlist )
+/* Generic room list function that works in all OLC modes */
+bool olc_rlist( CHAR_DATA *ch, char *argument )
 {
     ROOM_INDEX_DATA	*pRoomIndex;
     AREA_DATA		*pArea;
@@ -345,9 +346,48 @@ REDIT( redit_rlist )
 
     one_argument( argument, arg );
 
-    pArea = ch->in_room->area;
+    /* Get area based on current edit mode */
+    switch ( ch->desc->editor )
+    {
+	case ED_ROOM:
+	    pArea = ch->in_room->area;
+	    break;
+	case ED_AREA:
+	    EDIT_AREA(ch, pArea);
+	    break;
+	case ED_OBJECT:
+	    {
+		OBJ_INDEX_DATA *pObj;
+		EDIT_OBJ(ch, pObj);
+		pArea = pObj->area;
+	    }
+	    break;
+	case ED_MOBILE:
+	    {
+		MOB_INDEX_DATA *pMob;
+		EDIT_MOB(ch, pMob);
+		pArea = pMob->area;
+	    }
+	    break;
+	case ED_MPCODE:
+	    {
+		MPROG_CODE *pMcode;
+		EDIT_MPCODE(ch, pMcode);
+		pArea = get_vnum_area( pMcode->vnum );
+	    }
+	    break;
+	default:
+	    send_to_char( "Room list not available in this editor mode.\n\r", ch );
+	    return FALSE;
+    }
+
+    if ( !pArea )
+    {
+	send_to_char( "No area found.\n\r", ch );
+	return FALSE;
+    }
+
     buf1=new_buf();
-/*    buf1[0] = '\0'; */
     found   = FALSE;
 
     for ( vnum = pArea->min_vnum; vnum <= pArea->max_vnum; vnum++ )
@@ -366,6 +406,7 @@ REDIT( redit_rlist )
     if ( !found )
     {
 	send_to_char( "Room(s) not found in this area.\n\r", ch);
+	free_buf(buf1);
 	return FALSE;
     }
 
@@ -377,7 +418,13 @@ REDIT( redit_rlist )
     return FALSE;
 }
 
-REDIT( redit_mlist )
+REDIT( redit_rlist )
+{
+    return olc_rlist( ch, argument );
+}
+
+/* Generic mobile list function that works in all OLC modes */
+bool olc_mlist( CHAR_DATA *ch, char *argument )
 {
     MOB_INDEX_DATA	*pMobIndex;
     AREA_DATA		*pArea;
@@ -395,9 +442,48 @@ REDIT( redit_mlist )
 	return FALSE;
     }
 
+    /* Get area based on current edit mode */
+    switch ( ch->desc->editor )
+    {
+	case ED_ROOM:
+	    pArea = ch->in_room->area;
+	    break;
+	case ED_AREA:
+	    EDIT_AREA(ch, pArea);
+	    break;
+	case ED_OBJECT:
+	    {
+		OBJ_INDEX_DATA *pObj;
+		EDIT_OBJ(ch, pObj);
+		pArea = pObj->area;
+	    }
+	    break;
+	case ED_MOBILE:
+	    {
+		MOB_INDEX_DATA *pMob;
+		EDIT_MOB(ch, pMob);
+		pArea = pMob->area;
+	    }
+	    break;
+	case ED_MPCODE:
+	    {
+		MPROG_CODE *pMcode;
+		EDIT_MPCODE(ch, pMcode);
+		pArea = get_vnum_area( pMcode->vnum );
+	    }
+	    break;
+	default:
+	    send_to_char( "Mobile list not available in this editor mode.\n\r", ch );
+	    return FALSE;
+    }
+
+    if ( !pArea )
+    {
+	send_to_char( "No area found.\n\r", ch );
+	return FALSE;
+    }
+
     buf1=new_buf();
-    pArea = ch->in_room->area;
-/*    buf1[0] = '\0'; */
     fAll    = !str_cmp( arg, "all" );
     found   = FALSE;
 
@@ -420,6 +506,7 @@ REDIT( redit_mlist )
     if ( !found )
     {
 	send_to_char( "Mobile(s) not found in this area.\n\r", ch);
+	free_buf(buf1);
 	return FALSE;
     }
 
@@ -431,9 +518,15 @@ REDIT( redit_mlist )
     return FALSE;
 }
 
+REDIT( redit_mlist )
+{
+    return olc_mlist( ch, argument );
+}
 
 
-REDIT( redit_olist )
+
+/* Generic object list function that works in all OLC modes */
+bool olc_olist( CHAR_DATA *ch, char *argument )
 {
     OBJ_INDEX_DATA	*pObjIndex;
     AREA_DATA		*pArea;
@@ -451,9 +544,48 @@ REDIT( redit_olist )
 	return FALSE;
     }
 
-    pArea = ch->in_room->area;
+    /* Get area based on current edit mode */
+    switch ( ch->desc->editor )
+    {
+	case ED_ROOM:
+	    pArea = ch->in_room->area;
+	    break;
+	case ED_AREA:
+	    EDIT_AREA(ch, pArea);
+	    break;
+	case ED_OBJECT:
+	    {
+		OBJ_INDEX_DATA *pObj;
+		EDIT_OBJ(ch, pObj);
+		pArea = pObj->area;
+	    }
+	    break;
+	case ED_MOBILE:
+	    {
+		MOB_INDEX_DATA *pMob;
+		EDIT_MOB(ch, pMob);
+		pArea = pMob->area;
+	    }
+	    break;
+	case ED_MPCODE:
+	    {
+		MPROG_CODE *pMcode;
+		EDIT_MPCODE(ch, pMcode);
+		pArea = get_vnum_area( pMcode->vnum );
+	    }
+	    break;
+	default:
+	    send_to_char( "Object list not available in this editor mode.\n\r", ch );
+	    return FALSE;
+    }
+
+    if ( !pArea )
+    {
+	send_to_char( "No area found.\n\r", ch );
+	return FALSE;
+    }
+
     buf1=new_buf();
-/*    buf1[0] = '\0'; */
     fAll    = !str_cmp( arg, "all" );
     found   = FALSE;
 
@@ -477,6 +609,7 @@ REDIT( redit_olist )
     if ( !found )
     {
 	send_to_char( "Object(s) not found in this area.\n\r", ch);
+	free_buf(buf1);
 	return FALSE;
     }
 
@@ -486,6 +619,11 @@ REDIT( redit_olist )
     page_to_char( buf_string(buf1), ch );
     free_buf(buf1);
     return FALSE;
+}
+
+REDIT( redit_olist )
+{
+    return olc_olist( ch, argument );
 }
 
 

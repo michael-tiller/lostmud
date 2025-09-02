@@ -150,6 +150,13 @@ bool show_help			args ( ( CHAR_DATA *ch, char *argument ) );
 bool edit_done			args ( ( CHAR_DATA *ch ) );
 bool show_version		args ( ( CHAR_DATA *ch, char *argument ) );
 
+/*
+ * Generic List Functions (work in all OLC modes)
+ */
+bool olc_rlist			args ( ( CHAR_DATA *ch, char *argument ) );
+bool olc_mlist			args ( ( CHAR_DATA *ch, char *argument ) );
+bool olc_olist			args ( ( CHAR_DATA *ch, char *argument ) );
+
 
 
 /*
