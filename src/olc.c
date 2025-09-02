@@ -234,6 +234,11 @@ const struct olc_cmd_type aedit_table[] =
 	
     {   "repop",		aedit_repop_msg	},
 
+    /* List commands */
+    {	"mlist",	olc_mlist	},
+    {	"rlist",	olc_rlist	},
+    {	"olist",	olc_olist	},
+
     {   "?",		show_help	},
     {   "version",	show_version	},
 
@@ -314,6 +319,11 @@ const struct olc_cmd_type oedit_table[] =
     {   "elevel",	oedit_elevel	},
     {   "condition",    oedit_condition },  /* ROM */
 
+    /* List commands */
+    {	"mlist",	olc_mlist	},
+    {	"rlist",	olc_rlist	},
+    {	"olist",	olc_olist	},
+
     {   "?",		show_help	},
     {   "version",	show_version	},
 	
@@ -370,6 +380,11 @@ const struct olc_cmd_type medit_table[] =
     {   "autoset", medit_autoset },
 	{   "autoeasy", medit_autoeasy },
 	{   "autohard", medit_autohard },
+
+    /* List commands */
+    {	"mlist",	olc_mlist	},
+    {	"rlist",	olc_rlist	},
+    {	"olist",	olc_olist	},
 
     {   "?",		show_help	},
     {   "version",	show_version	},

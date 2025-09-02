@@ -28,6 +28,12 @@ const struct olc_cmd_type mpedit_table[] =
 	{	"code",		mpedit_code	},
 	{	"show",		mpedit_show	},
 	{	"list",		mpedit_list	},
+
+	/* List commands */
+	{	"mlist",	olc_mlist	},
+	{	"rlist",	olc_rlist	},
+	{	"olist",	olc_olist	},
+
 	{	"?",		show_help	},
 
 	{	NULL,		0		}
