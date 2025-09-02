@@ -2,7 +2,7 @@
 Name Mountain Pass~
 Builders Chaos~
 VNUMs 700 799
-Credits { 15  30} Chaos   - Mountain Pass~
+Credits { 15  40} Chaos   - Mountain Pass~
 Security 9
 RepopMsg The sound of shouting rings throughout the mountains.~
 End
@@ -18,7 +18,7 @@ A small brown rodent is here.
 ~
 rodent~
 ACGU Z 0 500 0
-13 10 0 21d3+91 10d9+1 1d2+1 bite
+20 10 0 21d3+21 10d9+1 1d2+1 bite
 3 3 3 5
 FHU 0 0 0
 stand stand either 0
@@ -31,7 +31,7 @@ A huge black bear is here, scratching itself.
 ~
 bear~
 AGU 0 0 0 0
-21 15 0 37d5+152 15d10+3 2d6+4 claw
+25 15 0 37d5+62 15d10+3 2d2+4 claw
 0 0 0 2
 DEO 0 EI 0
 stand stand either 0
@@ -44,8 +44,8 @@ A mountain goat gazes down upon you.
 ~
 bovine~
 A 0 0 -600 0
-23 12 0 30d4+122 12d10+2 2d2+3 charge
-1 1 1 3
+30 15 0 37d5+62 15d10+3 2d2+4 charge
+0 0 0 2
 FI 0 Q 0
 stand stand either 0
 AGV ACDEFHJKLQW medium unknown
@@ -60,7 +60,7 @@ A mountain goat frolics around in the pen.
 ~
 bovine~
 ABU 0 0 -300 0
-18 12 0 30d4+122 12d10+2 2d2+3 charge
+30 12 0 30d4+50 12d10+2 1d2+3 charge
 1 1 1 3
 FHIU AB Q 0
 stand stand none 0
@@ -74,8 +74,8 @@ A small red bird chirps loudly.
 ~
 song bird~
 ACU T 0 0 0
-22 12 0 1d1+129 12d10+2 1d2+3 peck
-1 1 1 3
+20 10 0 21d3+21 10d9+1 1d2+1 peck
+3 3 3 5
 FH 0 0 0
 stand stand either 0
 AGW ACDEFHKP small unknown
@@ -87,7 +87,7 @@ A black worm roughly the size of a banana is making an awful racket.
 ~
 unique~
 ACFUY DFO H 0 0
-36 19 6 40d6+173 19d9+1 1d2+1 bite
+36 19 0 40d6+40 19d9+1 1d2+1 bite
 -2 -2 -2 1
 AH ABQSUW GLSUW E
 stand stand none 0
@@ -100,8 +100,8 @@ There is a grotesque giant black tunnel worm here.
 ~
 unique~
 ABFU DF H 0 0
-30 18 2 54d7+182 18d11+7 2d6+8 digestion
--4 -4 -4 0
+40 20 0 43d6+42 20d9+2 2d2+2 digestion
+-2 -2 -2 1
 AHO ABQ GL E
 stand stand female 0
 ABR DMQV giant unknown
@@ -113,8 +113,8 @@ A gigantic wolf is here.
 ~
 dog~
 AFG DFHO 0 -200 0
-30 20 2 60d7+243 20d11+8 6d2+14 bite
--5 -5 -5 -1
+40 20 0 43d6+42 20d9+2 2d2+2 bite
+-2 -2 -2 1
 H IJSUW FGIJSUW 0
 stand stand either 0
 AGV ACDEFHJKUV huge unknown
@@ -126,7 +126,7 @@ A giant yellow cat is here.
 ~
 cat~
 AFG Z 0 0 0
-30 20 0 43d6+42 20d9+2 2d2+2 scratch
+40 20 0 43d6+42 20d9+2 2d2+2 scratch
 -2 -2 -2 1
 FH 0 EFG 0
 stand stand either 0
@@ -139,7 +139,7 @@ An old orc is here, resting on a cane.
 ~
 orc~
 AB J 0 -300 0
-30 20 0 50d6+203 20d10+4 3d2+5 pound
+35 20 0 50d6+203 20d10+4 3d2+5 pound
 -3 -3 -3 0
 IQR 0 Q S
 stand stand male 0
@@ -152,7 +152,7 @@ A huge orc glares at you from behind a hide mask.
 ~
 orc~
 ABF J 0 -500 0
-30 20 0 50d6+83 20d10+4 3d2+5 punch
+35 20 0 50d6+83 20d10+4 3d2+5 punch
 -3 -3 -3 0
 INR 0 Q S
 stand stand either 0
@@ -165,7 +165,7 @@ A gigantic and fat orc sits on a chair fashioned from bones.
 ~
 orc~
 ABH DFJ H -1000 0
-40 25 0 62d8+253 25d10+5 3d2+6 slap
+40 25 0 62d8+103 25d10+5 3d2+6 slap
 -7 -7 -7 -1
 CIO AB Q S
 stand stand male 0
@@ -192,8 +192,8 @@ An orc laborer toils away.
 ~
 orc~
 ACH J 0 -600 0
-25 12 0 25d4+110 12d9+1 1d2+1 punch
-1 1 1 4
+35 15 0 37d5+62 15d10+3 2d2+4 punch
+0 0 0 2
 IR 0 Q S
 stand stand either 0
 AHMV ABCDEFGHIJK medium unknown
@@ -206,8 +206,8 @@ A huge orc in battered plate is standing here, glaring at you.
 ~
 orc~
 ABCF DFJa 0 -800 0
-30 20 0 50d6+83 20d10+4 3d2+5 punch
--3 -3 -3 0
+40 25 0 62d8+103 25d10+5 3d2+6 punch
+-7 -7 -7 -1
 FKRU 0 Q S
 stand stand male 0
 AHMV ABCDEFGHIJK large unknown
@@ -221,7 +221,7 @@ she is also very naked.  She blushes as you inspect her predicament.
 ~
 human~
 AB 0 H 100 0
-30 10 0 21d3+21 10d9+1 1d2+1 scratch
+40 10 0 21d3+21 10d9+1 1d2+1 scratch
 3 3 3 5
 FH AB EFG 0
 stand stand none 0
@@ -246,8 +246,8 @@ worm carapace shield~
 A large grotesque looking shield fashioned from wormhide is here.~
 wormhide~
 armor 0 AJ
-BC BC BC AB 0
-20 25 1 5 P
+ABC ABC ABC AB 0
+20 30 1 5 P
 A
 14 50
 A
@@ -258,84 +258,96 @@ some hide sleeves~
 A pair of hide sleeves have been left here.~
 hide~
 armor 0 AI
-AC AC AC B 0
-15 20 21 15 P
+ABC ABC ABC AB 0
+20 30 1 5 P
 #704
 orc lumberjack axe~
 a {Dblack iron {raxe{x~
 A large axe meant for cutting logs has been left here.~
 black iron~
 weapon 0 AN
-axe 3 6 cleave DF
-15 10 1 15 P
+axe 4 10 cleave DF
+20 30 1 12 P
+A
+19 3
+A
+18 3
 #705
 orc work hammer~
 a work hammer~
 A large stone construction hammer is here.~
 stone~
 weapon 0 AN
-mace 2 10 crush F
-15 15 1 15 P
+mace 4 10 crush F
+20 30 1 12 P
 A
-19 1
+19 2
 A
-18 1
+18 2
 #706
 orc labor gloves~
 some labor gloves~
 A pair of leather gloves has been left here.~
 hide~
 armor 0 AH
-AC AC AC B 0
-15 20 1 15 P
+ABC ABC ABC AB 0
+20 30 1 5 P
 #707
 bear claw~
 a bear claw~
 A severed bear's paw is laying here.~
 bear~
 weapon M AN
-exotic 1 14 claw D
-10 9 1 5 P
+exotic 4 10 claw D
+20 30 1 12 P
 A
-18 1
+19 2
 A
-19 1
+18 2
 #708
 orc shepherd cane~
 shepherd cane~
 A long wooden cane is discarded here.~
 wood~
 weapon 0 AN
-polearm 2 8 thwack F
-15 10 1 15 P
+polearm 5 12 thwack F
+20 30 1 12 P
+A
+19 2
+A
+18 2
 #709
 black iron shortsword short sword~
 a {Dblack iron{x short sword~
 A ragged looking orcish sword is here.~
 black iron~
 weapon 0 AN
-sword 2 8 slash D
-15 10 1 5 P
+sword 4 10 slash D
+20 30 1 12 P
 A
-18 1
+19 2
 A
-19 1
+18 2
 #710
 orc hide mask~
 a hide mask~
 A pile of leather scraps lays here.~
 hide~
 armor 0 AR
-AC AC AC B 0
-15 20 1 15 P
+ABC ABC ABC AB 0
+20 30 1 5 P
+A
+2 1
 #711
 orc hide armor~
 hide armor~
 A suit of rough leather armor rests here, undisturbed.~
 hide~
 armor 0 AD
-AC AC AC B 0
-15 20 1 15 P
+ABC ABC ABC AB 0
+20 30 1 5 P
+A
+5 1
 #712
 very airy robes~
 very airy robes~
@@ -343,7 +355,7 @@ A pile of silk cloth lays here.~
 silk~
 armor 0 AK
 BC BC BC AB 0
-15 25 1 5 P
+20 25 1 5 P
 A
 3 1
 #713
@@ -351,17 +363,19 @@ crown of bones~
 a crown of bones~
 There is a crown fashioned from human jawbones here.~
 bone~
-armor 0 AE
+armor AY AE
 BC BC BC AB 0
-15 25 1 5 P
+20 25 1 5 P
+F
+S 0 0 H
 #714
 orc shepherd pants~
 a pair of shepherd's pants~
 An old pair of pants which reeks of goat lays here.~
 hide~
 armor 0 AF
-AC AC AC B 0
-15 20 1 12 P
+ABC ABC ABC AB 0
+20 30 1 5 P
 A
 18 2
 A
@@ -372,8 +386,10 @@ some old work boots~
 A pair of old work boots has been left here. At least they're both together.~
 hide~
 armor 0 AG
-AC AC AC B 0
-10 20 1 14 P
+ABC ABC ABC AB 0
+20 30 1 5 P
+A
+1 1
 #716
 silken cord~
 a silken cord~
@@ -381,7 +397,7 @@ A fine silken cord is resting here.~
 silk~
 armor G AL
 BC BC BC AB 0
-15 25 1 5 P
+20 25 1 5 P
 A
 20 -1
 #717
@@ -392,6 +408,8 @@ fur~
 armor 0 AK
 AB AB AB ABC 0
 20 30 1 5 P
+A
+5 1
 #718
 claw ring~
 a claw ring~
@@ -443,7 +461,7 @@ A hoop made of onyx rests here.~
 onyx~
 jewelry G AI
 0 0 0 0 0
-0 0 1 1000 P
+20 30 1 1000 P
 A
 3 1
 #752
@@ -2165,6 +2183,8 @@ E 0 705 0 16
 M 0 711 10 772 1
 E 0 711 0 5
 E 0 710 0 20
+E 0 709 0 16
+M 0 715 4 773 1
 E 0 709 0 16
 M 0 705 20 776 2
 M 0 705 20 778 2

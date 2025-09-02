@@ -2,7 +2,7 @@
 Name The Undercroft~
 Builders Chaos~
 VNUMs 1800 1999
-Credits { 70 100} Chaos   - The Undercroft~
+Credits { 60  90} Chaos   - The Undercroft~
 Security 9
 RepopMsg You hear a {yrumble{x in the distance.~
 End
@@ -31,8 +31,8 @@ There is a fairly large hairy bat fluttering about.
 ~
 bat~
 AGH TZ 0 200 0
-75 65 1 139d21+271 65d9+6 6d2+11 bite
--31 -31 -31 -18
+60 50 2 125d16+411 50d10+10 7d2+15 bite
+-24 -24 -24 -14
 FHR 0 0 S
 stand stand either 0
 AGV ACDEFHJKP huge unknown
@@ -44,8 +44,8 @@ There is a large black bat resting in a quiet niche of the cave.
 ~
 bat~
 ABFG PQTZ 0 -800 0
-80 70 6 175d23+575 70d10+14 10d2+27 drain
--37 -37 -37 -22
+70 60 4 150d20+493 60d10+12 9d2+21 drain
+-30 -30 -30 -18
 FHR 0 0 S
 stand stand either 0
 AGV ACDEFHJKP medium unknown
@@ -57,8 +57,8 @@ A strange looking doll floats here, looking at you menacingly.
 ~
 doll~
 ABFR DFT D 0 0
-90 70 13 210d24+1695 70d11+28 18d2+59 flbite
--41 -41 -41 -26
+70 60 4 150d20+493 60d10+12 9d2+21 flbite
+-30 -30 -30 -18
 FG ILMNPQR ES GHJKO
 stand stand none 1000
 EJMc ABCGHK medium unknown
@@ -70,8 +70,8 @@ A nondistinct reanimated corpse is standing here.
 ~
 unique~
 ADEFGHILMOPQRSW DEFGHILMOPQRSUW 0 -850 0
-82 95 17 237d31+779 95d10+19 14d2+47 none
--54 -54 -54 -35
+80 70 6 175d23+575 70d10+14 10d2+27 none
+-37 -37 -37 -22
 AC JLMOPQRSUW JLMOPQRSUW AB
 stand stand male 0
 0 0 medium unknown
@@ -96,8 +96,8 @@ A tall figure all dressed in black
 ~
 giant~
 AFGO 0 0 -850 0
-95 80 20 240d27+1937 80d11+32 21d2+74 none
--48 -48 -48 -32
+90 70 6 175d23+575 70d10+14 10d2+27 none
+-37 -37 -37 -22
 0 0 HI JP
 stand stand none 0
 AHMV ABCDEFGHIJK large unknown
@@ -109,8 +109,8 @@ A reanimated corpse stands here, her dress long rotted to tatters.
 ~
 human~
 ABFO DF H -200 0
-95 80 20 240d27+1937 80d11+32 21d2+74 scratch
--48 -48 -48 -32
+90 80 10 200d26+657 80d10+16 12d2+35 scratch
+-44 -44 -44 -28
 0 AB 0 0
 stand stand female 0
 AHMV ABCDEFGHIJK medium unknown
@@ -135,11 +135,37 @@ A grotesque abomination carved from flesh and sinew stands before you.
 ~
 unique~
 ABFO DF H -1000 0
-110 100 40 300d34+3631 100d11+40 26d2+110 beating
--62 -62 -62 -42
+90 80 10 200d26+657 80d10+16 12d2+35 beating
+-44 -44 -44 -28
 DH P 0 AB
 stand stand none 0
 ABIV ABCDEFGHIJK giant unknown
+#1810
+eternal shade~
+an eternal shade~
+The shade of someone long dead floats here.
+~
+~
+human~
+A 0 0 -1000 0
+80 65 5 162d21+533 65d10+13 9d2+23 chill
+-34 -34 -34 -20
+0 AB 0 0
+stand stand none 0
+AHMV ABCDEFGHIJK medium unknown
+#1811
+a skeleton warrior~
+a skeleton warrior~
+A skeleton shambles along quietly.
+~
+~
+human~
+AFG 0 0 -1000 0
+90 80 10 200d26+657 80d10+16 12d2+35 none
+-44 -44 -44 -28
+CH 0 FG 0
+stand stand none 0
+AHMV ABCDEFGHIJK medium unknown
 #0
 
 
@@ -152,27 +178,27 @@ There is a black hoop laying in the dirt.~
 onxy~
 jewelry MU AB
 0 0 0 0 0
-70 70 1 1500 P
+60 90 1 1500 P
 A
-3 2
-A
-4 1
+12 100
 A
 1 -4
 A
-12 100
+4 1
+A
+3 2
 #1801
-obsidian longsword~
-an {Dobsidian{x longsword~
+obsidian greatsword~
+an {Dobsidian{x greatsword~
 A huge obsidian sword has been left here.~
 obsidian~
 weapon AE AN
-sword 9 14 slash CEF
-80 80 8 83 P
+sword 12 14 slash CEF
+60 90 10 108 P
 A
-18 7
+18 8
 A
-19 7
+19 8
 #1802
 tattered wedding veil~
 a tattered wedding veil~
@@ -180,7 +206,7 @@ A crumpled piece of lace lies discarded on the floor.~
 lace~
 armor BSY AR
 BE BE BE AD 0
-90 85 8 23 P
+60 85 8 23 P
 A
 4 1
 #1803
@@ -190,23 +216,47 @@ A pair of oddly pristine shoes are sitting in the corner of the room.~
 leather~
 armor GMU AG
 ABE ABE ABE AD 0
-90 90 10 27 P
+60 90 10 27 P
 F
-A 0 1 V
+A 0 0 V
 #1804
 fleshcrafter fleshcrafters mitts~
 {Da pair of {mfleshcrafter's {Dmitts{x~
 A grotesque looking pair of gloves has been left here.~
 unknown~
 armor ABEG AH
-ACE ACE ACE BD 0
-100 100 12 33 P
+ABE ABE ABE AD 0
+60 90 10 27 P
 A
-4 1
+5 -1
 A
 3 1
 A
-5 -1
+4 1
+#1805
+ethereal dagger~
+an {gethereal {xdagger~
+A semi-corporeal dagger rests here.~
+ectoplasm~
+weapon E AN
+exotic 10 13 chill G
+60 90 10 108 P
+A
+18 8
+A
+19 8
+#1806
+broken ribcage~
+a broken ribcage~
+A broken ribcage has been discarded here.~
+bone~
+armor 0 AK
+ABE ABE ABE AD 0
+60 90 10 27 P
+A
+1 2
+A
+13 100
 #1890
 broken gizmo~
 a broken gizmo~
@@ -224,11 +274,11 @@ trash 0 AC
 0 0 0 0 0
 60 60 1 1000 P
 A
-5 -1
+3 1
 A
 4 1
 A
-3 1
+5 -1
 #0
 
 
@@ -837,6 +887,12 @@ M 0 1804 20 1823 20
 M 0 1808 20 1823 20
 M 0 1806 1 1828 1
 E 0 1801 0 16
+M 0 1811 4 1830 1
+E 0 1806 0 12
+M 0 1810 2 1833 1
+E 0 1805 0 16
+M 0 1810 2 1835 1
+E 0 1805 0 16
 M 0 1807 1 1836 1
 E 0 1802 0 20
 M 0 1809 1 1837 1

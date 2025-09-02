@@ -74,7 +74,7 @@ human~
 AB F 0 500 0
 40 25 0 75d9+303 25d11+10 7d2+16 none
 -8 -8 -8 -3
-QRTU AB 0 0
+HQRTU AB 0 0
 stand stand either 500
 AHMV ABCDEFGHIJK medium unknown
 #331
@@ -87,7 +87,7 @@ human~
 AG DF 0 500 0
 40 25 0 75d9+303 25d11+10 7d2+16 none
 -8 -8 -8 -3
-CQRTU AB 0 0
+CHQRTU AB 0 0
 stand stand either 500
 AHMV ABCDEFGHIJK medium unknown
 #340
@@ -262,8 +262,8 @@ an iron longsword~
 A battered old longsword rests here, unclaimed.~
 iron~
 weapon 0 AN
-sword 4 12 slash 0
-20 35 1 15 P
+sword 4 10 slash 0
+20 30 1 12 P
 A
 19 2
 A
@@ -622,6 +622,32 @@ S
 Winding Path~
 ~
 0 0 3
+E
+sign~
+The sign says:
+
+  Loyal citizens of Midgaard.  These are the earthly remains of the
+  three heretics 'Tabor', 'Wyatt' and 'Funky' of this world.
+  Having forged themselves to immortality, they called upon themselves
+  the anger of the implementators.
+                Let this be a lesson to all .....
+
+                                    -- the Powers that Be.
+
+~
+E
+sign~
+The sign says:
+
+  Loyal citizens of Midgaard.  These are the earthly remains of the
+  three heretics 'Tabor', 'Wyatt' and 'Funky' of this world.
+  Having forged themselves to immortality, they called upon themselves
+  the anger of the implementators.
+                Let this be a lesson to all .....
+
+                                    -- the Powers that Be.
+
+~
 E
 sign~
 The sign says:
@@ -3599,7 +3625,7 @@ S
 
 
 #SHOPS
-300 0 19 17 15 0 100 50 5 20
+300 0 19 17 15 33 100 50 5 20
 301 5 9 0 0 0 100 100 5 20
 0
 
