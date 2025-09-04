@@ -779,10 +779,25 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 	    ch->race = race_lookup("human");
 	}
 
-	/* Bounds check to prevent crash */
+	/* Comprehensive race validation */
+	bool race_changed = FALSE;
 	if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
 	    bug("Load_char_obj: invalid race %d, defaulting to human", ch->race);
 	    ch->race = 1; /* human is race 1 */
+	    race_changed = TRUE;
+	}
+	else if (race_table[ch->race].name == NULL) {
+	    /* Race has been deleted */
+	    bug("Load_char_obj: race %d has been deleted, defaulting to human", ch->race);
+	    ch->race = 1; /* human is race 1 */
+	    race_changed = TRUE;
+	}
+	else if (!race_table[ch->race].pc_race) {
+	    /* Race is no longer a PC race */
+	    bug("Load_char_obj: race %d (%s) is no longer a PC race, defaulting to human", 
+		ch->race, race_table[ch->race].name);
+	    ch->race = 1; /* human is race 1 */
+	    race_changed = TRUE;
 	}
 	ch->size = pc_race_table[ch->race].size;
 	ch->dam_type = 17; /*punch */
@@ -801,6 +816,12 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 	ch->vuln_flags	= ch->vuln_flags | race_table[ch->race].vuln;
 	ch->form	= race_table[ch->race].form;
 	ch->parts	= race_table[ch->race].parts;
+	
+	/* Notify player if race was changed */
+	if (race_changed) {
+	    send_to_char("Your race has been changed to human due to race modifications.\n\r", ch);
+	    send_to_char("Please contact an administrator if you have questions.\n\r", ch);
+	}
     }
 
 	
