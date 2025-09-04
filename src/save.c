@@ -794,8 +794,8 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 	}
 	else if (!race_table[ch->race].pc_race) {
 	    /* Race is no longer a PC race */
-	    bug("Load_char_obj: race %d (%s) is no longer a PC race, defaulting to human", 
-		ch->race, race_table[ch->race].name);
+	    bug("Load_char_obj: race %s is no longer a PC race, defaulting to human", 
+		race_table[ch->race].name);
 	    ch->race = 1; /* human is race 1 */
 	    race_changed = TRUE;
 	}
@@ -1326,7 +1326,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
 		ch->race = race_lookup(race_name);
 		printf("DEBUG: race_lookup returned %d\n", ch->race);
 		if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
-		    bug("fread_char: invalid race %d for race name '%s', defaulting to human", ch->race, race_name);
+		    bug("fread_char: invalid race '%s', defaulting to human", race_name);
 		    ch->race = 1; /* human is race 1 */
 		}
 
