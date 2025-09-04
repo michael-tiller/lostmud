@@ -1058,7 +1058,7 @@ void group_add( CHAR_DATA *ch, const char *name, bool deduct)
     if (sn != -1)
     {
 	if (sn < 0 || sn >= MAX_SKILL) {
-	    bug("group_add: invalid skill number %d for skill '%s'", sn, name);
+	    bug("group_add: invalid skill number for skill '%s'", name);
 	    return;
 	}
 	if (ch->pcdata->learned[sn] == 0) /* i.e. not known */
