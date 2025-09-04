@@ -794,7 +794,7 @@ void load_old_mob( FILE *fp )
     	{
             /* Additional validation - check if race still exists */
             if (race < 0 || race >= MAX_PC_RACE || race_table[race].name == NULL) {
-                bug("Load_old_mob: mobile vnum %d has invalid race '%s', defaulting to human", vnum, name);
+                bugf("Load_old_mob: mobile vnum %d has invalid race '%s', defaulting to human", vnum, name);
                 pMobIndex->race = race_lookup("human");
                 pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_VNUM;
                 pMobIndex->imm_flags = 0;
