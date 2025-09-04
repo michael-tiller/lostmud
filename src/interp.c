@@ -338,7 +338,7 @@ const	struct	cmd_type	cmd_table	[] =
     { "remember",	do_remember,	POS_SLEEPING,    0,  1,  LOG_NORMAL, 1 },
     { "voodoo",		do_voodoo,	POS_STANDING,	20,  1,  LOG_NORMAL, 1 },
     
-    { "classinfo",	do_showclass,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
+    { "showclass",	do_showclass,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
 
     /*
      * Immortal commands.
@@ -451,7 +451,11 @@ const	struct	cmd_type	cmd_table	[] =
 	{ "loadgroups",    do_load_groups, POS_DEAD,	ML,	      LOG_ALWAYS, 0 },
 	{ "skillinfo",    do_skill_info, POS_DEAD,	L3,	      LOG_NORMAL, 0 },
 	{ "groupinfo",    do_group_info, POS_DEAD,	L3,	      LOG_NORMAL, 0 },
+	{ "classinfo",    do_class_info, POS_DEAD,	L3,	      LOG_NORMAL, 0 },
+	{ "raceinfo",     do_race_info, POS_DEAD,	L3,	      LOG_NORMAL, 0 },
 	{ "skedit",	     do_skedit, POS_DEAD,	ML,	      LOG_ALWAYS, 0 },
+	{ "rcedit",	     do_rcedit, POS_DEAD,	ML,	      LOG_ALWAYS, 0 },
+
 	{ "gredit",	     do_gredit, POS_DEAD,	ML,	      LOG_ALWAYS, 0 },
     /*
 	* OLC

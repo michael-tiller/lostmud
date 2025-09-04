@@ -1,0 +1,21 @@
+#RACE
+Name wyvern~
+PC_RACE no
+Act 0
+Aff 524328
+Off 164
+Imm 2048
+Res 0
+Vuln 262144
+Shd 0
+Form 33554499
+Parts 10553021
+Who_Name wyvern~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

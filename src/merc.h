@@ -213,7 +213,7 @@ extern int	max_groups;
 #define MAX_DUPES		    7
 #define MAX_CLASS		   21
 #define NUM_TIERS       3
-#define MAX_PC_RACE		   20
+#define MAX_PC_RACE		   25
 #define MAX_CLAN		   15
 #define MAX_LEVEL		  210
 #define LEVEL_HERO		   (MAX_LEVEL - 9)
@@ -2329,8 +2329,8 @@ extern	const	struct	weapon_type	weapon_table	[];
 extern  const   struct  item_type	item_table	[];
 extern	const	struct	wiznet_type	wiznet_table	[];
 extern	const	struct	attack_type	attack_table	[];
-extern  const	struct  race_type	race_table	[];
-extern	const	struct	pc_race_type	pc_race_table	[];
+extern	struct  race_type	race_table	[];
+extern	struct	pc_race_type	pc_race_table	[];
 extern  const	struct	spec_type	spec_table	[];
 extern	const	struct	liq_type	liq_table	[];
 extern	struct	skill_type	skill_table	[MAX_SKILL];
@@ -2777,6 +2777,8 @@ void	reset_room	args( ( ROOM_INDEX_DATA *pRoom ) );	/* OLC */
 char *	print_flags	args( ( int flag ));
 void	boot_db		args( ( void ) );
 void	area_update	args( ( void ) );
+void	load_race_files	args( ( void ) );
+
 CD *	create_mobile	args( ( MOB_INDEX_DATA *pMobIndex ) );
 void	clone_mobile	args( ( CHAR_DATA *parent, CHAR_DATA *clone) );
 OD *	create_object	args( ( OBJ_INDEX_DATA *pObjIndex, int level ) );

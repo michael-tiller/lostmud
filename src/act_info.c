@@ -3700,14 +3700,14 @@ void do_credits( CHAR_DATA *ch, char *argument )
 void do_showclass(CHAR_DATA *ch, char *argument) {
    char arg1[MAX_INPUT_LENGTH];
    char buf[MAX_STRING_LENGTH];
+   char *attr_names[] = { "strength", "intelligence", "wisdom", "dexterity", "constitution" };
 
-   int class,level,skill;
-   int i;
+   int class, level, skill, i;
+   int skills_shown = 0;
  
-   strcpy(buf,"");
    argument = one_argument(argument, arg1);
 
-   if(arg1[0]=='\\0')
+   if(arg1[0]=='\0')
    {
     send_to_char("Syntax: showclass [class]\n\r",ch);
     return;
@@ -3717,21 +3717,104 @@ void do_showclass(CHAR_DATA *ch, char *argument) {
     return;
    }
 
-   sprintf(buf,"\{xSpells/skills for %s:\{x\n\r",class_table[class].name);
+   /* Class header information */
+   sprintf(buf,"{W=== %s Class Information ==={x\n\r", class_table[class].name);
    send_to_char(buf,ch);
-   i=0;
-   for(level=1;level<=LEVEL_HERO;level++) {
-      for(skill=0;skill<MAX_SKILL;skill++) {
-         if(skill_table[skill].skill_level[class]!=level)
-          continue;
-         i++;
-         sprintf(buf,"%3d: {c%-20s{x", level,skill_table[skill].name);
+   
+   sprintf(buf,"{YPrime Attribute:{x %s\n\r", attr_names[class_table[class].attr_prime]);
+   send_to_char(buf,ch);
+   
+   if (class_table[class].weapon >= 0 && weapon_table[class_table[class].weapon].name != NULL) {
+       sprintf(buf,"{YFirst Weapon:{x %s\n\r", weapon_table[class_table[class].weapon].name);
+   } else {
+       sprintf(buf,"{YFirst Weapon:{x none\n\r");
+   }
+   send_to_char(buf,ch);
+   
+   sprintf(buf,"{YHP per Level:{x %d-%d\n\r", class_table[class].hp_min, class_table[class].hp_max);
+   send_to_char(buf,ch);
+   
+   sprintf(buf,"{YGains Mana:{x %s\n\r", class_table[class].fMana ? "yes" : "no");
+   send_to_char(buf,ch);
+   
+   sprintf(buf,"{YTier:{x %d\n\r", class_table[class].tier);
+   send_to_char(buf,ch);
+   
+   if (class_table[class].base_group != NULL) {
+       sprintf(buf,"{YBase Skills:{x %s\n\r", class_table[class].base_group);
+       send_to_char(buf,ch);
+   }
+   
+   if (class_table[class].default_group != NULL) {
+       sprintf(buf,"{YDefault Skills:{x %s\n\r", class_table[class].default_group);
+       send_to_char(buf,ch);
+   }
+
+   /* Spells gained by level */
+   sprintf(buf,"\n{W=== Spells Gained by Level ==={x\n\r");
+   send_to_char(buf,ch);
+   
+   int spells_shown = 0;
+   for(level=1; level<=LEVEL_HERO; level++) {
+      bool level_has_spells = FALSE;
+      
+      for(skill=0; skill<MAX_SKILL; skill++) {
+         if(skill_table[skill].skill_level[class] != level)
+            continue;
+         if(skill_table[skill].spell_fun == spell_null)
+            continue; /* Skip skills, only show spells */
+            
+         if (!level_has_spells) {
+            sprintf(buf,"{CLevel %2d:{x ", level);
+            send_to_char(buf,ch);
+            level_has_spells = TRUE;
+         }
+         
+         sprintf(buf,"{m%s{x ", skill_table[skill].name);
          send_to_char(buf,ch);
-         if(i==3){
-          send_to_char("\n\r",ch);
-          i=0;
-       }
-     }
+         spells_shown++;
+      }
+      
+      if (level_has_spells) {
+         send_to_char("\n\r",ch);
+      }
+   }
+   
+   if (spells_shown == 0) {
+      send_to_char("{RNo spells found for this class.{x\n\r",ch);
+   }
+
+   /* Skills gained by level */
+   sprintf(buf,"\n{W=== Skills Gained by Level ==={x\n\r");
+   send_to_char(buf,ch);
+   
+   for(level=1; level<=LEVEL_HERO; level++) {
+      bool level_has_skills = FALSE;
+      
+      for(skill=0; skill<MAX_SKILL; skill++) {
+         if(skill_table[skill].skill_level[class] != level)
+            continue;
+         if(skill_table[skill].spell_fun != spell_null)
+            continue; /* Skip spells, only show skills */
+            
+         if (!level_has_skills) {
+            sprintf(buf,"{CLevel %2d:{x ", level);
+            send_to_char(buf,ch);
+            level_has_skills = TRUE;
+         }
+         
+         sprintf(buf,"{c%s{x ", skill_table[skill].name);
+         send_to_char(buf,ch);
+         skills_shown++;
+      }
+      
+      if (level_has_skills) {
+         send_to_char("\n\r",ch);
+      }
+   }
+   
+   if (skills_shown == 0) {
+      send_to_char("{RNo skills found for this class.{x\n\r",ch);
    }
 }
 

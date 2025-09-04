@@ -1,0 +1,21 @@
+#RACE
+Name goblin~
+PC_RACE yes
+Act 0
+Aff 512
+Off 0
+Imm 0
+Res 32768
+Vuln 25436160
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Gobln~
+Points 5
+Size 1
+Tier 7
+Stats 11 14 12 15 14
+Max_Stats 16 20 16 19 20
+Class_Mult 105 125 110 125 120 120 110 95 113 99 113 99 108 99 80 80 80 80 80 80 80
+Skills sneak hide
+End

@@ -1,0 +1,21 @@
+#RACE
+Name water fowl~
+PC_RACE no
+Act 0
+Aff 134742016
+Off 0
+Imm 0
+Res 131072
+Vuln 0
+Shd 0
+Form 4194369
+Parts 33981
+Who_Name water fowl~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

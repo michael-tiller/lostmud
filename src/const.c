@@ -194,7 +194,7 @@ const 	struct attack_type	attack_table	[]		=
 };
 
 /* race table */
-const 	struct	race_type	race_table	[]		=
+struct	race_type	race_table	[]		=
 {
 /*
     {
@@ -756,7 +756,7 @@ const 	struct	race_type	race_table	[]		=
     }
 };
 
-const	struct	pc_race_type	pc_race_table	[]	=
+struct	pc_race_type	pc_race_table	[]	=
 {
     {
 	"null race",	"",

@@ -1,0 +1,21 @@
+#RACE
+Name troll~
+PC_RACE no
+Act 0
+Aff 268436000
+Off 8
+Imm 0
+Res 18
+Vuln 1152
+Shd 0
+Form 2101379
+Parts 3147775
+Who_Name troll~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

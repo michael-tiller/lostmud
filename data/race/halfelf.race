@@ -1,0 +1,21 @@
+#RACE
+Name halfelf~
+PC_RACE yes
+Act 0
+Aff 2048
+Off 0
+Imm 0
+Res 0
+Vuln 0
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name HfElf~
+Points 2
+Size 2
+Tier 7
+Stats 12 13 14 13 13
+Max_Stats 17 18 19 18 18
+Class_Mult 105 105 105 105 105 105 105 95 95 95 95 95 95 95 80 80 80 80 80 80 80
+Skills
+End

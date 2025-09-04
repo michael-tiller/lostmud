@@ -1,0 +1,21 @@
+#RACE
+Name hobgoblin~
+PC_RACE no
+Act 0
+Aff 512
+Off 0
+Imm 0
+Res 67584
+Vuln 0
+Shd 0
+Form 2101377
+Parts 16779263
+Who_Name hobgoblin~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

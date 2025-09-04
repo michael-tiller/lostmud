@@ -1,0 +1,21 @@
+#RACE
+Name dog~
+PC_RACE no
+Act 0
+Aff 0
+Off 128
+Imm 0
+Res 0
+Vuln 0
+Shd 0
+Form 2097217
+Parts 3147453
+Who_Name dog~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

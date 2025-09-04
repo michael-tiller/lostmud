@@ -1,0 +1,21 @@
+#RACE
+Name kenku~
+PC_RACE yes
+Act 0
+Aff 526880
+Off 0
+Imm 0
+Res 256
+Vuln 0
+Shd 0
+Form 2101377
+Parts 34815
+Who_Name Kenku~
+Points 5
+Size 2
+Tier 7
+Stats 14 14 16 15 14
+Max_Stats 19 19 21 20 19
+Class_Mult 125 110 150 150 110 125 180 115 100 140 140 100 115 170 80 80 80 80 80 80 80
+Skills meditation
+End

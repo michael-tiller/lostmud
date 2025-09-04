@@ -1,0 +1,21 @@
+#RACE
+Name titan~
+PC_RACE yes
+Act 0
+Aff 67108872
+Off 0
+Imm 2
+Res 8
+Vuln 0
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Titan~
+Points 11
+Size 5
+Tier 7
+Stats 20 13 13 10 20
+Max_Stats 25 18 18 15 25
+Class_Mult 180 105 130 105 105 130 100 170 93 115 95 95 115 98 80 80 80 80 80 80 80
+Skills fast healing
+End

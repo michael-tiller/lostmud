@@ -10,7 +10,7 @@ ROT_FILES = act_comm.o act_enter.o act_info.o act_move.o act_obj.o act_wiz.o \
           lookup.o magic.o magic2.o music.o recycle.o repent.o save.o scan.o \
           sign.o skills.o special.o tables.o update.o wizlist.o \
           mob_cmds.o mob_prog.o olc.o olc_act.o olc_save.o bit.o mem.o \
-          string.o olc_mpcode.o math.o sedit.o skedit.o quest.o \
+          string.o olc_mpcode.o math.o sedit.o skedit.o rcedit.o quest.o \
           asciimap.o
 
 TARGET = rot

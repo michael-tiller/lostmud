@@ -1,0 +1,21 @@
+#RACE
+Name satyr~
+PC_RACE yes
+Act 0
+Aff 100
+Off 0
+Imm 128
+Res 4096
+Vuln 270336
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Satyr~
+Points 6
+Size 3
+Tier 7
+Stats 18 14 5 9 16
+Max_Stats 23 19 10 14 21
+Class_Mult 110 110 110 175 110 110 150 100 100 100 165 100 100 140 80 80 80 80 80 80 80
+Skills
+End

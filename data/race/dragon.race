@@ -1,0 +1,21 @@
+#RACE
+Name dragon~
+PC_RACE no
+Act 0
+Aff 524800
+Off 0
+Imm 0
+Res 146
+Vuln 288
+Shd 0
+Form 33554561
+Parts 11634685
+Who_Name dragon~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

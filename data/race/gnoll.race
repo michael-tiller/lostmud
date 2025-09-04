@@ -1,0 +1,21 @@
+#RACE
+Name gnoll~
+PC_RACE yes
+Act 0
+Aff 33554464
+Off 0
+Imm 0
+Res 0
+Vuln 16777216
+Shd 0
+Form 2101377
+Parts 3147775
+Who_Name Gnoll~
+Points 7
+Size 3
+Tier 7
+Stats 15 11 10 16 15
+Max_Stats 20 16 15 20 19
+Class_Mult 110 110 125 110 175 110 110 100 100 115 100 165 100 100 80 80 80 80 80 80 80
+Skills
+End

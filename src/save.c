@@ -678,6 +678,11 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
     ch->name				= str_dup( name );
     ch->id				= get_pc_id();
     ch->race				= race_lookup("human");
+    /* Bounds check to prevent crash */
+    if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
+	bug("Create_char: invalid race %d, defaulting to human", ch->race);
+	ch->race = 1; /* human is race 1 */
+    }
     ch->act				= PLR_NOSUMMON;
     ch->comm				= COMM_COMBINE 
 					| COMM_PROMPT
@@ -740,11 +745,19 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 	    }
 
 	    word = fread_word( fp );
-	    if      ( !str_cmp( word, "PLAYER" ) ) fread_char ( ch, fp );
-	    else if ( !str_cmp( word, "OBJECT" ) ) fread_obj  ( ch, fp );
-	    else if ( !str_cmp( word, "O"      ) ) fread_obj  ( ch, fp );
+	    		if      ( !str_cmp( word, "PLAYER" ) ) {
+			fread_char ( ch, fp );
+		}
+	    else if ( !str_cmp( word, "OBJECT" ) ) {
+		fread_obj  ( ch, fp );
+	    }
+	    else if ( !str_cmp( word, "O"      ) ) {
+		fread_obj  ( ch, fp );
+	    }
 	    else if ( !str_cmp( word, "PET"    ) ) fread_pet  ( ch, fp );
-	    else if ( !str_cmp( word, "END"    ) ) break;
+	    else if ( !str_cmp( word, "END"    ) ) {
+		break;
+	    }
 	    else
 	    {
 		bug( "Load_char_obj: bad section.", 0 );
@@ -762,9 +775,15 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
     {
 	int i;
 
-	if (ch->race == 0)
+	if (ch->race == 0) {
 	    ch->race = race_lookup("human");
+	}
 
+	/* Bounds check to prevent crash */
+	if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
+	    bug("Load_char_obj: invalid race %d, defaulting to human", ch->race);
+	    ch->race = 1; /* human is race 1 */
+	}
 	ch->size = pc_race_table[ch->race].size;
 	ch->dam_type = 17; /*punch */
 
@@ -774,6 +793,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 		break;
 	    group_add(ch,pc_race_table[ch->race].skills[i],FALSE);
 	}
+	
 	ch->affected_by = ch->affected_by|race_table[ch->race].aff;
 	ch->shielded_by = ch->shielded_by|race_table[ch->race].shd;
 	ch->imm_flags	= ch->imm_flags | race_table[ch->race].imm;
@@ -838,6 +858,11 @@ bool load_char_reroll( DESCRIPTOR_DATA *d, char *name )
     ch->name				= str_dup( name );
     ch->id				= get_pc_id();
     ch->race				= race_lookup("human");
+    /* Bounds check to prevent crash */
+    if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
+	bug("Create_char: invalid race %d, defaulting to human", ch->race);
+	ch->race = 1; /* human is race 1 */
+    }
     ch->act				= PLR_NOSUMMON;
     ch->comm				= COMM_COMBINE 
 					| COMM_PROMPT
@@ -971,9 +996,13 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
 
 		sn = skill_lookup(fread_word(fp));
 		if (sn < 0)
+		{
 			bugf("fread_char(): unknown skill: %s", skill_table[sn].name);
+		}
 		else
-		    paf->type = sn;
+		{
+			paf->type = sn;
+		}
 
 		paf->level	= fread_number( fp );
 		paf->duration	= fread_number( fp );
@@ -1162,7 +1191,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
                 if ( gn < 0 )
                 {
                     fprintf(stderr,"%s",temp);
-                    bug( "Fread_char: unknown group. ", 0 );
+                    bug( "Fread_char: unknown group: %s", temp );
                 }
                 else
 		    gn_add(ch,gn);
@@ -1270,8 +1299,19 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
 			break;
 
 	case 'R':
-	    KEY( "Race",        ch->race,	
-				race_lookup(fread_string( fp )) );
+	    if (!str_cmp(word, "Race")) {
+		char *race_name = fread_string(fp);
+		printf("DEBUG: Reading race '%s' from character file\n", race_name);
+		ch->race = race_lookup(race_name);
+		printf("DEBUG: race_lookup returned %d\n", ch->race);
+		if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
+		    bug("fread_char: invalid race %d for race name '%s', defaulting to human", ch->race, race_name);
+		    ch->race = 1; /* human is race 1 */
+		}
+
+		fMatch = TRUE;
+		break;
+	    }
 	    KEY( "Reca",	ch->pcdata->recall, fread_number( fp ) );
 
 	    if ( !str_cmp( word, "Room" ) )
@@ -1311,7 +1351,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
 		if ( sn < 0 )
 		{
 		    fprintf(stderr,"%s",temp);
-			bugf("fread_char(): unknown skill: %s", skill_table[sn].name);
+			bugf("fread_char(): unknown skill: %s", temp);
 		}
 		else
 		    ch->pcdata->learned[sn] = value;
@@ -1370,6 +1410,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp )
 	    fread_to_eol( fp );
 	}
     }
+
 }
 
 /* load a pet from the forgotten reaches */
@@ -1851,7 +1892,7 @@ void fread_obj( CHAR_DATA *ch, FILE *fp )
 		}
 		else if ( sn < 0 )
 		{
-			bugf("Fread_obj(): unknown skill: %s", skill_table[sn].name);
+			//bugf("Fread_obj(): unknown skill: %s", skill_table[sn].name);
 		}
 		else
 		{

@@ -1,0 +1,21 @@
+#RACE
+Name fido~
+PC_RACE no
+Act 0
+Aff 0
+Off 131104
+Imm 0
+Res 0
+Vuln 4
+Shd 0
+Form 2097219
+Parts 2164413
+Who_Name fido~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

@@ -1,0 +1,21 @@
+#RACE
+Name halforc~
+PC_RACE yes
+Act 0
+Aff 67108864
+Off 0
+Imm 0
+Res 12
+Vuln 32768
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name HfOrc~
+Points 6
+Size 2
+Tier 7
+Stats 14 11 11 14 15
+Max_Stats 19 15 15 20 21
+Class_Mult 200 200 120 100 125 150 105 180 180 108 90 135 135 95 80 80 80 80 80 80 80
+Skills fast healing
+End

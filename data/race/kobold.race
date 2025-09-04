@@ -1,0 +1,21 @@
+#RACE
+Name kobold~
+PC_RACE no
+Act 0
+Aff 512
+Off 0
+Imm 0
+Res 2048
+Vuln 4
+Shd 0
+Form 2101379
+Parts 67583
+Who_Name kobold~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

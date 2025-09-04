@@ -1951,8 +1951,17 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    return;
 	}
 
+	printf("DEBUG: About to call load_char_obj with argument '%s'\n", argument);
 	fOld = load_char_obj( d, argument );
+	printf("DEBUG: load_char_obj returned %d\n", fOld);
 	ch   = d->character;
+	
+	printf("DEBUG: load_char_obj completed, ch = %p\n", ch);
+	if (ch == NULL) {
+	    printf("DEBUG: ch is NULL after load_char_obj!\n");
+	    return;
+	}
+	printf("DEBUG: About to check PLR_DENY\n");
 
 	if (IS_SET(ch->act, PLR_DENY))
 	{

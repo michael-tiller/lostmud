@@ -11,6 +11,7 @@
 #include "merc.h"
 #include "tables.h"
 #include "interp.h"
+#include "magic.h"
 
 // function prototypes
 void do_load_groups( CHAR_DATA *ch, char *argument );
@@ -29,14 +30,23 @@ void load_group_list();
 
 void do_skill_info( CHAR_DATA *ch, char *argument);
 void do_group_info( CHAR_DATA *ch, char *argument);
+void do_class_info( CHAR_DATA *ch, char *argument);
 void do_skedit(CHAR_DATA *ch ,char * argument);
 
 // macro definitions
+#ifdef WIN32
 #define CLASS_TEMP "../data/class/t"
 #define CLASS_DIR "../data/class/"
 #define GROUP_TEMP "../data/group/t"
 #define GROUP_DIR "../data/group/"
 #define GROUP_LIST "../data/group/group.lst"
+#else
+#define CLASS_TEMP "data/class/t"
+#define CLASS_DIR "data/class/"
+#define GROUP_TEMP "data/group/t"
+#define GROUP_DIR "data/group/"
+#define GROUP_LIST "data/group/group.lst"
+#endif
 
 int max_groups;
 
@@ -191,7 +201,7 @@ void save_group(FILE *fp, int id) {
 		fprintf( fp, " %d", group_table[id].rating[i] );
 	}
 	// end of line
-	fprintf( fp, "~\n", class_table[i].name, group_table[id].rating[i] );
+	fprintf( fp, "~\n" );
 	
 	// end of group stats
 	fprintf( fp, "End~\n" );
@@ -649,6 +659,135 @@ void do_skill_info( CHAR_DATA *ch, char *argument ) {
   }
   
 } // do_skill_info()
+
+/**/
+void do_class_info( CHAR_DATA *ch, char *argument ) {
+	char class_name[MIL];
+	int class_no, i, level, skill;
+	int spells_shown, skills_shown;
+	char *attr_names[] = { "strength", "intelligence", "wisdom", "dexterity", "constitution" };
+
+	if (!argument[0]) {
+		send_to_char ("Syntax is: classinfo <class>.\n\r",ch);
+		return;
+	}
+
+	argument = one_argument (argument, class_name);
+	
+	for (class_no = 0; class_no < MAX_CLASS; class_no++)
+		if (!str_cmp(class_name, class_table[class_no].name))
+			break;
+	
+	if (class_no == MAX_CLASS) {
+		printf_to_char (ch, "No class named '%s' exists.\n\r", class_name);
+		return;
+	}
+
+	printf_to_char(ch, "Class Info for '%s'\n\r", class_table[class_no].name);
+	printf_to_char(ch, "  Who Name: %s\n\r", class_table[class_no].who_name);
+	printf_to_char(ch, "  Prime Attribute: %s\n\r", attr_names[class_table[class_no].attr_prime]);
+	
+	if (class_table[class_no].weapon >= 0 && weapon_table[class_table[class_no].weapon].name != NULL) {
+		printf_to_char(ch, "  First Weapon: %s\n\r", weapon_table[class_table[class_no].weapon].name);
+	} else {
+		printf_to_char(ch, "  First Weapon: none\n\r");
+	}
+	
+	printf_to_char(ch, "  Guild Rooms: ");
+	for (i = 0; i < MAX_GUILD; i++) {
+		if (class_table[class_no].guild[i] > 0) {
+			printf_to_char(ch, "%d", class_table[class_no].guild[i]);
+			if (i < MAX_GUILD - 1 && class_table[class_no].guild[i + 1] > 0) {
+				printf_to_char(ch, ", ");
+			}
+		}
+	}
+	printf_to_char(ch, "\n\r");
+	
+	printf_to_char(ch, "  Skill Adept: %d\n\r", class_table[class_no].skill_adept);
+	printf_to_char(ch, "  THAC0 (Level 0): %d\n\r", class_table[class_no].thac0_00);
+	printf_to_char(ch, "  THAC0 (Level 32): %d\n\r", class_table[class_no].thac0_32);
+	printf_to_char(ch, "  HP Range: %d-%d\n\r", class_table[class_no].hp_min, class_table[class_no].hp_max);
+	printf_to_char(ch, "  Gains Mana: %s\n\r", class_table[class_no].fMana ? "yes" : "no");
+	
+	if (class_table[class_no].base_group != NULL) {
+		printf_to_char(ch, "  Base Group: %s\n\r", class_table[class_no].base_group);
+	} else {
+		printf_to_char(ch, "  Base Group: none\n\r");
+	}
+	
+	if (class_table[class_no].default_group != NULL) {
+		printf_to_char(ch, "  Default Group: %s\n\r", class_table[class_no].default_group);
+	} else {
+		printf_to_char(ch, "  Default Group: none\n\r");
+	}
+	
+	printf_to_char(ch, "  Tier: %d\n\r", class_table[class_no].tier);
+	printf_to_char(ch, "  Next Tier: %d\n\r", class_table[class_no].tier_next);
+	
+	/* Spells gained by level */
+	printf_to_char(ch, "\nSpells Gained by Level:\n\r");
+	
+	spells_shown = 0;
+	for(level=1; level<=LEVEL_HERO; level++) {
+		bool level_has_spells = FALSE;
+		
+		for(skill=0; skill<MAX_SKILL; skill++) {
+			if(skill_table[skill].skill_level[class_no] != level)
+				continue;
+			if(skill_table[skill].spell_fun == spell_null)
+				continue; /* Skip skills, only show spells */
+				
+			if (!level_has_spells) {
+				printf_to_char(ch, "  Level %2d: ", level);
+				level_has_spells = TRUE;
+			}
+			
+			printf_to_char(ch, "%s ", skill_table[skill].name);
+			spells_shown++;
+		}
+		
+		if (level_has_spells) {
+			printf_to_char(ch, "\n\r");
+		}
+	}
+	
+	if (spells_shown == 0) {
+		printf_to_char(ch, "  No spells found for this class.\n\r");
+	}
+
+	/* Skills gained by level */
+	printf_to_char(ch, "\nSkills Gained by Level:\n\r");
+	
+	skills_shown = 0;
+	for(level=1; level<=LEVEL_HERO; level++) {
+		bool level_has_skills = FALSE;
+		
+		for(skill=0; skill<MAX_SKILL; skill++) {
+			if(skill_table[skill].skill_level[class_no] != level)
+				continue;
+			if(skill_table[skill].spell_fun != spell_null)
+				continue; /* Skip spells, only show skills */
+				
+			if (!level_has_skills) {
+				printf_to_char(ch, "  Level %2d: ", level);
+				level_has_skills = TRUE;
+			}
+			
+			printf_to_char(ch, "%s ", skill_table[skill].name);
+			skills_shown++;
+		}
+		
+		if (level_has_skills) {
+			printf_to_char(ch, "\n\r");
+		}
+	}
+	
+	if (skills_shown == 0) {
+		printf_to_char(ch, "  No skills found for this class.\n\r");
+	}
+	
+} // do_class_info()
 
 /**/
 void do_skedit(CHAR_DATA *ch ,char * argument) {

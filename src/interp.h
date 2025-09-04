@@ -293,6 +293,8 @@ DECLARE_DO_FUN(	do_save_class);
 DECLARE_DO_FUN(	do_save_groups);
 DECLARE_DO_FUN(	do_load_groups);
 DECLARE_DO_FUN(	do_group_info);
+DECLARE_DO_FUN(	do_class_info);
+DECLARE_DO_FUN(	do_race_info);
 DECLARE_DO_FUN(	do_ooc);
 DECLARE_DO_FUN(	do_rescue	);
 DECLARE_DO_FUN(	do_rest		);
@@ -330,6 +332,8 @@ DECLARE_DO_FUN( do_socials	);
 DECLARE_DO_FUN(	do_south	);
 DECLARE_DO_FUN( do_skedit	);
 DECLARE_DO_FUN( do_skill_info	);
+DECLARE_DO_FUN( do_rcedit	);
+
 DECLARE_DO_FUN( do_sockets	);
 DECLARE_DO_FUN( do_spells	);
 DECLARE_DO_FUN(	do_split	);

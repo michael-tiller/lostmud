@@ -1,0 +1,21 @@
+#RACE
+Name dwarf~
+PC_RACE yes
+Act 0
+Aff 512
+Off 0
+Imm 0
+Res 67584
+Vuln 131072
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Dwarf~
+Points 8
+Size 2
+Tier 7
+Stats 14 12 13 11 15
+Max_Stats 20 16 19 15 21
+Class_Mult 150 100 125 100 110 110 110 135 90 113 90 113 99 99 80 80 80 80 80 80 80
+Skills berserk
+End

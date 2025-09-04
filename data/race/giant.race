@@ -1,0 +1,21 @@
+#RACE
+Name giant~
+PC_RACE yes
+Act 0
+Aff 0
+Off 0
+Imm 0
+Res 384
+Vuln 33280
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Giant~
+Points 6
+Size 3
+Tier 7
+Stats 16 11 13 11 14
+Max_Stats 22 15 18 15 20
+Class_Mult 200 125 150 105 125 150 120 180 113 135 95 135 135 108 80 80 80 80 80 80 80
+Skills bash fast healing
+End

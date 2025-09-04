@@ -1,0 +1,21 @@
+#RACE
+Name centaur~
+PC_RACE yes
+Act 0
+Aff 0
+Off 0
+Imm 0
+Res 0
+Vuln 0
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Centr~
+Points 9
+Size 3
+Tier 7
+Stats 15 12 10 8 16
+Max_Stats 20 17 15 13 21
+Class_Mult 100 110 100 175 110 110 95 90 100 90 165 100 100 85 80 80 80 80 80 80 80
+Skills enhanced damage
+End

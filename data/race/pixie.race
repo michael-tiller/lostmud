@@ -1,0 +1,21 @@
+#RACE
+Name pixie~
+PC_RACE yes
+Act 0
+Aff 524816
+Off 0
+Imm 0
+Res 32770
+Vuln 33554432
+Shd 0
+Form 2101377
+Parts 34815
+Who_Name Pixie~
+Points 6
+Size 0
+Tier 7
+Stats 10 15 15 15 10
+Max_Stats 14 21 21 20 14
+Class_Mult 100 100 120 200 150 100 150 90 90 108 180 95 90 135 80 80 80 80 80 80 80
+Skills
+End

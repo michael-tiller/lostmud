@@ -1,0 +1,21 @@
+#RACE
+Name minotaur~
+PC_RACE yes
+Act 0
+Aff 2048
+Off 0
+Imm 2048
+Res 0
+Vuln 16
+Shd 0
+Form 2101377
+Parts 4196351
+Who_Name Mintr~
+Points 7
+Size 3
+Tier 7
+Stats 18 11 10 11 17
+Max_Stats 23 16 15 16 22
+Class_Mult 110 110 110 95 110 110 110 100 100 100 85 100 100 100 80 80 80 80 80 80 80
+Skills enhanced damage
+End

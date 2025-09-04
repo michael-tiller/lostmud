@@ -460,6 +460,9 @@ void boot_db()
 	strcat(boot_buf,"\n\r");
     log_string( "Loading Socials." );
 	load_social_table();
+    log_string( "Loading Race Files." );
+	load_race_files();
+
     }
     if ( ( pRoomIndex = get_room_index( 315 ) ) == NULL)
     {
@@ -1986,12 +1989,12 @@ void reset_area( AREA_DATA *pArea )
     {
         if ( ( pRoom = get_room_index(vnum) ) )
             reset_room(pRoom);
-}
+	}
     return;
 }
 
 /*
- * Create an instance of a mobile.
+ * Create an instance of a mobile.y
  */
 CHAR_DATA *create_mobile( MOB_INDEX_DATA *pMobIndex )
 {

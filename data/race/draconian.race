@@ -1,0 +1,21 @@
+#RACE
+Name draconian~
+PC_RACE yes
+Act 0
+Aff 524288
+Off 0
+Imm 67584
+Res 384
+Vuln 608
+Shd 0
+Form 2101377
+Parts 100351
+Who_Name Dracn~
+Points 11
+Size 4
+Tier 7
+Stats 16 13 12 11 15
+Max_Stats 22 18 16 15 21
+Class_Mult 125 150 200 100 110 125 150 113 135 180 90 108 113 135 80 80 80 80 80 80 80
+Skills fast healing
+End

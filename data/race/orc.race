@@ -1,0 +1,21 @@
+#RACE
+Name orc~
+PC_RACE no
+Act 0
+Aff 512
+Off 0
+Imm 0
+Res 65536
+Vuln 262144
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name orc~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

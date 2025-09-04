@@ -1,0 +1,21 @@
+#RACE
+Name heucuva~
+PC_RACE yes
+Act 0
+Aff 33554432
+Off 0
+Imm 71680
+Res 8
+Vuln 17047552
+Shd 0
+Form 2101377
+Parts 1991
+Who_Name Heucv~
+Points 10
+Size 2
+Tier 7
+Stats 20 5 5 20 20
+Max_Stats 25 10 10 25 25
+Class_Mult 110 110 110 100 110 110 100 100 100 100 90 100 100 90 80 80 80 80 80 80 80
+Skills second attack
+End

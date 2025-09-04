@@ -1,0 +1,21 @@
+#RACE
+Name avian~
+PC_RACE yes
+Act 0
+Aff 526888
+Off 0
+Imm 0
+Res 512
+Vuln 67584
+Shd 0
+Form 2101377
+Parts 34815
+Who_Name Avian~
+Points 5
+Size 3
+Tier 7
+Stats 12 14 15 11 12
+Max_Stats 17 19 20 16 17
+Class_Mult 110 105 150 125 120 100 120 99 95 135 113 108 90 108 80 80 80 80 80 80 80
+Skills
+End

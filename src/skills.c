@@ -1006,6 +1006,16 @@ void gn_add( CHAR_DATA *ch, int gn)
 {
     int i;
     
+    if (gn < 0 || gn >= MAX_GROUP) {
+        bug("gn_add: invalid group number %d", gn);
+        return;
+    }
+    
+    /* Prevent infinite recursion - if group is already known, don't process it again */
+    if (ch->pcdata->group_known[gn]) {
+        return;
+    }
+    
     ch->pcdata->group_known[gn] = TRUE;
     for ( i = 0; i < MAX_IN_GROUP; i++)
     {
@@ -1019,6 +1029,11 @@ void gn_add( CHAR_DATA *ch, int gn)
 void gn_remove( CHAR_DATA *ch, int gn)
 {
     int i;
+
+    if (gn < 0 || gn >= MAX_GROUP) {
+        bug("gn_remove: invalid group number %d", gn);
+        return;
+    }
 
     ch->pcdata->group_known[gn] = FALSE;
 
@@ -1042,6 +1057,10 @@ void group_add( CHAR_DATA *ch, const char *name, bool deduct)
 
     if (sn != -1)
     {
+	if (sn < 0 || sn >= MAX_SKILL) {
+	    bug("group_add: invalid skill number %d for skill '%s'", sn, name);
+	    return;
+	}
 	if (ch->pcdata->learned[sn] == 0) /* i.e. not known */
 	{
 	    ch->pcdata->learned[sn] = 1;

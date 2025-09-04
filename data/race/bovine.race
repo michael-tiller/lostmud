@@ -1,0 +1,21 @@
+#RACE
+Name bovine~
+PC_RACE no
+Act 0
+Aff 0
+Off 32
+Imm 0
+Res 65536
+Vuln 0
+Shd 0
+Form 2097217
+Parts 1725
+Who_Name bovine~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

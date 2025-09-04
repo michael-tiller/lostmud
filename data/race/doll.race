@@ -1,0 +1,21 @@
+#RACE
+Name doll~
+PC_RACE no
+Act 0
+Aff 0
+Off 0
+Imm 243968
+Res 262160
+Vuln 18112
+Shd 0
+Form 268440080
+Parts 1223
+Who_Name doll~
+Points 0
+Size 2
+Tier 1
+Stats 13 13 13 13 13
+Max_Stats 18 18 18 18 18
+Class_Mult 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
+Skills
+End

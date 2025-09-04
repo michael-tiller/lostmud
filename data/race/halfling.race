@@ -1,0 +1,21 @@
+#RACE
+Name halfling~
+PC_RACE yes
+Act 0
+Aff 1048576
+Off 0
+Imm 0
+Res 67584
+Vuln 262144
+Shd 0
+Form 2101377
+Parts 2047
+Who_Name Hflng~
+Points 5
+Size 1
+Tier 7
+Stats 11 14 12 15 13
+Max_Stats 15 20 16 21 18
+Class_Mult 105 120 100 150 150 120 120 95 108 90 135 108 108 108 80 80 80 80 80 80 80
+Skills sneak hide
+End
