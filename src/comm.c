@@ -415,6 +415,32 @@ int main( int argc, char **argv )
 
         printf ("Working directory now %s\n", directory);
       }
+#elif defined(unix)
+      {
+      char cwd[1024];
+      char *last_slash;
+      
+      // Get current working directory
+      if (getcwd(cwd, sizeof(cwd)) == NULL) {
+          perror("getcwd");
+          exit(1);
+      }
+      
+      // Find the last slash to get the parent directory
+      last_slash = strrchr(cwd, '/');
+      if (last_slash != NULL) {
+          *last_slash = '\0';  // Remove everything after the last slash
+          strcat(cwd, "/area");  // Add /area
+          
+          // Change to the area directory
+          if (chdir(cwd) != 0) {
+              perror("chdir to area directory");
+              exit(1);
+          }
+          
+          printf("Working directory now %s\n", cwd);
+      }
+      }
 #endif
 
     /*

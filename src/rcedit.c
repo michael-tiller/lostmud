@@ -27,14 +27,8 @@ void save_race_to_file(int race_no);
 void reload_race_list(void);
 
 // macro definitions
-#if WIN32
 #define RACE_TEMP "../data/race/t"
 #define RACE_DIR "../data/race/"
-#endif
-#if (linux)
-#define RACE_TEMP "data/race/t"
-#define RACE_DIR "data/race/"
-#endif
 
 /**/	
 void do_race_info( CHAR_DATA *ch, char *argument ) {
