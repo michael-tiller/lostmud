@@ -878,6 +878,7 @@ void load_race_file(const char *filename, int race_no) {
 	}
 	
 	printf("  Parsing race file: %s\n", filename);
+	fflush(stdout);  /* Ensure output is flushed immediately */
 	
 	for (;;) {
 		if (feof(fp)) {
@@ -890,10 +891,11 @@ void load_race_file(const char *filename, int race_no) {
 		}
 		fMatch = FALSE;
 		
-		/* Debug output to track loading progress - uncomment for debugging */
-		/* if (strcmp(word, "End") != 0) {
-			printf("    Reading word: '%s'\n", word);
-		} */
+		/* Debug: Show what word we're processing */
+		if (strcmp(word, "End") != 0) {
+			printf("    Processing word: '%s'\n", word);
+			fflush(stdout);
+		}
 		
 		switch (UPPER(word[0])) {
 			case '#':
@@ -1183,6 +1185,7 @@ void load_race_files(void) {
 		}
 		
 		printf("Processing race %d: %s\n", race_no, race_table[race_no].name);
+		fflush(stdout);  /* Ensure output is flushed immediately */
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
 		
 		/* Try to load the race file - if it doesn't exist, skip it */
@@ -1190,8 +1193,22 @@ void load_race_files(void) {
 		if (fp != NULL) {
 			fclose(fp);
 			printf("Loading race file: %s\n", filename);
+			fflush(stdout);  /* Ensure output is flushed immediately */
+			
 			/* Add error handling around race file loading */
+			printf("  About to call load_race_file for race %d\n", race_no);
+			fflush(stdout);
+			
+			/* Check if this is the problematic race file */
+			if (race_no == 29) {
+				printf("  WARNING: This is race 29 (fox) - potential problem race\n");
+				fflush(stdout);
+			}
+			
 			load_race_file(filename, race_no);
+			
+			printf("  Completed load_race_file for race %d\n", race_no);
+			fflush(stdout);
 			loaded_count++;
 		} else {
 			printf("Race file not found: %s (using hardcoded values)\n", filename);
@@ -1209,6 +1226,12 @@ void load_race_files(void) {
 		/* Force termination to prevent crashes */
 		race_table[race_no].name = NULL;
 	}
+	
+	/* Debug: Check if race table is accessible */
+	printf("DEBUG: Race table accessibility check:\n");
+	printf("  race_table[0].name = %s\n", race_table[0].name ? race_table[0].name : "NULL");
+	printf("  race_table[1].name = %s\n", race_table[1].name ? race_table[1].name : "NULL");
+	printf("  race_table[2].name = %s\n", race_table[2].name ? race_table[2].name : "NULL");
 	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
@@ -1297,6 +1320,25 @@ void load_race_files(void) {
 	printf("Testing race_lookup('human'): %d\n", race_lookup("human"));
 	printf("Testing race_lookup('elf'): %d\n", race_lookup("elf"));
 	printf("Testing race_lookup('dwarf'): %d\n", race_lookup("dwarf"));
+	
+	/* Debug: Check race table state */
+	printf("DEBUG: Race table state:\n");
+	for (int i = 0; i < 5 && race_table[i].name != NULL; i++) {
+		printf("  Race %d: name='%s', pc_race=%d\n", i, race_table[i].name, race_table[i].pc_race);
+	}
+	
+	/* Debug: Test race_lookup with direct string comparison */
+	printf("DEBUG: Direct race table search test:\n");
+	for (int i = 0; race_table[i].name != NULL; i++) {
+		if (!str_cmp("human", race_table[i].name)) {
+			printf("  Found 'human' at index %d\n", i);
+			break;
+		}
+	}
+	
+	/* Final flush to ensure all output is written */
+	fflush(stdout);
+	fflush(stderr);
 	
 } // load_race_files()
 

@@ -3068,6 +3068,12 @@ char *fread_word( FILE *fp )
     char *pword;
     char cEnd;
 
+    /* Safety check for NULL file pointer */
+    if (fp == NULL) {
+	word[0] = '\0';
+	return word;
+    }
+
     do
     {
 	cEnd = getc( fp );

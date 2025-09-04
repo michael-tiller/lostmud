@@ -18,7 +18,7 @@ do
 
     rm -f ./rot
     cp ../bin/rot .
-    ./rot $port >& "$logfile"
+    stdbuf -o0 -e0 ./rot $port >& "$logfile"
 
     if [ -e shutdown.txt ]; then
         rm -f shutdown.txt
