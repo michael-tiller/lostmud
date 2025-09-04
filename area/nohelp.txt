@@ -36,3 +36,4 @@
 [ 1087] Chaos: ITEM_PORTAL
 [  200] Topaz: newbie info
 [  200] Topaz: newbie info
+[  200] Rancor: newbie info

@@ -142,10 +142,10 @@ You see a living statue made from clay.
 ~
 ~
 titan~
-A Da 0 0 0
-80 35 1 105d12+424 35d11+14 9d2+21 none
+ABF Da 0 0 0
+80 35 1 105d12+424 35d11+14 9d2+21 crush
 -15 -15 -15 -8
-CH B D 0
+CH AB D 0
 stand stand none 0
 AHMV ABCDEFGHIJK medium unknown
 #1099
@@ -155,7 +155,7 @@ A beautiful glowing Avi stands here wearing in flowing robes.
 ~
 ~
 avian~
-Aa DFJLT H 0 0
+ABa DFJLT H 0 0
 300 300 1080 900d101+25411 300d11+120 76d15+910 none
 -205 -205 -205 -144
 0 0 J LQ
@@ -181,7 +181,7 @@ A huge feathered headdress decorated with gems is here.~
 gold~
 jewelry GMY AE
 0 0 0 0 0
-80 80 8 2100 P
+50 80 8 2100 P
 A
 5 2
 A
@@ -193,7 +193,7 @@ There's a sword here, but it literally has wings. Still looks mean.~
 steel~
 weapon 0 AN
 sword 9 13 slice E
-60 80 8 83 P
+50 80 8 83 P
 A
 19 7
 A
@@ -205,7 +205,7 @@ There is a smelly old rag laying here.~
 burlap~
 armor 0 AF
 AE AE AE D 0
-60 80 8 0 P
+50 80 8 0 P
 A
 4 -1
 A
@@ -217,7 +217,7 @@ A large pile of purple cloth is here.~
 linen~
 armor 0 AK
 AE AE AE D 0
-60 80 8 20 P
+50 80 8 20 P
 A
 5 1
 #1005
@@ -227,7 +227,7 @@ A translucent blue feather flutters weightlessly in the wind.~
 nether~
 jewelry Y AC
 0 0 0 0 0
-55 60 0 500 P
+50 60 0 500 P
 F
 A 0 0 L
 A
@@ -239,7 +239,9 @@ A huge pile of red cloth lays slumped on the floor.~
 unknown~
 armor G AK
 AE AE AE D 0
-60 80 8 20 P
+50 80 8 20 P
+F
+S 0 0 D
 A
 3 2
 A
@@ -253,7 +255,7 @@ A bulky but protective looking set of ankle guards have been left behind.~
 steel~
 armor Y AG
 AE AE AE D 0
-60 80 8 20 P
+50 80 8 20 P
 A
 14 100
 A
@@ -267,7 +269,7 @@ A jagged blue spear lays here, discarded.~
 skysteel~
 weapon G AN
 staff 11 15 stab DFG
-70 80 8 300 P
+50 80 8 300 P
 A
 18 7
 A
@@ -279,7 +281,7 @@ A sharp looking kitchen knife has been left here.~
 steel~
 weapon Y AN
 dagger 8 12 stab DH
-60 80 8 83 P
+50 80 8 83 P
 A
 18 7
 A
@@ -291,7 +293,7 @@ A small hoop of silver just covered in gemstones lays here, abandoned.~
 unknown~
 jewelry Y AB
 0 0 0 0 0
-60 80 2 1200 P
+50 80 2 1200 P
 A
 5 2
 A
@@ -319,7 +321,7 @@ A stone pendant has been discarded here.~
 lodestone~
 jewelry BY AC
 0 0 0 0 0
-60 80 3 1000 P
+50 80 3 1000 P
 A
 5 2
 A
