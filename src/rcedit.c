@@ -1170,6 +1170,18 @@ void load_race_files(void) {
 	/* First, load races from the static table (existing races) */
 	log_string("Loading races from static table...");
 	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		/* Safety check to prevent infinite loops or crashes */
+		if (race_no >= MAX_PC_RACE) {
+			printf("WARNING: Race table appears to be corrupted, stopping at race %d\n", race_no);
+			break;
+		}
+		
+		/* Safety check for NULL race name */
+		if (race_table[race_no].name == NULL) {
+			printf("WARNING: Found NULL race name at index %d, stopping\n", race_no);
+			break;
+		}
+		
 		printf("Processing race %d: %s\n", race_no, race_table[race_no].name);
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
 		
@@ -1178,6 +1190,7 @@ void load_race_files(void) {
 		if (fp != NULL) {
 			fclose(fp);
 			printf("Loading race file: %s\n", filename);
+			/* Add error handling around race file loading */
 			load_race_file(filename, race_no);
 			loaded_count++;
 		} else {
@@ -1188,6 +1201,14 @@ void load_race_files(void) {
 	}
 	
 	printf("Finished processing static races. Processed %d races.\n", race_no);
+	
+	/* Verify race table termination */
+	if (race_table[race_no].name != NULL) {
+		printf("ERROR: Race table not properly terminated! Race %d has name: %s\n", 
+			race_no, race_table[race_no].name);
+		/* Force termination to prevent crashes */
+		race_table[race_no].name = NULL;
+	}
 	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
@@ -1271,6 +1292,11 @@ void load_race_files(void) {
 	
 	printf("Race loading complete: %d static races loaded, %d skipped, %d from list, %d total\n", 
 		loaded_count, skipped_count, list_loaded_count, total_races);
+	
+	/* Debug: Test race_lookup function */
+	printf("Testing race_lookup('human'): %d\n", race_lookup("human"));
+	printf("Testing race_lookup('elf'): %d\n", race_lookup("elf"));
+	printf("Testing race_lookup('dwarf'): %d\n", race_lookup("dwarf"));
 	
 } // load_race_files()
 
