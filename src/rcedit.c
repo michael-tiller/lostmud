@@ -26,13 +26,8 @@ void load_race_files(void);
 void save_race_to_file(int race_no);
 
 // macro definitions
-#ifdef WIN32
 #define RACE_TEMP "../data/race/t"
 #define RACE_DIR "../data/race/"
-#else
-#define RACE_TEMP "data/race/t"
-#define RACE_DIR "data/race/"
-#endif
 
 /**/
 void do_race_info( CHAR_DATA *ch, char *argument ) {
@@ -1085,8 +1080,12 @@ void load_race_files(void) {
 	char filename[MIL];
 	int race_no;
 	
-	/* Initialize all PC race entries with defaults first */
-	for (race_no = 0; race_no < MAX_PC_RACE; race_no++) {
+	/* Initialize PC race entries with defaults first - only initialize existing entries */
+	/* The pc_race_table has a fixed number of entries defined in const.c */
+	/* We'll initialize only the entries that are actually defined (about 21 entries) */
+	int actual_race_count = 20; /* This matches the actual number of entries in pc_race_table (0-19) */
+	
+	for (race_no = 0; race_no < actual_race_count; race_no++) {
 		/* Initialize with default values */
 		pc_race_table[race_no].name = str_dup("null race");
 		strcpy(pc_race_table[race_no].who_name, "     ");
