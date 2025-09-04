@@ -792,14 +792,27 @@ void load_old_mob( FILE *fp )
     	}
     	else
     	{
-            pMobIndex->race = race;
-            pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_RACE|
-                                   race_table[race].off;
-            pMobIndex->imm_flags = race_table[race].imm;
-            pMobIndex->res_flags = race_table[race].res;
-            pMobIndex->vuln_flags = race_table[race].vuln;
-            pMobIndex->form = race_table[race].form;
-            pMobIndex->parts = race_table[race].parts;
+            /* Additional validation - check if race still exists */
+            if (race < 0 || race >= MAX_PC_RACE || race_table[race].name == NULL) {
+                bug("Load_old_mob: mobile vnum %d has invalid race '%s', defaulting to human", vnum, name);
+                pMobIndex->race = race_lookup("human");
+                pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_VNUM;
+                pMobIndex->imm_flags = 0;
+                pMobIndex->res_flags = 0;
+                pMobIndex->vuln_flags = 0;
+                pMobIndex->form = FORM_EDIBLE|FORM_SENTIENT|FORM_BIPED|FORM_MAMMAL;
+                pMobIndex->parts = PART_HEAD|PART_ARMS|PART_LEGS|PART_HEART|
+                                   PART_BRAINS|PART_GUTS;
+            } else {
+                pMobIndex->race = race;
+                pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_RACE|
+                                       race_table[race].off;
+                pMobIndex->imm_flags = race_table[race].imm;
+                pMobIndex->res_flags = race_table[race].res;
+                pMobIndex->vuln_flags = race_table[race].vuln;
+                pMobIndex->form = race_table[race].form;
+                pMobIndex->parts = race_table[race].parts;
+            }
     	}
 
 	if ( letter != 'S' )

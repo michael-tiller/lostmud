@@ -237,10 +237,17 @@ void load_mobiles( FILE *fp )
         pMobIndex->long_descr           = fread_string( fp );
         pMobIndex->description          = fread_string( fp );
 	pMobIndex->race		 	= race_lookup(fread_string( fp ));
- 
+
+        /* Validate race - if race no longer exists, default to human */
+        if (pMobIndex->race < 0 || pMobIndex->race >= MAX_PC_RACE || 
+            race_table[pMobIndex->race].name == NULL) {
+            bug("Load_mobiles: mobile vnum %d has invalid race, defaulting to human", vnum);
+            pMobIndex->race = race_lookup("human");
+        }
+
         pMobIndex->long_descr[0]        = UPPER(pMobIndex->long_descr[0]);
         pMobIndex->description[0]       = UPPER(pMobIndex->description[0]);
- 
+
         pMobIndex->act                  = fread_flag( fp ) | ACT_IS_NPC
 					| race_table[pMobIndex->race].act;
         pMobIndex->affected_by          = fread_flag( fp )
