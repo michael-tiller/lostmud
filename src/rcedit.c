@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#ifdef WIN32
+#include <io.h>
+#else
+#include <dirent.h>
+#endif
 #include "merc.h"
 #include "tables.h"
 #include "interp.h"
@@ -18,6 +23,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument);
 void load_race_file(const char *filename, int race_no);
 void save_race_file(const char *filename, int race_no);
 void load_race_files(void);
+void save_race_to_file(int race_no);
 
 // macro definitions
 #ifdef WIN32
@@ -42,9 +48,11 @@ void do_race_info( CHAR_DATA *ch, char *argument ) {
 
 	argument = one_argument (argument, race_name);
 	
-	for (race_no = 0; race_table[race_no].name != NULL; race_no++)
-		if (!str_cmp(race_name, race_table[race_no].name))
+	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		if (!str_cmp(race_name, race_table[race_no].name)) {
 			break;
+		}
+	}
 	
 	if (race_table[race_no].name == NULL) {
 		printf_to_char (ch, "No race named '%s' exists.\n\r", race_name);
@@ -104,6 +112,207 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 	int race_no, value, i;
 	
 	argument = one_argument (argument, race_name);
+	
+	/* Special handling for create command */
+	if (!str_cmp(race_name, "create")) {
+		if (!argument[0]) {
+			send_to_char("Syntax is: rcedit create <race_name>.\n\r", ch);
+			return;
+		}
+		
+		/* Check if race already exists and find first empty slot */
+		race_no = 0;
+		for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+			if (!str_cmp(argument, race_table[race_no].name)) {
+				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
+				return;
+			}
+		}
+		/* race_no now points to the first empty slot or beyond the table */
+		
+		/* Check if we have room for a new race */
+		if (race_no >= MAX_PC_RACE) {
+			printf_to_char(ch, "Cannot create new race - maximum number of races (%d) reached.\n\r", MAX_PC_RACE);
+			return;
+		}
+		
+		/* Check if we're within the PC race limit */
+		if (race_no >= MAX_PC_RACE) {
+			printf_to_char(ch, "Cannot create new race - maximum number of races (%d) reached.\n\r", MAX_PC_RACE);
+			return;
+		}
+		
+		/* Validate race name */
+		if (strlen(argument) < 2 || strlen(argument) > 20) {
+			send_to_char("Race name must be between 2 and 20 characters.\n\r", ch);
+			return;
+		}
+		
+		/* Initialize new race with default values */
+		race_table[race_no].name = str_dup(argument);
+		race_table[race_no].pc_race = FALSE;
+		race_table[race_no].act = 0;
+		race_table[race_no].aff = 0;
+		race_table[race_no].off = 0;
+		race_table[race_no].imm = 0;
+		race_table[race_no].res = 0;
+		race_table[race_no].vuln = 0;
+		race_table[race_no].shd = 0;
+		race_table[race_no].form = 0;
+		race_table[race_no].parts = 0;
+		
+		/* Initialize PC race data with defaults */
+		if (race_no < MAX_PC_RACE) {
+			pc_race_table[race_no].name = str_dup(argument);
+			strcpy(pc_race_table[race_no].who_name, "     ");
+			pc_race_table[race_no].points = 0;
+			pc_race_table[race_no].size = 2; /* SIZE_MEDIUM */
+			pc_race_table[race_no].tier = 1;
+			
+			/* Set default stats */
+			for (i = 0; i < MAX_STATS; i++) {
+				pc_race_table[race_no].stats[i] = 13;
+				pc_race_table[race_no].max_stats[i] = 18;
+			}
+			
+			/* Set default class multipliers */
+			for (i = 0; i < MAX_CLASS; i++) {
+				pc_race_table[race_no].class_mult[i] = 100;
+			}
+			
+			/* Initialize skills */
+			for (i = 0; i < 5; i++) {
+				pc_race_table[race_no].skills[i] = NULL;
+			}
+		}
+		
+		/* Mark end of table if this is a new race at the end */
+		if (race_table[race_no + 1].name == NULL || race_no == 0) {
+			race_table[race_no + 1].name = NULL;
+		}
+		
+		printf_to_char(ch, "OK, created new race '%s'.\n\r", argument);
+		
+		/* Save the race file */
+		save_race_to_file(race_no);
+		
+		/* Add to race list file */
+		FILE *list_fp = fopen("data/race/race_list.txt", "a");
+		if (list_fp != NULL) {
+			fprintf(list_fp, "%s\n", argument);
+			fclose(list_fp);
+		}
+		
+		return;
+	}
+	
+	/* Special handling for delete command */
+	if (!str_cmp(race_name, "delete")) {
+		if (!argument[0]) {
+			send_to_char("Syntax is: rcedit delete <race_name>.\n\r", ch);
+			return;
+		}
+		
+		/* Find the race to delete */
+		for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+			if (!str_cmp(argument, race_table[race_no].name)) {
+				break;
+			}
+		}
+		
+		if (race_table[race_no].name == NULL) {
+			printf_to_char(ch, "No race named '%s' exists.\n\r", argument);
+			return;
+		}
+		
+		/* Check if any players are using this race */
+		CHAR_DATA *wch;
+		for (wch = char_list; wch != NULL; wch = wch->next) {
+			if (wch->race == race_no) {
+				printf_to_char(ch, "Cannot delete race '%s' - players are currently using it.\n\r", race_table[race_no].name);
+				return;
+			}
+		}
+		
+		/* Get filename and race name before freeing data */
+		char filename[MIL];
+		char deleted_race_name[MIL];
+		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
+		strcpy(deleted_race_name, race_table[race_no].name);
+		
+		/* Free race data */
+		free_string(race_table[race_no].name);
+		
+		/* Free PC race data if applicable */
+		if (race_no < MAX_PC_RACE) {
+			free_string(pc_race_table[race_no].name);
+			int i;
+			for (i = 0; i < 5; i++) {
+				if (pc_race_table[race_no].skills[i] != NULL) {
+					free_string(pc_race_table[race_no].skills[i]);
+				}
+			}
+		}
+		
+		/* Shift remaining races down */
+		int i;
+		for (i = race_no; race_table[i + 1].name != NULL; i++) {
+			race_table[i] = race_table[i + 1];
+			if (i < MAX_PC_RACE) {
+				pc_race_table[i] = pc_race_table[i + 1];
+			}
+		}
+		race_table[i].name = NULL;
+		
+		printf_to_char(ch, "OK, race deleted.\n\r");
+		
+		/* Delete the race file */
+		unlink(filename);
+		
+		/* Remove from race list file */
+		FILE *list_fp = fopen("data/race/race_list.txt", "r");
+		if (list_fp != NULL) {
+			char temp_filename[MIL];
+			sprintf(temp_filename, "%srace_list.tmp", RACE_DIR);
+			FILE *temp_fp = fopen(temp_filename, "w");
+			if (temp_fp != NULL) {
+				char line[MIL];
+				while (fgets(line, sizeof(line), list_fp) != NULL) {
+					/* Remove newline */
+					char *newline = strchr(line, '\n');
+					if (newline) *newline = '\0';
+					char *carriage = strchr(line, '\r');
+					if (carriage) *carriage = '\0';
+					
+					/* Skip the deleted race */
+					if (str_cmp(line, deleted_race_name)) {
+						fprintf(temp_fp, "%s\n", line);
+					}
+				}
+				fclose(temp_fp);
+				fclose(list_fp);
+				
+				/* Replace the original file */
+				unlink("data/race/race_list.txt");
+				rename(temp_filename, "data/race/race_list.txt");
+			} else {
+				fclose(list_fp);
+			}
+		}
+		
+		return;
+	}
+	
+	/* Special handling for list command */
+	if (!str_cmp(race_name, "list")) {
+		send_to_char("Available races:\n\r", ch);
+		for (int i = 0; race_table[i].name != NULL; i++) {
+			printf_to_char(ch, "  %d: %s (%s)\n\r", i, race_table[i].name, 
+				race_table[i].pc_race ? "PC" : "NPC");
+		}
+		return;
+	}
+	
 	argument = one_argument (argument, field_name);
 	
 	if (!argument[0])
@@ -112,13 +321,17 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		send_to_char ("PC Race Fields: pcrace, points, size, tier, stat, maxstat, mult, skill\n\r",ch);
 		send_to_char ("Race Flag Fields: act, aff, off, imm, res, vuln, shd, form, parts\n\r",ch);
 		send_to_char ("Flag Removal: remove_act, remove_aff, remove_off, remove_imm, remove_res, remove_vuln, remove_shd, remove_form, remove_parts\n\r",ch);
+		send_to_char ("Race Management: rename <new_name>\n\r",ch);
+		send_to_char ("Special Commands: rcedit create <race_name>, rcedit delete <race_name>, rcedit list\n\r",ch);
 		return;
 	}
 	
 	/* Find the race */
-	for (race_no = 0; race_table[race_no].name != NULL; race_no++)
-		if (!str_cmp(race_name, race_table[race_no].name))
+	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		if (!str_cmp(race_name, race_table[race_no].name)) {
 			break;
+		}
+	}
 	
 	if (race_table[race_no].name == NULL)
 	{
@@ -135,6 +348,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			if (race_no >= MAX_PC_RACE) {
 				printf_to_char(ch, "Cannot make %s a PC race - race number %d exceeds MAX_PC_RACE (%d).\n\r", 
 					race_table[race_no].name, race_no, MAX_PC_RACE);
+				printf_to_char(ch, "Only races 0-%d can be PC races. Use 'rcedit create <name>' to create a new race.\n\r", MAX_PC_RACE - 1);
 				return;
 			}
 			race_table[race_no].pc_race = TRUE;
@@ -464,9 +678,44 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		printf_to_char(ch, "OK, removed %s from %s parts flags. Now: %s\n\r", 
 			part_bit_name(value), race_table[race_no].name, part_bit_name(race_table[race_no].parts));
 	}
-	else {
-		send_to_char("Invalid field. Use: pcrace, points, size, tier, stat, maxstat, mult, skill, act, aff, off, imm, res, vuln, shd, form, parts, remove_act, remove_aff, remove_off, remove_imm, remove_res, remove_vuln, remove_shd, remove_form, remove_parts\n\r", ch);
+	else if (!str_cmp(field_name, "rename")) {
+		/* Format: rcedit race rename <new_name> */
+		if (strlen(argument) < 2 || strlen(argument) > 20) {
+			send_to_char("Race name must be between 2 and 20 characters.\n\r", ch);
+			return;
+		}
+		
+		/* Check if new name already exists */
+		int check_race;
+		for (check_race = 0; race_table[check_race].name != NULL; check_race++) {
+			if (check_race != race_no && !str_cmp(argument, race_table[check_race].name)) {
+				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
+				return;
+			}
+		}
+		
+		/* Free old name and set new name */
+		free_string(race_table[race_no].name);
+		race_table[race_no].name = str_dup(argument);
+		
+		/* Update PC race table name if it's a PC race */
+		if (race_table[race_no].pc_race && race_no < MAX_PC_RACE) {
+			free_string(pc_race_table[race_no].name);
+			pc_race_table[race_no].name = str_dup(argument);
+		}
+		
+		printf_to_char(ch, "OK, race renamed to '%s'.\n\r", argument);
+		
+		/* Save the race file */
+		save_race_to_file(race_no);
 	}
+	else {
+		send_to_char("Invalid field. Use: pcrace, points, size, tier, stat, maxstat, mult, skill, act, aff, off, imm, res, vuln, shd, form, parts, remove_act, remove_aff, remove_off, remove_imm, remove_res, remove_vuln, remove_shd, remove_form, remove_parts, rename, delete\n\r", ch);
+		return;
+	}
+	
+	/* Save the race file after any modification */
+	save_race_to_file(race_no);
 	
 } // do_rcedit()
 
@@ -836,7 +1085,34 @@ void load_race_files(void) {
 	char filename[MIL];
 	int race_no;
 	
-	/* Try to load each race file based on the race table */
+	/* Initialize all PC race entries with defaults first */
+	for (race_no = 0; race_no < MAX_PC_RACE; race_no++) {
+		/* Initialize with default values */
+		pc_race_table[race_no].name = str_dup("null race");
+		strcpy(pc_race_table[race_no].who_name, "     ");
+		pc_race_table[race_no].points = 0;
+		pc_race_table[race_no].size = 2; /* SIZE_MEDIUM */
+		pc_race_table[race_no].tier = 1;
+		
+		/* Set default stats */
+		int i;
+		for (i = 0; i < MAX_STATS; i++) {
+			pc_race_table[race_no].stats[i] = 13;
+			pc_race_table[race_no].max_stats[i] = 18;
+		}
+		
+		/* Set default class multipliers */
+		for (i = 0; i < MAX_CLASS; i++) {
+			pc_race_table[race_no].class_mult[i] = 100;
+		}
+		
+		/* Initialize skills */
+		for (i = 0; i < 5; i++) {
+			pc_race_table[race_no].skills[i] = NULL;
+		}
+	}
+	
+	/* First, load races from the static table (existing races) */
 	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
 		
@@ -849,4 +1125,73 @@ void load_race_files(void) {
 		/* If file doesn't exist, race keeps its hardcoded values */
 	}
 	
+	/* Load additional races from a race list file */
+	/* This is a simpler cross-platform approach */
+	char list_filename[MIL];
+	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
+	FILE *list_fp = fopen(list_filename, "r");
+	if (list_fp != NULL) {
+		char line[MIL];
+		while (fgets(line, sizeof(line), list_fp) != NULL) {
+			/* Remove newline */
+			char *newline = strchr(line, '\n');
+			if (newline) *newline = '\0';
+			char *carriage = strchr(line, '\r');
+			if (carriage) *carriage = '\0';
+			
+			/* Skip empty lines and comments */
+			if (line[0] == '\0' || line[0] == '#') continue;
+			
+			/* Check if this race is already loaded */
+			int found = 0;
+			for (int i = 0; race_table[i].name != NULL; i++) {
+				if (!str_cmp(line, race_table[i].name)) {
+					found = 1;
+					break;
+				}
+			}
+			
+			/* If not found, add it to the race table */
+			if (!found) {
+				/* Find first empty slot within existing table bounds */
+				int empty_slot = 0;
+				for (empty_slot = 0; race_table[empty_slot].name != NULL; empty_slot++) {
+					/* Keep going until we find the end */
+				}
+				
+				/* Check if we can extend the table */
+				if (empty_slot < MAX_PC_RACE) {
+					printf("Adding race '%s' to slot %d\n", line, empty_slot);
+					/* Create the race entry */
+					race_table[empty_slot].name = str_dup(line);
+					race_table[empty_slot].pc_race = FALSE;
+					race_table[empty_slot].act = 0;
+					race_table[empty_slot].aff = 0;
+					race_table[empty_slot].off = 0;
+					race_table[empty_slot].imm = 0;
+					race_table[empty_slot].res = 0;
+					race_table[empty_slot].vuln = 0;
+					race_table[empty_slot].shd = 0;
+					race_table[empty_slot].form = 0;
+					race_table[empty_slot].parts = 0;
+					
+					/* Load the race file */
+					sprintf(filename, "%s%s.race", RACE_DIR, line);
+					load_race_file(filename, empty_slot);
+					
+					/* Mark end of table after loading */
+					race_table[empty_slot + 1].name = NULL;
+				}
+			}
+		}
+		fclose(list_fp);
+	}
+	
 } // load_race_files()
+
+/**/
+void save_race_to_file(int race_no) {
+	char filename[MIL];
+	sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
+	save_race_file(filename, race_no);
+} // save_race_to_file()

@@ -213,7 +213,7 @@ extern int	max_groups;
 #define MAX_DUPES		    7
 #define MAX_CLASS		   21
 #define NUM_TIERS       3
-#define MAX_PC_RACE		   25
+#define MAX_PC_RACE		   100
 #define MAX_CLAN		   15
 #define MAX_LEVEL		  210
 #define LEVEL_HERO		   (MAX_LEVEL - 9)
