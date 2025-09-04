@@ -3074,6 +3074,12 @@ char *fread_word( FILE *fp )
     }
     while ( isspace( cEnd ) );
 
+    if ( cEnd == EOF )
+    {
+	word[0] = '\0';
+	return word;
+    }
+
     if ( cEnd == '\'' || cEnd == '"' )
     {
 	pword   = word;
@@ -3088,6 +3094,11 @@ char *fread_word( FILE *fp )
     for ( ; pword < word + MAX_INPUT_LENGTH; pword++ )
     {
 	*pword = getc( fp );
+	if ( *pword == EOF )
+	{
+	    *pword = '\0';
+	    return word;
+	}
 	if ( cEnd == ' ' ? isspace(*pword) : *pword == cEnd )
 	{
 	    if ( cEnd == ' ' )

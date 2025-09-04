@@ -880,8 +880,20 @@ void load_race_file(const char *filename, int race_no) {
 	printf("  Parsing race file: %s\n", filename);
 	
 	for (;;) {
-		word = feof(fp) ? "End" : fread_word(fp);
+		if (feof(fp)) {
+			word = "End";
+		} else {
+			word = fread_word(fp);
+			if (word == NULL || word[0] == '\0') {
+				word = "End";
+			}
+		}
 		fMatch = FALSE;
+		
+		/* Debug output to track loading progress - uncomment for debugging */
+		/* if (strcmp(word, "End") != 0) {
+			printf("    Reading word: '%s'\n", word);
+		} */
 		
 		switch (UPPER(word[0])) {
 			case '#':
@@ -1158,6 +1170,7 @@ void load_race_files(void) {
 	/* First, load races from the static table (existing races) */
 	log_string("Loading races from static table...");
 	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		printf("Processing race %d: %s\n", race_no, race_table[race_no].name);
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
 		
 		/* Try to load the race file - if it doesn't exist, skip it */
@@ -1173,6 +1186,8 @@ void load_race_files(void) {
 		}
 		/* If file doesn't exist, race keeps its hardcoded values */
 	}
+	
+	printf("Finished processing static races. Processed %d races.\n", race_no);
 	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
