@@ -870,13 +870,14 @@ void load_race_file(const char *filename, int race_no) {
 	char *word;
 	bool fMatch;
 	int i;
+	int fields_loaded = 0;
 	
 	if ((fp = fopen(filename, "r")) == NULL) {
 		bug("load_race_file: cannot open file for reading", 0);
 		return;
 	}
 	
-
+	printf("  Parsing race file: %s\n", filename);
 	
 	for (;;) {
 		word = feof(fp) ? "End" : fread_word(fp);
@@ -896,10 +897,12 @@ void load_race_file(const char *filename, int race_no) {
 			case 'A':
 				if (!str_cmp(word, "Act")) {
 					race_table[race_no].act = fread_number(fp);
+					fields_loaded++;
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Aff")) {
 					race_table[race_no].aff = fread_number(fp);
+					fields_loaded++;
 					fMatch = TRUE;
 				}
 				break;
@@ -1015,6 +1018,8 @@ void load_race_file(const char *filename, int race_no) {
 						/* Keep the original name if fread_string fails */
 					} else {
 						race_table[race_no].name = new_name;
+						printf("    Race name: %s\n", race_table[race_no].name);
+						fields_loaded++;
 					}
 					fMatch = TRUE;
 				}
@@ -1023,6 +1028,7 @@ void load_race_file(const char *filename, int race_no) {
 			case 'O':
 				if (!str_cmp(word, "Off")) {
 					race_table[race_no].off = fread_number(fp);
+					fields_loaded++;
 					fMatch = TRUE;
 				}
 				break;
@@ -1031,10 +1037,12 @@ void load_race_file(const char *filename, int race_no) {
 				if (!str_cmp(word, "PC_RACE")) {
 					char *pc_race_str = fread_word(fp);
 					race_table[race_no].pc_race = (!str_cmp(pc_race_str, "yes"));
+					fields_loaded++;
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Parts")) {
 					race_table[race_no].parts = fread_number(fp);
+					fields_loaded++;
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Points")) {
@@ -1128,17 +1136,27 @@ void load_race_file(const char *filename, int race_no) {
 		}
 	}
 	
+	printf("    Loaded %d fields from %s\n", fields_loaded, filename);
+	fclose(fp);
+	
 } // load_race_file()
 
 /**/
 void load_race_files(void) {
 	char filename[MIL];
 	int race_no;
+	int loaded_count = 0;
+	int skipped_count = 0;
+	int list_loaded_count = 0;
 	
 	/* The pc_race_table is already initialized with hardcoded race data in const.c */
 	/* We don't need to overwrite it with "null race" - that destroys the existing data */
 	
+	log_string("Race file loading starting...");
+	log_string("Race directory: " RACE_DIR);
+	
 	/* First, load races from the static table (existing races) */
+	log_string("Loading races from static table...");
 	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
 		
@@ -1146,7 +1164,12 @@ void load_race_files(void) {
 		FILE *fp = fopen(filename, "r");
 		if (fp != NULL) {
 			fclose(fp);
+			printf("Loading race file: %s\n", filename);
 			load_race_file(filename, race_no);
+			loaded_count++;
+		} else {
+			printf("Race file not found: %s (using hardcoded values)\n", filename);
+			skipped_count++;
 		}
 		/* If file doesn't exist, race keeps its hardcoded values */
 	}
@@ -1155,8 +1178,11 @@ void load_race_files(void) {
 	/* This is a simpler cross-platform approach */
 	char list_filename[MIL];
 	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
+	printf("Checking for race list file: %s\n", list_filename);
+	
 	FILE *list_fp = fopen(list_filename, "r");
 	if (list_fp != NULL) {
+		printf("Loading additional races from race list file...\n");
 		char line[MIL];
 		while (fgets(line, sizeof(line), list_fp) != NULL) {
 			/* Remove newline */
@@ -1187,7 +1213,7 @@ void load_race_files(void) {
 				
 				/* Check if we can extend the table */
 				if (empty_slot < MAX_PC_RACE) {
-					printf("Adding race '%s' to slot %d\n", line, empty_slot);
+					printf("Adding new race '%s' to slot %d\n", line, empty_slot);
 					/* Create the race entry */
 					race_table[empty_slot].name = str_dup(line);
 					race_table[empty_slot].pc_race = FALSE;
@@ -1203,15 +1229,33 @@ void load_race_files(void) {
 					
 					/* Load the race file */
 					sprintf(filename, "%s%s.race", RACE_DIR, line);
+					printf("Loading race file: %s\n", filename);
 					load_race_file(filename, empty_slot);
+					list_loaded_count++;
 					
 					/* Mark end of table after loading */
 					race_table[empty_slot + 1].name = NULL;
+				} else {
+					printf("Cannot add race '%s': table full (MAX_PC_RACE=%d)\n", line, MAX_PC_RACE);
 				}
+			} else {
+				printf("Race '%s' already loaded, skipping\n", line);
 			}
 		}
 		fclose(list_fp);
+		printf("Race list file processing complete\n");
+	} else {
+		printf("Race list file not found: %s\n", list_filename);
 	}
+	
+	/* Count total races loaded */
+	int total_races = 0;
+	for (int i = 0; race_table[i].name != NULL; i++) {
+		total_races++;
+	}
+	
+	printf("Race loading complete: %d static races loaded, %d skipped, %d from list, %d total\n", 
+		loaded_count, skipped_count, list_loaded_count, total_races);
 	
 } // load_race_files()
 
