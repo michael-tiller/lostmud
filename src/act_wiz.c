@@ -2534,6 +2534,8 @@ void do_reboot( CHAR_DATA *ch, char *argument )
     extern bool merc_down;
     DESCRIPTOR_DATA *d,*d_next;
 
+	/* Update reset time when reboot */
+	last_reset_time = current_time;
     if (ch->invis_level < LEVEL_HERO)
     {
     	sprintf( buf, "Reboot by %s.", ch->name );
@@ -5815,7 +5817,8 @@ void copyover_recover ()
 	}
    fclose (fp);
 	
-	
+	/* Update reset time for copyover */
+	last_reset_time = current_time;
 }
 
 

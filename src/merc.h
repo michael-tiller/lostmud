@@ -2541,6 +2541,8 @@ extern		bool			MOBtrigger;
 
 extern		char			bug_buf		[];
 extern		time_t			current_time;
+extern		time_t			startup_time;
+extern		time_t			last_reset_time;
 extern		bool			fLogAll;
 extern		FILE *			fpReserve;
 extern		KILL_DATA		kill_table	[];
@@ -2777,6 +2779,8 @@ void	show_string	args( ( struct descriptor_data *d, char *input) );
 void	close_socket	args( ( DESCRIPTOR_DATA *dclose ) );
 void	write_to_buffer	args( ( DESCRIPTOR_DATA *d, const char *txt, int length ) );
 void    send_to_desc    args( ( const char *txt, DESCRIPTOR_DATA *d ) );
+void	show_uptime	args( ( DESCRIPTOR_DATA *d ) );
+void	show_uptime_char	args( ( CHAR_DATA *ch ) );
 void	send_to_char	args( ( const char *txt, CHAR_DATA *ch ) );
 void	page_to_char	args( ( const char *txt, CHAR_DATA *ch ) );
 void	act		args( ( const char *format, CHAR_DATA *ch, const void *arg1, const void *arg2, int type ) );

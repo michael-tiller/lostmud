@@ -157,6 +157,7 @@ const	struct	cmd_type	cmd_table	[] =
     { "spells",		do_spells,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
     { "story",		do_story,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
     { "time",		do_time,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
+    { "uptime",		do_uptime,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
     { "typo",		do_typo,	POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },
     { "weather",	do_weather,	POS_RESTING,	 0,  1,  LOG_NORMAL, 1 },
     { "who",		do_who,		POS_DEAD,	 0,  1,  LOG_NORMAL, 1 },

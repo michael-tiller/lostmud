@@ -351,6 +351,8 @@ bool		    wizlock;		/* Game is wizlocked		*/
 bool		    newlock;		/* Game is newlocked		*/
 char		    str_boot_time[MAX_INPUT_LENGTH];
 time_t		    current_time;	/* time of this pulse */	
+time_t		    startup_time;	/* time when MUD started */
+time_t		    last_reset_time;	/* time of last reset/copyover */
 bool		    MOBtrigger = TRUE;  /* act() switch                 */	
 char		    clcode[ MAX_INPUT_LENGTH ];
 int 		    port, control;
@@ -377,6 +379,8 @@ int main( int argc, char **argv )
      */
     gettimeofday( &now_time, NULL );
     current_time 	= (time_t) now_time.tv_sec;
+    startup_time 	= current_time;
+    last_reset_time 	= current_time;
     strcpy( str_boot_time, ctime( &current_time ) );
 
     /*
@@ -1875,6 +1879,10 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				send_to_desc( help_authors+1, d );
 			else
 				send_to_desc( help_authors  , d );
+			
+			/* Display uptime information */
+			show_uptime( d );
+			
 			if ( help_login[0] == '.' )
 				send_to_desc(  help_login+1, d );
 			else
@@ -1944,6 +1952,10 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 				send_to_desc( help_authors+1, d );
 			else
 				send_to_desc( help_authors  , d );
+			
+			/* Display uptime information */
+			show_uptime( d );
+			
 			if ( help_login[0] == '.' )
 				send_to_desc(  help_login+1, d );
 			else
@@ -3959,4 +3971,92 @@ void mudlogf(const char *fmt, ...) {
 	vfprintf(stderr, fmt, args);
 	fprintf(stderr, "\n");
 	va_end(args);
+}
+
+/*
+ * Display uptime information to a descriptor
+ */
+void show_uptime( DESCRIPTOR_DATA *d )
+{
+    char buf[MAX_STRING_LENGTH];
+    time_t uptime, reset_uptime;
+    int days, hours, minutes, seconds;
+    
+    /* Calculate uptime since startup */
+    uptime = current_time - startup_time;
+    days = uptime / 86400;
+    hours = (uptime % 86400) / 3600;
+    minutes = (uptime % 3600) / 60;
+    seconds = uptime % 60;
+    
+    sprintf(buf, "{YUptime since startup: {x");
+    if (days > 0)
+        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+    if (hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
+    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+    send_to_desc(buf, d);
+    
+    /* Calculate uptime since last reset/copyover */
+    reset_uptime = current_time - last_reset_time;
+    days = reset_uptime / 86400;
+    hours = (reset_uptime % 86400) / 3600;
+    minutes = (reset_uptime % 3600) / 60;
+    seconds = reset_uptime % 60;
+    
+    sprintf(buf, "{YUptime since last reset: {x");
+    if (days > 0)
+        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+    if (hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
+    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+    send_to_desc(buf, d);
+}
+
+/*
+ * Display uptime information to a character
+ */
+void show_uptime_char( CHAR_DATA *ch )
+{
+    char buf[MAX_STRING_LENGTH];
+    time_t uptime, reset_uptime;
+    int days, hours, minutes, seconds;
+    
+    /* Calculate uptime since startup */
+    uptime = current_time - startup_time;
+    days = uptime / 86400;
+    hours = (uptime % 86400) / 3600;
+    minutes = (uptime % 3600) / 60;
+    seconds = uptime % 60;
+    
+    sprintf(buf, "{YUptime since startup: {x");
+    if (days > 0)
+        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+    if (hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
+    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+    send_to_char(buf, ch);
+    
+    /* Calculate uptime since last reset/copyover */
+    reset_uptime = current_time - last_reset_time;
+    days = reset_uptime / 86400;
+    hours = (reset_uptime % 86400) / 3600;
+    minutes = (reset_uptime % 3600) / 60;
+    seconds = reset_uptime % 60;
+    
+    sprintf(buf, "{YUptime since last reset: {x");
+    if (days > 0)
+        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+    if (hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
+    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+    send_to_char(buf, ch);
 }

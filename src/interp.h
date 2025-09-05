@@ -347,6 +347,7 @@ DECLARE_DO_FUN( do_string	);
 DECLARE_DO_FUN(	do_switch	);
 DECLARE_DO_FUN(	do_tell		);
 DECLARE_DO_FUN(	do_time		);
+DECLARE_DO_FUN(	do_uptime	);
 DECLARE_DO_FUN(	do_title	);
 DECLARE_DO_FUN(	do_track	);
 DECLARE_DO_FUN(	do_train	);

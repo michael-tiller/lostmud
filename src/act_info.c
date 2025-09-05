@@ -2704,7 +2704,11 @@ void do_time( CHAR_DATA *ch, char *argument )
     return;
 }
 
-
+void do_uptime( CHAR_DATA *ch, char *argument )
+{    
+    show_uptime_char( ch );    
+    return;
+}
 
 void do_weather( CHAR_DATA *ch, char *argument )
 {
