@@ -4022,15 +4022,14 @@ void show_uptime( DESCRIPTOR_DATA *d )
     minutes = (uptime % 3600) / 60;
     seconds = uptime % 60;
     
-    sprintf(buf, "{YUptime: {x");
+    sprintf(buf, "{DUptime: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%dd, ", days);
+        sprintf(buf + strlen(buf), "%dd,", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%dh", hours);
-    if (minutes > 0 && days == 0 && hours == 0)
-        sprintf(buf + strlen(buf), "%dm", minutes);
-    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
-        sprintf(buf + strlen(buf), "%ds", seconds);
+        sprintf(buf + strlen(buf), "%dh,", hours);
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%dm,", minutes);
+    sprintf(buf + strlen(buf), "%ds", seconds);
     sprintf(buf + strlen(buf), "\n\r");
     send_to_desc(buf, d);
     
@@ -4041,15 +4040,14 @@ void show_uptime( DESCRIPTOR_DATA *d )
     minutes = (reset_uptime % 3600) / 60;
     seconds = reset_uptime % 60;
     
-    sprintf(buf, "{YSince Reboot: {x");
+    sprintf(buf, "{DLast Reboot: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%dd, ", days);
+        sprintf(buf + strlen(buf), "%dd,", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%dh", hours);
-    if (minutes > 0 && days == 0 && hours == 0)
-        sprintf(buf + strlen(buf), "%dm", minutes);
-    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
-        sprintf(buf + strlen(buf), "%ds", seconds);
+        sprintf(buf + strlen(buf), "%dh,", hours);
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%dm,", minutes);
+    sprintf(buf + strlen(buf), "%ds", seconds);
     sprintf(buf + strlen(buf), "\n\r");
     send_to_desc(buf, d);
 }
@@ -4070,15 +4068,14 @@ void show_uptime_char( CHAR_DATA *ch )
     minutes = (uptime % 3600) / 60;
     seconds = uptime % 60;
     
-    sprintf(buf, "{YUptime: {x");
+    sprintf(buf, "{DUptime: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%dd, ", days);
+        sprintf(buf + strlen(buf), "%dd,", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%dh", hours);
-    if (minutes > 0 && days == 0 && hours == 0)
-        sprintf(buf + strlen(buf), "%dm", minutes);
-    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
-        sprintf(buf + strlen(buf), "%ds", seconds);
+        sprintf(buf + strlen(buf), "%dh,", hours);
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%dm,", minutes);
+    sprintf(buf + strlen(buf), "%ds", seconds);
     sprintf(buf + strlen(buf), "\n\r");
     send_to_char(buf, ch);
     
@@ -4089,15 +4086,14 @@ void show_uptime_char( CHAR_DATA *ch )
     minutes = (reset_uptime % 3600) / 60;
     seconds = reset_uptime % 60;
     
-    sprintf(buf, "{YSince Reboot: {x");
+    sprintf(buf, "{DLast Reboot: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%dd, ", days);
+        sprintf(buf + strlen(buf), "%dd,", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%dh", hours);
-    if (minutes > 0 && days == 0 && hours == 0)
-        sprintf(buf + strlen(buf), "%dm", minutes);
-    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
-        sprintf(buf + strlen(buf), "%ds", seconds);
+        sprintf(buf + strlen(buf), "%dh,", hours);
+    if (minutes > 0 || hours > 0 || days > 0)
+        sprintf(buf + strlen(buf), "%dm,", minutes);
+    sprintf(buf + strlen(buf), "%ds", seconds);
     sprintf(buf + strlen(buf), "\n\r");
     send_to_char(buf, ch);
 }
