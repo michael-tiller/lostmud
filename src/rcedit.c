@@ -1299,9 +1299,24 @@ void load_race_files(void) {
 	printf("DEBUG: Completed race table structure check\n");
 	fflush(stdout);
 	
+	/* Test a simple operation to see if we can continue */
+	printf("DEBUG: Testing simple string operation\n");
+	fflush(stdout);
+	
+	char test_string[100];
+	strcpy(test_string, "test");
+	printf("DEBUG: String operation successful: %s\n", test_string);
+	fflush(stdout);
+	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
 	printf("DEBUG: About to load additional races from race list file\n");
+	fflush(stdout);
+	
+	printf("DEBUG: MIL constant value: %d\n", MIL);
+	fflush(stdout);
+	
+	printf("DEBUG: RACE_DIR constant: '%s'\n", RACE_DIR);
 	fflush(stdout);
 	
 	char list_filename[MIL];
