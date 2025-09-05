@@ -5725,6 +5725,10 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	
 	sprintf (buf, "%d", port);
 	sprintf (buf2, "%d", control);
+	
+	/* Update reset time before copyover */
+	last_reset_time = current_time;
+	
 	execl (EXE_FILE, "rot", buf, "copyover", buf2, (char *) NULL);
 
 	/* Failed - sucessful exec will not return */
@@ -5816,9 +5820,6 @@ void copyover_recover ()
 		
 	}
    fclose (fp);
-	
-	/* Update reset time for copyover */
-	last_reset_time = current_time;
 }
 
 
