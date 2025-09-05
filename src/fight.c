@@ -2509,8 +2509,15 @@ void raw_kill( CHAR_DATA *victim, CHAR_DATA *killer )
     extract_char( victim, FALSE );
     while ( victim->affected )
 	affect_remove( victim, victim->affected );
-    victim->affected_by	= race_table[victim->race].aff;
-    victim->shielded_by	= race_table[victim->race].shd;
+    /* Get race data from file-based system */
+    struct race_data *race = get_race_by_index(victim->race);
+    if (race != NULL) {
+        victim->affected_by	= race->aff;
+        victim->shielded_by	= race->shd;
+    } else {
+        victim->affected_by	= 0;
+        victim->shielded_by	= 0;
+    }
     for (i = 0; i < 4; i++)
     	victim->armor[i]= 100;
     victim->position	= POS_RESTING;

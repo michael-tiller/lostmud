@@ -187,7 +187,13 @@ void save_mobile( FILE *fp, MOB_INDEX_DATA *pMobIndex )
     fprintf( fp, "%s~\n",	pMobIndex->short_descr );
     fprintf( fp, "%s~\n",	fix_string( pMobIndex->long_descr ) );
     fprintf( fp, "%s~\n",	fix_string( pMobIndex->description) );
-    fprintf( fp, "%s~\n",	race_table[race].name );
+    /* Get race name from file-based system */
+    struct race_data *race_data = get_race_by_index(race);
+    if (race_data != NULL) {
+        fprintf( fp, "%s~\n", race_data->name );
+    } else {
+        fprintf( fp, "human~\n" ); /* Default fallback */
+    }
     fprintf( fp, "%s ",		fwrite_flag( pMobIndex->act,		buf ) );
     fprintf( fp, "%s ",		fwrite_flag( pMobIndex->affected_by,	buf ) );
     fprintf( fp, "%s ",     fwrite_flag( pMobIndex->shielded_by,    buf ) );
@@ -225,29 +231,32 @@ void save_mobile( FILE *fp, MOB_INDEX_DATA *pMobIndex )
     fprintf( fp, "%s ",		size_table[pMobIndex->size].name );
     fprintf( fp, "%s\n",	IS_NULLSTR(pMobIndex->material) ? pMobIndex->material : "unknown" );
 
-    if ((temp = DIF(race_table[race].act,pMobIndex->act)))
-     	fprintf( fp, "F act %s\n", fwrite_flag(temp, buf) );
+    /* Use race_data from earlier in the function */
+    if (race_data != NULL) {
+        if ((temp = DIF(race_data->act,pMobIndex->act)))
+            fprintf( fp, "F act %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].aff,pMobIndex->affected_by)))
-     	fprintf( fp, "F aff %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->aff,pMobIndex->affected_by)))
+            fprintf( fp, "F aff %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].off,pMobIndex->off_flags)))
-     	fprintf( fp, "F off %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->off,pMobIndex->off_flags)))
+            fprintf( fp, "F off %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].imm,pMobIndex->imm_flags)))
-     	fprintf( fp, "F imm %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->imm,pMobIndex->imm_flags)))
+            fprintf( fp, "F imm %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].res,pMobIndex->res_flags)))
-     	fprintf( fp, "F res %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->res,pMobIndex->res_flags)))
+            fprintf( fp, "F res %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].vuln,pMobIndex->vuln_flags)))
-     	fprintf( fp, "F vul %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->vuln,pMobIndex->vuln_flags)))
+            fprintf( fp, "F vul %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].form,pMobIndex->form)))
-     	fprintf( fp, "F for %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->form,pMobIndex->form)))
+            fprintf( fp, "F for %s\n", fwrite_flag(temp, buf) );
 
-    if ((temp = DIF(race_table[race].parts,pMobIndex->parts)))
-    	fprintf( fp, "F par %s\n", fwrite_flag(temp, buf) );
+        if ((temp = DIF(race_data->parts,pMobIndex->parts)))
+            fprintf( fp, "F par %s\n", fwrite_flag(temp, buf) );
+    }
 
     for (pMprog = pMobIndex->mprogs; pMprog; pMprog = pMprog->next)
     {

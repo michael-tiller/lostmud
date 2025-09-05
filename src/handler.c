@@ -755,7 +755,13 @@ int get_curr_stat( CHAR_DATA *ch, int stat )
 
     else
     {
-	max = pc_race_table[ch->race].max_stats[stat] + 4;
+	/* Get race data from file-based system */
+	struct race_data *race = get_race_by_index(ch->race);
+	if (race != NULL) {
+	    max = race->max_stats[stat] + 4;
+	} else {
+	    max = 18 + 4; /* Default max stat + 4 */
+	}
 
 	if (class_table[ch->class].attr_prime == stat)
 	    max += 2;
@@ -777,7 +783,13 @@ int get_max_train( CHAR_DATA *ch, int stat )
     if (IS_NPC(ch) || ch->level > LEVEL_IMMORTAL)
 	return 25;
 
-    max = pc_race_table[ch->race].max_stats[stat];
+    /* Get race data from file-based system */
+    struct race_data *race = get_race_by_index(ch->race);
+    if (race != NULL) {
+        max = race->max_stats[stat];
+    } else {
+        max = 18; /* Default max stat */
+    }
     if (class_table[ch->class].attr_prime == stat)
 	if (ch->race == race_lookup("human"))
 	   max += 3;

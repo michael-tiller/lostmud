@@ -3793,7 +3793,7 @@ MEDIT( medit_show )
 	pMob->sex == SEX_MALE    ? "male   " :
 	pMob->sex == SEX_FEMALE  ? "female " : 
 	pMob->sex == 3           ? "random " : "neutral",
-	race_table[pMob->race].name );
+	get_race_name_by_index(pMob->race) );
     send_to_char( buf, ch );
 
     sprintf( buf,
@@ -4875,15 +4875,8 @@ MEDIT( medit_race )
 	char buf[MAX_STRING_LENGTH];
 
 	send_to_char( "Available races are:", ch );
-
-	for ( race = 0; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
-	{
-	    if ( ( race % 3 ) == 0 )
-		send_to_char( "\n\r", ch );
-	    sprintf( buf, " %-15s", race_table[race].name );
-	    send_to_char( buf, ch );
-	}
-
+	/* Use the new file-based race system to list races */
+	list_available_races(ch);
 	send_to_char( "\n\r", ch );
 	return FALSE;
     }
@@ -4891,14 +4884,14 @@ MEDIT( medit_race )
 	EDIT_MOB( ch, pMob );
 
 	pMob->race = 0;
-	pMob->act	  |= race_table[0].act;
-	pMob->affected_by |= race_table[0].aff;
-	pMob->off_flags   |= race_table[0].off;
-	pMob->imm_flags   |= race_table[0].imm;
-	pMob->res_flags   |= race_table[0].res;
-	pMob->vuln_flags  |= race_table[0].vuln;
-	pMob->form        |= race_table[0].form;
-	pMob->parts       |= race_table[0].parts;
+	pMob->act	  |= get_race_act_by_index(0);
+	pMob->affected_by |= get_race_aff_by_index(0);
+	pMob->off_flags   |= get_race_off_by_index(0);
+	pMob->imm_flags   |= get_race_imm_by_index(0);
+	pMob->res_flags   |= get_race_res_by_index(0);
+	pMob->vuln_flags  |= get_race_vuln_by_index(0);
+	pMob->form        |= get_race_form_by_index(0);
+	pMob->parts       |= get_race_parts_by_index(0);
 
 	send_to_char( "Race set.\n\r", ch );
 	return TRUE;
@@ -4911,14 +4904,14 @@ MEDIT( medit_race )
 	EDIT_MOB( ch, pMob );
 
 	pMob->race = race;
-	pMob->act	  |= race_table[race].act;
-	pMob->affected_by |= race_table[race].aff;
-	pMob->off_flags   |= race_table[race].off;
-	pMob->imm_flags   |= race_table[race].imm;
-	pMob->res_flags   |= race_table[race].res;
-	pMob->vuln_flags  |= race_table[race].vuln;
-	pMob->form        |= race_table[race].form;
-	pMob->parts       |= race_table[race].parts;
+	pMob->act	  |= get_race_act_by_index(race);
+	pMob->affected_by |= get_race_aff_by_index(race);
+	pMob->off_flags   |= get_race_off_by_index(race);
+	pMob->imm_flags   |= get_race_imm_by_index(race);
+	pMob->res_flags   |= get_race_res_by_index(race);
+	pMob->vuln_flags  |= get_race_vuln_by_index(race);
+	pMob->form        |= get_race_form_by_index(race);
+	pMob->parts       |= get_race_parts_by_index(race);
 
 	send_to_char( "Race set.\n\r", ch );
 	return TRUE;

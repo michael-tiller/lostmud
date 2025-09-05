@@ -42,6 +42,9 @@
 #include "merc.h"
 #include "tables.h"
 
+/* Forward declaration */
+void load_all_races(void);
+
 int flag_lookup (const char *name, const struct flag_type *flag_table)
 {
     int flag;
@@ -112,30 +115,26 @@ int size_lookup (const char *name)
    return -1;
 }
 
-/* returns race number */
+/* returns race number - now works with file-based system */
 int race_lookup (const char *name)
 {
-	int race;
+	struct race_data *race;
+	int race_num = 0;
 	
-	printf("DEBUG: race_lookup called with name='%s'\n", name);
-	fflush(stdout);
+	/* Load all races if not already loaded */
+	if (race_list == NULL) {
+		load_all_races();
+	}
 	
-	for ( race = 0; race < MAX_PC_RACE && race_table[race].name != NULL; race++)
+	for (race = race_list; race != NULL; race = race->next, race_num++)
 	{
-		printf("DEBUG: Checking race %d: name='%s'\n", race, race_table[race].name);
-		fflush(stdout);
-		
-		if (LOWER(name[0]) == LOWER(race_table[race].name[0])
-			&&  !str_prefix( name,race_table[race].name))
+		if (LOWER(name[0]) == LOWER(race->name[0])
+			&&  !str_prefix( name, race->name))
 		{
-			printf("DEBUG: Found match at race %d\n", race);
-			fflush(stdout);
-			return race;
+			return race_num;
 		}
 	}
 	
-	printf("DEBUG: No match found, returning -1\n");
-	fflush(stdout);
 	return -1;
 } 
 

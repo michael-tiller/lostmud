@@ -461,7 +461,7 @@ void boot_db()
     log_string( "Loading Socials." );
 	load_social_table();
     log_string( "Loading Race Files." );
-	load_race_files();
+	load_all_races();
 
     }
     if ( ( pRoomIndex = get_room_index( 315 ) ) == NULL)
@@ -792,8 +792,9 @@ void load_old_mob( FILE *fp )
     	}
     	else
     	{
-            /* Additional validation - check if race still exists */
-            if (race < 0 || race >= MAX_PC_RACE || race_table[race].name == NULL) {
+            /* Additional validation - check if race still exists using file-based system */
+            struct race_data *race_data = get_race_by_index(race);
+            if (race_data == NULL) {
                 bugf("Load_old_mob: mobile vnum %d has invalid race '%s', defaulting to human", vnum, name);
                 pMobIndex->race = race_lookup("human");
                 pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_VNUM;
@@ -806,12 +807,12 @@ void load_old_mob( FILE *fp )
             } else {
                 pMobIndex->race = race;
                 pMobIndex->off_flags = OFF_DODGE|OFF_DISARM|OFF_TRIP|ASSIST_RACE|
-                                       race_table[race].off;
-                pMobIndex->imm_flags = race_table[race].imm;
-                pMobIndex->res_flags = race_table[race].res;
-                pMobIndex->vuln_flags = race_table[race].vuln;
-                pMobIndex->form = race_table[race].form;
-                pMobIndex->parts = race_table[race].parts;
+                                       race_data->off;
+                pMobIndex->imm_flags = race_data->imm;
+                pMobIndex->res_flags = race_data->res;
+                pMobIndex->vuln_flags = race_data->vuln;
+                pMobIndex->form = race_data->form;
+                pMobIndex->parts = race_data->parts;
             }
     	}
 

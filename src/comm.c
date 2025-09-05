@@ -2111,25 +2111,16 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    ch->pcdata->socket = str_dup( d->host );
 	    send_to_desc( echo_on_str, d );
 	    send_to_desc("The following races are available:\n\r\n\r",d);
-	    pos = 0;
-	    for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
-	    {
-		if (!race_table[race].pc_race)
-		    break;
-		sprintf(newbuf, "%6s%-24s", " ", race_table[race].name);
-		send_to_desc(newbuf,d);
-		pos++;
-		if (pos >= 2) {
-		    send_to_desc("\n\r",d);
-		    pos = 0;
-		}
-	    }
+	    /* Use the new file-based race system to list races */
+			/*
+	    list_available_races(ch);
 	    newbuf[0] = '\0';
 	    send_to_desc("\n\r\n\r",d);
 	    send_to_desc("What is your race (help for more information)? ",d);
 	    d->connected = CON_GET_NEW_RACE;
 	    break;
 	}
+	*/
 	/**/
 
 	if ( IS_IMMORTAL(ch) )
@@ -2269,27 +2260,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	ch->pcdata->socket = str_dup( d->host );
 	write_to_buffer( d, echo_on_str, 0 );
 	send_to_desc( "The following races are available:\n\r", d );
-	pos = 0;
-	for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
-	{
-	    if (!race_table[race].pc_race)
-		break;
-
-		/* YES the IS_SET macro is already able to check your
-		* current tier and see if it matches any available tier
-		* in your choice of race.  No modifications needed **/
-		if ( IS_SET(ch->pcdata->ctier, pc_race_table[race].tier) != 0)
-		{
-			sprintf(newbuf, "%6s%-24s", " ", race_table[race].name);
-			send_to_desc(newbuf,d);
-			pos++;
-			if (pos >= 2)
-			{ 
-				send_to_desc("\n\r",d);
-				pos = 0;
-			}
-		}
-	}
+	/* Use the new file-based race system to list races */
+	list_available_races(ch);
 	send_to_desc("\n\r",d);
 	send_to_desc("What is your race (help for more information)? ",d);
 	d->connected = CON_GET_NEW_RACE;
@@ -2299,27 +2271,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	ch->level= 0; // fix to force the player to restart at level 1
 	send_to_desc( "Now beginning the rerolling process.\n\r\n\r", d );
 	send_to_desc( "The following races are available:\n\r", d );
-	pos = 0;
-	for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
-	{
-	    if (!race_table[race].pc_race)
-		break;
-
-		/* YES the IS_SET macro is already able to check your
-		* current tier and see if it matches any available tier
-		* in your choice of race.  No modifications needed **/
-		if ( IS_SET(ch->pcdata->ctier, pc_race_table[race].tier) != 0)
-		{
-			sprintf(newbuf, "%6s%-24s", " ", race_table[race].name);
-			send_to_desc(newbuf,d);
-			pos++;
-			if (pos >= 2)
-			{ 
-				send_to_desc("\n\r",d);
-				pos = 0;
-			}
-		}
-	}
+	/* Use the new file-based race system to list races */
+	list_available_races(ch);
 	send_to_desc("\n\r",d);
 	send_to_desc("What is your race (help for more information)? ",d);
 	d->connected = CON_GET_NEW_RACE;
@@ -2342,32 +2295,13 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 	race = race_lookup(argument);
 
-	if (race == 0 || !race_table[race].pc_race)
+	if (race == 0 || !is_pc_race_by_index(race))
 	{
 	    write_to_buffer(d,"That is not a valid race.\n\r",0);
 		
 		send_to_desc( "The following races are available:\n\r", d );
-		pos = 0;
-		for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
-		{
-			if (!race_table[race].pc_race)
-			break;
-
-			/* YES the IS_SET macro is already able to check your
-			* current tier and see if it matches any available tier
-			* in your choice of race.  No modifications needed **/
-			if ( IS_SET(ch->pcdata->ctier, pc_race_table[race].tier) != 0)
-			{
-				sprintf(newbuf, "%6s%-24s", " ", race_table[race].name);
-				send_to_desc(newbuf,d);
-				pos++;
-				if (pos >= 2)
-				{ 
-					send_to_desc("\n\r",d);
-					pos = 0;
-				}
-			}
-		}
+		/* Use the new file-based race system to list races */
+		list_available_races(ch);
 		send_to_desc("\n\r",d);
 		send_to_desc("What is your race (help for more information)? ",d);
 		d->connected = CON_GET_NEW_RACE;
@@ -2376,25 +2310,26 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
         ch->race = race;
 	/* initialize stats */
 	for (i = 0; i < MAX_STATS; i++)
-	    ch->perm_stat[i] = pc_race_table[race].stats[i];
-	ch->affected_by = ch->affected_by|race_table[race].aff;
-	ch->shielded_by = ch->shielded_by|race_table[race].shd;
-	ch->imm_flags	= ch->imm_flags|race_table[race].imm;
-	ch->res_flags	= ch->res_flags|race_table[race].res;
-	ch->vuln_flags	= ch->vuln_flags|race_table[race].vuln;
-	ch->form	= race_table[race].form;
-	ch->parts	= race_table[race].parts;
+	    ch->perm_stat[i] = get_pc_race_stat_by_index(race, i);
+	ch->affected_by = ch->affected_by|get_race_aff_by_index(race);
+	ch->shielded_by = ch->shielded_by|get_race_shd_by_index(race);
+	ch->imm_flags	= ch->imm_flags|get_race_imm_by_index(race);
+	ch->res_flags	= ch->res_flags|get_race_res_by_index(race);
+	ch->vuln_flags	= ch->vuln_flags|get_race_vuln_by_index(race);
+	ch->form	= get_race_form_by_index(race);
+	ch->parts	= get_race_parts_by_index(race);
 
 	/* add skills */
 	for (i = 0; i < 5; i++)
 	{
-	    if (pc_race_table[race].skills[i] == NULL)
+	    const char *skill_name = get_pc_race_skill_by_index(race, i);
+	    if (skill_name == NULL)
 	 	break;
-	    group_add(ch,pc_race_table[race].skills[i],FALSE);
+	    group_add(ch, skill_name, FALSE);
 	}
 	/* add cost */
-	ch->pcdata->points = pc_race_table[race].points;
-	ch->size = pc_race_table[race].size;
+	ch->pcdata->points = get_pc_race_points_by_index(race);
+	ch->size = get_pc_race_size_by_index(race);
 
         write_to_buffer( d, "What is your sex (M/F/N)? ", 0 );
         d->connected = CON_GET_NEW_SEX;
@@ -2586,17 +2521,17 @@ case CON_DEFAULT_CHOICE:
 	send_to_char("\n\r",ch);
        	if (!str_cmp(argument,"done"))
        	{
-			if (ch->pcdata->points == pc_race_table[ch->race].points)
+			if (ch->pcdata->points == get_pc_race_points_by_index(ch->race))
 			{
 				send_to_char("You didn't pick anything.\n\r",ch);
 				break;
 			}
 					
-			if (ch->pcdata->points < 40 + pc_race_table[ch->race].points)
+			if (ch->pcdata->points < 40 + get_pc_race_points_by_index(ch->race))
 			{
 				sprintf(buf,
 				"You must take at least %d points of skills and groups",
-				40 + pc_race_table[ch->race].points);
+				40 + get_pc_race_points_by_index(ch->race));
 				send_to_char(buf, ch);
 				break;
 			}

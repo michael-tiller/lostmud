@@ -545,8 +545,12 @@ long exp_per_level(CHAR_DATA *ch, int points)
     expl = 1000;
     inc = 500;
 
-    if (points < 40)
-	return 1000 * pc_race_table[ch->race].class_mult[ch->class]/100;
+    if (points < 40) {
+	/* Get race data from file-based system */
+	struct race_data *race = get_race_by_index(ch->race);
+	if (race == NULL) return 1000; /* Default if race not found */
+	return 1000 * race->class_mult[ch->class]/100;
+    }
 
     /* processing */
     points -= 40;
@@ -565,7 +569,10 @@ long exp_per_level(CHAR_DATA *ch, int points)
 
     expl += (long)points * (long)inc / 10;  
 
-    return (long)expl * (long)pc_race_table[ch->race].class_mult[ch->class]/100;
+    /* Get race data from file-based system */
+    struct race_data *race = get_race_by_index(ch->race);
+    if (race == NULL) return (long)expl; /* Default if race not found */
+    return (long)expl * (long)race->class_mult[ch->class]/100;
 }
 
 /* this procedure handles the input parsing for the skill generator */

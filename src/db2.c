@@ -239,21 +239,22 @@ void load_mobiles( FILE *fp )
 	pMobIndex->race		 	= race_lookup(fread_string( fp ));
 
         /* Validate race - if race no longer exists, default to human */
-        if (pMobIndex->race < 0 || pMobIndex->race >= MAX_PC_RACE || 
-            race_table[pMobIndex->race].name == NULL) {
+        struct race_data *race_data = get_race_by_index(pMobIndex->race);
+        if (race_data == NULL) {
             bug("Load_mobiles: mobile vnum %d has invalid race, defaulting to human", vnum);
             pMobIndex->race = race_lookup("human");
+            race_data = get_race_by_index(pMobIndex->race); /* Get the human race data */
         }
 
         pMobIndex->long_descr[0]        = UPPER(pMobIndex->long_descr[0]);
         pMobIndex->description[0]       = UPPER(pMobIndex->description[0]);
 
         pMobIndex->act                  = fread_flag( fp ) | ACT_IS_NPC
-					| race_table[pMobIndex->race].act;
+					| race_data->act;
         pMobIndex->affected_by          = fread_flag( fp )
-					| race_table[pMobIndex->race].aff;
+					| race_data->aff;
         pMobIndex->shielded_by          = fread_flag( fp )
-					| race_table[pMobIndex->race].shd;
+					| race_data->shd;
         pMobIndex->pShop                = NULL;
         pMobIndex->alignment            = fread_number( fp );
         pMobIndex->group                = fread_number( fp );
@@ -292,13 +293,13 @@ void load_mobiles( FILE *fp )
 
 	/* read flags and add in data from the race table */
 	pMobIndex->off_flags		= fread_flag( fp ) 
-					| race_table[pMobIndex->race].off;
+					| race_data->off;
 	pMobIndex->imm_flags		= fread_flag( fp )
-					| race_table[pMobIndex->race].imm;
+					| race_data->imm;
 	pMobIndex->res_flags		= fread_flag( fp )
-					| race_table[pMobIndex->race].res;
+					| race_data->res;
 	pMobIndex->vuln_flags		= fread_flag( fp )
-					| race_table[pMobIndex->race].vuln;
+					| race_data->vuln;
 
 	/* vital statistics */
 	pMobIndex->start_pos		= position_lookup(fread_word(fp));
@@ -308,9 +309,9 @@ void load_mobiles( FILE *fp )
 	pMobIndex->wealth		= fread_number( fp );
 
 	pMobIndex->form			= fread_flag( fp )
-					| race_table[pMobIndex->race].form;
+					| race_data->form;
 	pMobIndex->parts		= fread_flag( fp )
-					| race_table[pMobIndex->race].parts;
+					| race_data->parts;
 	/* size */
 	pMobIndex->size			= size_lookup(fread_word(fp));
 	pMobIndex->material		= str_dup(fread_word( fp ));

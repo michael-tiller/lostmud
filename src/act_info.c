@@ -2192,7 +2192,7 @@ void do_score( CHAR_DATA *ch, char *argument )
     }
 
     sprintf(buf, "{xRace: {M%s{x  Sex: {M%s{x  Class:  {M%s{x\n\r",
-	race_table[ch->race].name,
+	get_race_name_by_index(ch->race),
 	ch->sex == 0 ? "sexless" : ch->sex == 1 ? "male" : "female",
  	IS_NPC(ch) ? "mobile" : class_table[ch->class].name);
     add_buf(output,buf);
@@ -2448,7 +2448,6 @@ void do_score( CHAR_DATA *ch, char *argument )
 {
     char buf[MAX_STRING_LENGTH];
     BUFFER *output;
-    int i;
 
     output = new_buf();
     
@@ -2460,7 +2459,7 @@ void do_score( CHAR_DATA *ch, char *argument )
     sprintf( buf, "{c| {xYou are a level {G%d{x %s{x {G%s{x {G%s{x at {x{G%d{x years old.\n\r",
                   ch->level,
 	                ch->sex == 0 ? "{Wsexless" : ch->sex == 1 ? "{Gmale" : "{Yfemale",
-	                race_table[ch->race].name,
+	                get_race_name_by_index(ch->race),
  	                IS_NPC(ch) ? "mobile" : class_table[ch->class].name,
                   get_age(ch));    add_buf(output,buf);
     if ( get_trust( ch ) != ch->level ) {
@@ -2909,8 +2908,7 @@ void do_whois (CHAR_DATA *ch, char *argument)
 	    }
 	    sprintf(buf, "{c|{x %s %-6s %s {c|{x  %s%s%s%s%s%s%s%s\n\r",
 		buf2,
-		wch->race < MAX_PC_RACE ? pc_race_table[wch->race].who_name
-					: "     ",
+		get_pc_race_who_name_by_index(wch->race),
 		class,
 	     ((wch->ghost_level >= LEVEL_HERO)&&(ch->level >= wch->level)) ? "(Ghost) ": "",
 	     wch->incog_level >= LEVEL_HERO ? "(Incog) ": "",
@@ -3216,8 +3214,7 @@ void do_who( CHAR_DATA *ch, char *argument )
 	{
 	    sprintf( buf, "{c| {x%s %-6s %s %s {c|{x  %s%s%s%s%s%s%s%s%s\n\r",
 		buf2,
-		wch->race < MAX_PC_RACE ? pc_race_table[wch->race].who_name 
-				    : "     ",
+		get_pc_race_who_name_by_index(wch->race) ? get_pc_race_who_name_by_index(wch->race) : "     ",
 		class,
 		wch->sex == 0 ? "{WN{x" : wch->sex == 1 ? "{GM{x" : "{YF{x",
 		questdat,
@@ -3369,8 +3366,7 @@ void do_who( CHAR_DATA *ch, char *argument )
 	{
 	    sprintf( buf, "{c| {x%s %-6s %s %s {c|{x  %s%s%s%s%s%s%s%s%s\n\r",
 		buf2,
-		wch->race < MAX_PC_RACE ? pc_race_table[wch->race].who_name 
-				    : "     ",
+		get_pc_race_who_name_by_index(wch->race) ? get_pc_race_who_name_by_index(wch->race) : "     ",
 		class,
 		wch->sex == 0 ? "{WN{x" : wch->sex == 1 ? "{GM{x" : "{YF{x",
 		questdat,

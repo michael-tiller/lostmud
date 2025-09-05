@@ -16,24 +16,35 @@
 #include "merc.h"
 #include "tables.h"
 #include "interp.h"
+#include "olc.h"
 
 // function prototypes
 void do_race_info( CHAR_DATA *ch, char *argument);
 void do_rcedit(CHAR_DATA *ch ,char * argument);
-void load_race_file(const char *filename, int race_no);
 void save_race_file(const char *filename, int race_no);
-void load_race_files(void);
-void save_race_to_file(int race_no);
-void reload_race_list(void);
+/* Old race loading function declarations removed - now using file-based system */
+/* Old race management function declarations removed - now using file-based system */
+
+// File-based race system prototypes
+struct race_data *load_race_from_file(const char *race_name);
+struct race_data *find_race_by_name(const char *race_name);
+void free_race_data(struct race_data *race);
+struct race_data *create_race_data(void);
+void list_available_races(CHAR_DATA *ch);
+struct race_data *get_race_by_index(int race_num);
 
 // macro definitions
 #define RACE_TEMP "../data/race/t"
 #define RACE_DIR "../data/race/"
 
+// Global race list
+struct race_data *race_list = NULL;
+
 /**/	
 void do_race_info( CHAR_DATA *ch, char *argument ) {
 	char race_name[MIL];
-	int race_no, i;
+	struct race_data *race;
+	int i;
 	char *attr_names[] = { "strength", "intelligence", "wisdom", "dexterity", "constitution" };
 	char *size_names[] = { "tiny", "small", "medium", "large", "huge", "giant" };
 
@@ -44,58 +55,59 @@ void do_race_info( CHAR_DATA *ch, char *argument ) {
 
 	argument = one_argument (argument, race_name);
 	
-	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
-		if (!str_cmp(race_name, race_table[race_no].name)) {
-			break;
-		}
+	/* Load all races if not already loaded */
+	if (race_list == NULL) {
+		load_all_races();
 	}
 	
-	if (race_table[race_no].name == NULL) {
+	/* Find the race */
+	race = find_race_by_name(race_name);
+	if (race == NULL) {
 		printf_to_char (ch, "No race named '%s' exists.\n\r", race_name);
 		return;
 	}
 
-	printf_to_char(ch, "Race Info for '%s'\n\r", race_table[race_no].name);
-	printf_to_char(ch, "  PC Race: %s\n\r", race_table[race_no].pc_race ? "yes" : "no");
+	printf_to_char(ch, "Race Info for '%s'\n\r", race->name);
+	printf_to_char(ch, "  PC Race: %s\n\r", race->pc_race ? "yes" : "no");
 	
 	/* Show race flags */
-	printf_to_char(ch, "  Act Flags: %s\n\r", act_bit_name(race_table[race_no].act));
-	printf_to_char(ch, "  Affected By: %s\n\r", affect_bit_name(race_table[race_no].aff));
-	printf_to_char(ch, "  Offensive: %s\n\r", off_bit_name(race_table[race_no].off));
-	printf_to_char(ch, "  Immune: %s\n\r", imm_bit_name(race_table[race_no].imm));
-	printf_to_char(ch, "  Resistant: %s\n\r", imm_bit_name(race_table[race_no].res));
-	printf_to_char(ch, "  Vulnerable: %s\n\r", imm_bit_name(race_table[race_no].vuln));
-	printf_to_char(ch, "  Shielded: %s\n\r", shield_bit_name(race_table[race_no].shd));
-	printf_to_char(ch, "  Form: %s\n\r", form_bit_name(race_table[race_no].form));
-	printf_to_char(ch, "  Parts: %s\n\r", part_bit_name(race_table[race_no].parts));
+	printf_to_char(ch, "  Act Flags: %s\n\r", act_bit_name(race->act));
+	printf_to_char(ch, "  Affected By: %s\n\r", affect_bit_name(race->aff));
+	printf_to_char(ch, "  Offensive: %s\n\r", off_bit_name(race->off));
+	printf_to_char(ch, "  Immune: %s\n\r", imm_bit_name(race->imm));
+	printf_to_char(ch, "  Resistant: %s\n\r", imm_bit_name(race->res));
+	printf_to_char(ch, "  Vulnerable: %s\n\r", imm_bit_name(race->vuln));
+	printf_to_char(ch, "  Shielded: %s\n\r", shield_bit_name(race->shd));
+	printf_to_char(ch, "  Form: %s\n\r", form_bit_name(race->form));
+	printf_to_char(ch, "  Parts: %s\n\r", part_bit_name(race->parts));
 	
 	/* Show PC race specific info if it's a PC race */
-	if (race_table[race_no].pc_race && race_no < MAX_PC_RACE) {
+	if (race->pc_race) {
 		printf_to_char(ch, "\nPC Race Details:\n\r");
-		printf_to_char(ch, "  Who Name: %s\n\r", pc_race_table[race_no].who_name);
-		printf_to_char(ch, "  Points Cost: %d\n\r", pc_race_table[race_no].points);
-		printf_to_char(ch, "  Size: %s\n\r", size_names[pc_race_table[race_no].size]);
-		printf_to_char(ch, "  Tier: %d\n\r", pc_race_table[race_no].tier);
+		printf_to_char(ch, "  Who Name: %s\n\r", race->who_name);
+		printf_to_char(ch, "  Points Cost: %d\n\r", race->points);
+		printf_to_char(ch, "  Size: %s\n\r", size_names[race->size]);
+		printf_to_char(ch, "  Tier: %d\n\r", race->tier);
 		
 		printf_to_char(ch, "  Starting Stats:\n\r");
 		for (i = 0; i < MAX_STATS; i++) {
-			printf_to_char(ch, "    %s: %d\n\r", attr_names[i], pc_race_table[race_no].stats[i]);
+			printf_to_char(ch, "    %s: %d\n\r", attr_names[i], race->stats[i]);
 		}
 		
 		printf_to_char(ch, "  Maximum Stats:\n\r");
 		for (i = 0; i < MAX_STATS; i++) {
-			printf_to_char(ch, "    %s: %d\n\r", attr_names[i], pc_race_table[race_no].max_stats[i]);
+			printf_to_char(ch, "    %s: %d\n\r", attr_names[i], race->max_stats[i]);
 		}
 		
 		printf_to_char(ch, "  Class Experience Multipliers:\n\r");
 		for (i = 0; i < MAX_CLASS; i++) {
-			printf_to_char(ch, "    %s: %d%%\n\r", class_table[i].name, pc_race_table[race_no].class_mult[i]);
+			printf_to_char(ch, "    %s: %d%%\n\r", class_table[i].name, race->class_mult[i]);
 		}
 		
 		printf_to_char(ch, "  Bonus Skills:\n\r");
 		for (i = 0; i < 5; i++) {
-			if (pc_race_table[race_no].skills[i] != NULL && pc_race_table[race_no].skills[i][0] != '\0') {
-				printf_to_char(ch, "    %s\n\r", pc_race_table[race_no].skills[i]);
+			if (race->skills[i] != NULL && race->skills[i][0] != '\0') {
+				printf_to_char(ch, "    %s\n\r", race->skills[i]);
 			}
 		}
 	}
@@ -105,7 +117,7 @@ void do_race_info( CHAR_DATA *ch, char *argument ) {
 /**/
 void do_rcedit(CHAR_DATA *ch ,char * argument) {
 	char race_name[MIL], field_name[MIL];
-	int race_no, value, i;
+	int value, i;
 	
 	argument = one_argument (argument, race_name);
 	
@@ -116,25 +128,14 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			return;
 		}
 		
-		/* Check if race already exists and find first empty slot */
-		race_no = 0;
-		for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
-			if (!str_cmp(argument, race_table[race_no].name)) {
-				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
-				return;
-			}
-		}
-		/* race_no now points to the first empty slot or beyond the table */
-		
-		/* Check if we have room for a new race */
-		if (race_no >= MAX_PC_RACE) {
-			printf_to_char(ch, "Cannot create new race - maximum number of races (%d) reached.\n\r", MAX_PC_RACE);
-			return;
+		/* Load all races if not already loaded */
+		if (race_list == NULL) {
+			load_all_races();
 		}
 		
-		/* Check if we're within the PC race limit */
-		if (race_no >= MAX_PC_RACE) {
-			printf_to_char(ch, "Cannot create new race - maximum number of races (%d) reached.\n\r", MAX_PC_RACE);
+		/* Check if race already exists */
+		if (find_race_by_name(argument) != NULL) {
+			printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
 			return;
 		}
 		
@@ -144,53 +145,21 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			return;
 		}
 		
-		/* Initialize new race with default values */
-		race_table[race_no].name = str_dup(argument);
-		race_table[race_no].pc_race = FALSE;
-		race_table[race_no].act = 0;
-		race_table[race_no].aff = 0;
-		race_table[race_no].off = 0;
-		race_table[race_no].imm = 0;
-		race_table[race_no].res = 0;
-		race_table[race_no].vuln = 0;
-		race_table[race_no].shd = 0;
-		race_table[race_no].form = 0;
-		race_table[race_no].parts = 0;
+		/* Create new race using file-based system */
+		struct race_data *new_race = create_race_data();
+		new_race->name = str_dup(argument);
+		new_race->pc_race = FALSE;
 		
-		/* Initialize PC race data with defaults */
-		if (race_no < MAX_PC_RACE) {
-			pc_race_table[race_no].name = str_dup(argument);
-			strcpy(pc_race_table[race_no].who_name, "     ");
-			pc_race_table[race_no].points = 0;
-			pc_race_table[race_no].size = 2; /* SIZE_MEDIUM */
-			pc_race_table[race_no].tier = 1;
-			
-			/* Set default stats */
-			for (i = 0; i < MAX_STATS; i++) {
-				pc_race_table[race_no].stats[i] = 13;
-				pc_race_table[race_no].max_stats[i] = 18;
-			}
-			
-			/* Set default class multipliers */
-			for (i = 0; i < MAX_CLASS; i++) {
-				pc_race_table[race_no].class_mult[i] = 100;
-			}
-			
-			/* Initialize skills */
-			for (i = 0; i < 5; i++) {
-				pc_race_table[race_no].skills[i] = NULL;
-			}
-		}
-		
-		/* Mark end of table if this is a new race at the end */
-		if (race_table[race_no + 1].name == NULL || race_no == 0) {
-			race_table[race_no + 1].name = NULL;
-		}
+		/* Add to race list */
+		new_race->next = race_list;
+		race_list = new_race;
 		
 		printf_to_char(ch, "OK, created new race '%s'.\n\r", argument);
 		
 		/* Save the race file */
-		save_race_to_file(race_no);
+		char filename[MIL];
+		sprintf(filename, "%s%s.race", RACE_DIR, argument);
+		save_race_file(filename, 0); /* Use 0 as dummy race_no for file-based system */
 		
 		/* Add to race list file */
 		char list_filename[MIL];
@@ -211,104 +180,46 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			return;
 		}
 		
-		printf("DEBUG: Starting delete for race '%s'\n", argument);
-		
-		/* Find the race to delete */
-		for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
-			if (!str_cmp(argument, race_table[race_no].name)) {
-				break;
-			}
+		/* Load all races if not already loaded */
+		if (race_list == NULL) {
+			load_all_races();
 		}
 		
-		printf("DEBUG: Found race at slot %d\n", race_no);
-		
-		if (race_table[race_no].name == NULL) {
+		/* Find the race to delete */
+		struct race_data *race_to_delete = find_race_by_name(argument);
+		if (race_to_delete == NULL) {
 			printf_to_char(ch, "No race named '%s' exists.\n\r", argument);
 			return;
 		}
 		
-		/* Safety check - ensure race_no is within bounds */
-		if (race_no < 0 || race_no >= MAX_PC_RACE) {
-			printf_to_char(ch, "Invalid race number %d.\n\r", race_no);
-			return;
-		}
-		
-		printf("DEBUG: Bounds check passed\n");
-		
 		/* Check if any players are using this race */
+		int race_index = race_lookup(argument);
 		CHAR_DATA *wch;
 		for (wch = char_list; wch != NULL; wch = wch->next) {
-			if (wch->race == race_no) {
-				printf_to_char(ch, "Cannot delete race '%s' - players are currently using it.\n\r", race_table[race_no].name);
+			if (wch->race == race_index) {
+				printf_to_char(ch, "Cannot delete race '%s' - players are currently using it.\n\r", argument);
 				return;
 			}
 		}
 		
-		printf("DEBUG: Player check passed\n");
-		
-		/* Get filename and race name before freeing data */
-		char filename[MIL];
-		char deleted_race_name[MIL];
-		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
-		strncpy(deleted_race_name, race_table[race_no].name, MIL - 1);
-		deleted_race_name[MIL - 1] = '\0';
-		
-		printf("DEBUG: About to free race data\n");
-		
-		/* Store pointers before freeing */
-		char *race_name_ptr = race_table[race_no].name;
-		bool is_pc_race = (race_no < MAX_PC_RACE && race_table[race_no].pc_race);
-		char *pc_race_name_ptr = is_pc_race ? pc_race_table[race_no].name : NULL;
-		bool same_pointer = (pc_race_name_ptr == race_name_ptr);
-		
-		printf("DEBUG: race_name_ptr = %p, pc_race_name_ptr = %p, same = %s, is_pc_race = %s\n", 
-			race_name_ptr, pc_race_name_ptr, same_pointer ? "yes" : "no", is_pc_race ? "yes" : "no");
-		
-		/* Free race data */
-		free_string(race_name_ptr);
-		
-		printf("DEBUG: Freed race data\n");
-		
-		/* Free PC race data if applicable - only if it's actually a PC race */
-		if (is_pc_race) {
-			printf("DEBUG: Inside PC race data free section\n");
-			/* Only free pc_race_table name if it's different from race_table name */
-			if (!same_pointer && pc_race_name_ptr != NULL) {
-				printf("DEBUG: Freeing pc_race_table name\n");
-				free_string(pc_race_name_ptr);
-			} else {
-				printf("DEBUG: Skipping pc_race_table name (same as race_table or NULL)\n");
-			}
-			printf("DEBUG: About to free skills\n");
-			int i;
-			for (i = 0; i < 5; i++) {
-				if (pc_race_table[race_no].skills[i] != NULL) {
-					printf("DEBUG: Freeing skill %d\n", i);
-					free_string(pc_race_table[race_no].skills[i]);
-				}
-			}
-			printf("DEBUG: Finished freeing PC race data\n");
+		/* Remove from race list */
+		if (race_list == race_to_delete) {
+			race_list = race_to_delete->next;
 		} else {
-			printf("DEBUG: Skipping PC race data (not a PC race)\n");
-		}
-		
-		printf("DEBUG: About to shift races down\n");
-		
-		/* Shift remaining races down */
-		int i;
-		for (i = race_no; i < MAX_PC_RACE - 1 && race_table[i + 1].name != NULL; i++) {
-			race_table[i] = race_table[i + 1];
-			if (i < MAX_PC_RACE) {
-				pc_race_table[i] = pc_race_table[i + 1];
+			struct race_data *prev = race_list;
+			while (prev != NULL && prev->next != race_to_delete) {
+				prev = prev->next;
+			}
+			if (prev != NULL) {
+				prev->next = race_to_delete->next;
 			}
 		}
-		race_table[i].name = NULL;
-		
-		printf("DEBUG: Finished shifting races\n");
 		
 		printf_to_char(ch, "OK, race deleted.\n\r");
 		
 		/* Delete the race file */
+		char filename[MIL];
+		sprintf(filename, "%s%s.race", RACE_DIR, argument);
 		unlink(filename);
 		
 		/* Remove from race list file */
@@ -329,7 +240,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 					if (carriage) *carriage = '\0';
 					
 					/* Skip the deleted race */
-					if (str_cmp(line, deleted_race_name)) {
+					if (str_cmp(line, argument)) {
 						fprintf(temp_fp, "%s\n", line);
 					}
 				}
@@ -344,16 +255,15 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			}
 		}
 		
+		/* Free the race data */
+		free_race_data(race_to_delete);
+		
 		return;
 	}
 	
 	/* Special handling for list command */
 	if (!str_cmp(race_name, "list")) {
-		send_to_char("Available races:\n\r", ch);
-		for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
-			printf_to_char(ch, "  %d: %s (%s)\n\r", i, race_table[i].name, 
-				race_table[i].pc_race ? "PC" : "NPC");
-		}
+		list_available_races(ch);
 		return;
 	}
 	
@@ -370,37 +280,30 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		return;
 	}
 	
-	/* Find the race */
-	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
-		if (!str_cmp(race_name, race_table[race_no].name)) {
-			break;
-		}
+	/* Load all races if not already loaded */
+	if (race_list == NULL) {
+		load_all_races();
 	}
 	
-	if (race_table[race_no].name == NULL)
-	{
+	/* Find the race */
+	struct race_data *race = find_race_by_name(race_name);
+	if (race == NULL) {
 		printf_to_char (ch, "No race named '%s' exists.\n\r", race_name);
 		return;
 	}
 	
 	/* Check if it's a PC race for PC-specific editing */
-	bool is_pc_race = (race_table[race_no].pc_race && race_no < MAX_PC_RACE);
+	bool is_pc_race = race->pc_race;
 	
 	/* Parse the field and value */
 	if (!str_cmp(field_name, "pcrace")) {
 		if (!str_cmp(argument, "yes") || !str_cmp(argument, "true") || !str_cmp(argument, "1")) {
-			if (race_no >= MAX_PC_RACE) {
-				printf_to_char(ch, "Cannot make %s a PC race - race number %d exceeds MAX_PC_RACE (%d).\n\r", 
-					race_table[race_no].name, race_no, MAX_PC_RACE);
-				printf_to_char(ch, "Only races 0-%d can be PC races. Use 'rcedit create <name>' to create a new race.\n\r", MAX_PC_RACE - 1);
-				return;
-			}
-			race_table[race_no].pc_race = TRUE;
-			printf_to_char(ch, "OK, %s is now a PC race.\n\r", race_table[race_no].name);
+			race->pc_race = TRUE;
+			printf_to_char(ch, "OK, %s is now a PC race.\n\r", race->name);
 		}
 		else if (!str_cmp(argument, "no") || !str_cmp(argument, "false") || !str_cmp(argument, "0")) {
-			race_table[race_no].pc_race = FALSE;
-			printf_to_char(ch, "OK, %s is now an NPC race.\n\r", race_table[race_no].name);
+			race->pc_race = FALSE;
+			printf_to_char(ch, "OK, %s is now an NPC race.\n\r", race->name);
 		}
 		else {
 			send_to_char("Use: yes/no, true/false, or 1/0\n\r", ch);
@@ -416,8 +319,8 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Points must be between 0 and 50.\n\r", ch);
 			return;
 		}
-		pc_race_table[race_no].points = value;
-		printf_to_char(ch, "OK, %s now costs %d points.\n\r", race_table[race_no].name, value);
+		race->points = value;
+		printf_to_char(ch, "OK, %s now costs %d points.\n\r", race->name, value);
 	}
 	else if (!str_cmp(field_name, "size")) {
 		if (!is_pc_race) {
@@ -429,8 +332,8 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Size must be between 0 (tiny) and 5 (giant).\n\r", ch);
 			return;
 		}
-		pc_race_table[race_no].size = value;
-		printf_to_char(ch, "OK, %s size is now %d.\n\r", race_table[race_no].name, value);
+		race->size = value;
+		printf_to_char(ch, "OK, %s size is now %d.\n\r", race->name, value);
 	}
 	else if (!str_cmp(field_name, "tier")) {
 		if (!is_pc_race) {
@@ -442,8 +345,8 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Tier must be between 1 and 5.\n\r", ch);
 			return;
 		}
-		pc_race_table[race_no].tier = value;
-		printf_to_char(ch, "OK, %s tier is now %d.\n\r", race_table[race_no].name, value);
+		race->tier = value;
+		printf_to_char(ch, "OK, %s tier is now %d.\n\r", race->name, value);
 	}
 	else if (!str_cmp(field_name, "stat")) {
 		if (!is_pc_race) {
@@ -464,9 +367,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		for (i = 0; i < MAX_STATS; i++) {
 			char *attr_names[] = { "strength", "intelligence", "wisdom", "dexterity", "constitution" };
 			if (!str_cmp(stat_name, attr_names[i])) {
-				pc_race_table[race_no].stats[i] = value;
+				race->stats[i] = value;
 				printf_to_char(ch, "OK, %s starting %s is now %d.\n\r", 
-					race_table[race_no].name, stat_name, value);
+					race->name, stat_name, value);
 				return;
 			}
 		}
@@ -491,9 +394,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		for (i = 0; i < MAX_STATS; i++) {
 			char *attr_names[] = { "strength", "intelligence", "wisdom", "dexterity", "constitution" };
 			if (!str_cmp(stat_name, attr_names[i])) {
-				pc_race_table[race_no].max_stats[i] = value;
+				race->max_stats[i] = value;
 				printf_to_char(ch, "OK, %s maximum %s is now %d.\n\r", 
-					race_table[race_no].name, stat_name, value);
+					race->name, stat_name, value);
 				return;
 			}
 		}
@@ -517,9 +420,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		/* Find the class */
 		for (i = 0; i < MAX_CLASS; i++) {
 			if (!str_cmp(class_name, class_table[i].name)) {
-				pc_race_table[race_no].class_mult[i] = value;
+				race->class_mult[i] = value;
 				printf_to_char(ch, "OK, %s %s experience multiplier is now %d%%.\n\r", 
-					race_table[race_no].name, class_name, value);
+					race->name, class_name, value);
 				return;
 			}
 		}
@@ -533,10 +436,10 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		/* Format: rcedit race skill <skill_name> */
 		/* For now, just add to the first available slot */
 		for (i = 0; i < 5; i++) {
-			if (pc_race_table[race_no].skills[i] == NULL || pc_race_table[race_no].skills[i][0] == '\0') {
-				pc_race_table[race_no].skills[i] = str_dup(argument);
+			if (race->skills[i] == NULL || race->skills[i][0] == '\0') {
+				race->skills[i] = str_dup(argument);
 				printf_to_char(ch, "OK, %s now has bonus skill '%s'.\n\r", 
-					race_table[race_no].name, argument);
+					race->name, argument);
 				return;
 			}
 		}
@@ -548,9 +451,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid act flag. Use: sentinel, aggressive, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].act = value;
+		race->act = value;
 		printf_to_char(ch, "OK, %s act flags are now %s.\n\r", 
-			race_table[race_no].name, act_bit_name(value));
+			race->name, act_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "aff")) {
 		value = flag_value(affect_flags, argument);
@@ -558,9 +461,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid affect flag. Use: charm, sleep, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].aff = value;
+		race->aff = value;
 		printf_to_char(ch, "OK, %s affected by flags are now %s.\n\r", 
-			race_table[race_no].name, affect_bit_name(value));
+			race->name, affect_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "off")) {
 		value = flag_value(off_flags, argument);
@@ -568,9 +471,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid offensive flag. Use: area_attack, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].off = value;
+		race->off = value;
 		printf_to_char(ch, "OK, %s offensive flags are now %s.\n\r", 
-			race_table[race_no].name, off_bit_name(value));
+			race->name, off_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "imm")) {
 		value = flag_value(imm_flags, argument);
@@ -578,9 +481,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid immunity flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].imm = value;
+		race->imm = value;
 		printf_to_char(ch, "OK, %s immunity flags are now %s.\n\r", 
-			race_table[race_no].name, imm_bit_name(value));
+			race->name, imm_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "res")) {
 		value = flag_value(imm_flags, argument);
@@ -588,9 +491,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid resistance flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].res = value;
+		race->res = value;
 		printf_to_char(ch, "OK, %s resistance flags are now %s.\n\r", 
-			race_table[race_no].name, imm_bit_name(value));
+			race->name, imm_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "vuln")) {
 		value = flag_value(imm_flags, argument);
@@ -598,9 +501,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid vulnerability flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].vuln = value;
+		race->vuln = value;
 		printf_to_char(ch, "OK, %s vulnerability flags are now %s.\n\r", 
-			race_table[race_no].name, imm_bit_name(value));
+			race->name, imm_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "shd")) {
 		value = flag_value(shield_flags, argument);
@@ -608,9 +511,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid shield flag. Use: sanctuary, fire, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].shd = value;
+		race->shd = value;
 		printf_to_char(ch, "OK, %s shield flags are now %s.\n\r", 
-			race_table[race_no].name, shield_bit_name(value));
+			race->name, shield_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "form")) {
 		value = flag_value(form_flags, argument);
@@ -618,9 +521,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid form flag. Use: animal, sentient, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].form = value;
+		race->form = value;
 		printf_to_char(ch, "OK, %s form flags are now %s.\n\r", 
-			race_table[race_no].name, form_bit_name(value));
+			race->name, form_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "parts")) {
 		value = flag_value(part_flags, argument);
@@ -628,9 +531,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid parts flag. Use: head, arms, legs, etc.\n\r", ch);
 			return;
 		}
-		race_table[race_no].parts = value;
+		race->parts = value;
 		printf_to_char(ch, "OK, %s parts flags are now %s.\n\r", 
-			race_table[race_no].name, part_bit_name(value));
+			race->name, part_bit_name(value));
 	}
 	else if (!str_cmp(field_name, "remove_act")) {
 		value = flag_value(act_flags, argument);
@@ -638,9 +541,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid act flag. Use: sentinel, aggressive, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].act, value);
+		REMOVE_BIT(race->act, value);
 		printf_to_char(ch, "OK, removed %s from %s act flags. Now: %s\n\r", 
-			act_bit_name(value), race_table[race_no].name, act_bit_name(race_table[race_no].act));
+			act_bit_name(value), race->name, act_bit_name(race->act));
 	}
 	else if (!str_cmp(field_name, "remove_aff")) {
 		value = flag_value(affect_flags, argument);
@@ -648,9 +551,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid affect flag. Use: charm, sleep, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].aff, value);
+		REMOVE_BIT(race->aff, value);
 		printf_to_char(ch, "OK, removed %s from %s affected by flags. Now: %s\n\r", 
-			affect_bit_name(value), race_table[race_no].name, affect_bit_name(race_table[race_no].aff));
+			affect_bit_name(value), race->name, affect_bit_name(race->aff));
 	}
 	else if (!str_cmp(field_name, "remove_off")) {
 		value = flag_value(off_flags, argument);
@@ -658,9 +561,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid offensive flag. Use: area_attack, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].off, value);
+		REMOVE_BIT(race->off, value);
 		printf_to_char(ch, "OK, removed %s from %s offensive flags. Now: %s\n\r", 
-			off_bit_name(value), race_table[race_no].name, off_bit_name(race_table[race_no].off));
+			off_bit_name(value), race->name, off_bit_name(race->off));
 	}
 	else if (!str_cmp(field_name, "remove_imm")) {
 		value = flag_value(imm_flags, argument);
@@ -668,9 +571,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid immunity flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].imm, value);
+		REMOVE_BIT(race->imm, value);
 		printf_to_char(ch, "OK, removed %s from %s immunity flags. Now: %s\n\r", 
-			imm_bit_name(value), race_table[race_no].name, imm_bit_name(race_table[race_no].imm));
+			imm_bit_name(value), race->name, imm_bit_name(race->imm));
 	}
 	else if (!str_cmp(field_name, "remove_res")) {
 		value = flag_value(imm_flags, argument);
@@ -678,9 +581,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid resistance flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].res, value);
+		REMOVE_BIT(race->res, value);
 		printf_to_char(ch, "OK, removed %s from %s resistance flags. Now: %s\n\r", 
-			imm_bit_name(value), race_table[race_no].name, imm_bit_name(race_table[race_no].res));
+			imm_bit_name(value), race->name, imm_bit_name(race->res));
 	}
 	else if (!str_cmp(field_name, "remove_vuln")) {
 		value = flag_value(imm_flags, argument);
@@ -688,9 +591,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid vulnerability flag. Use: fire, cold, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].vuln, value);
+		REMOVE_BIT(race->vuln, value);
 		printf_to_char(ch, "OK, removed %s from %s vulnerability flags. Now: %s\n\r", 
-			imm_bit_name(value), race_table[race_no].name, imm_bit_name(race_table[race_no].vuln));
+			imm_bit_name(value), race->name, imm_bit_name(race->vuln));
 	}
 	else if (!str_cmp(field_name, "remove_shd")) {
 		value = flag_value(shield_flags, argument);
@@ -698,9 +601,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid shield flag. Use: sanctuary, fire, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].shd, value);
+		REMOVE_BIT(race->shd, value);
 		printf_to_char(ch, "OK, removed %s from %s shield flags. Now: %s\n\r", 
-			shield_bit_name(value), race_table[race_no].name, shield_bit_name(race_table[race_no].shd));
+			shield_bit_name(value), race->name, shield_bit_name(race->shd));
 	}
 	else if (!str_cmp(field_name, "remove_form")) {
 		value = flag_value(form_flags, argument);
@@ -708,9 +611,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid form flag. Use: animal, sentient, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].form, value);
+		REMOVE_BIT(race->form, value);
 		printf_to_char(ch, "OK, removed %s from %s form flags. Now: %s\n\r", 
-			form_bit_name(value), race_table[race_no].name, form_bit_name(race_table[race_no].form));
+			form_bit_name(value), race->name, form_bit_name(race->form));
 	}
 	else if (!str_cmp(field_name, "remove_parts")) {
 		value = flag_value(part_flags, argument);
@@ -718,9 +621,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 			send_to_char("Invalid parts flag. Use: head, arms, legs, etc.\n\r", ch);
 			return;
 		}
-		REMOVE_BIT(race_table[race_no].parts, value);
+		REMOVE_BIT(race->parts, value);
 		printf_to_char(ch, "OK, removed %s from %s parts flags. Now: %s\n\r", 
-			part_bit_name(value), race_table[race_no].name, part_bit_name(race_table[race_no].parts));
+			part_bit_name(value), race->name, part_bit_name(race->parts));
 	}
 	else if (!str_cmp(field_name, "rename")) {
 		/* Format: rcedit race rename <new_name> */
@@ -730,28 +633,21 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		}
 		
 		/* Check if new name already exists */
-		int check_race;
-		for (check_race = 0; check_race < MAX_PC_RACE && race_table[check_race].name != NULL; check_race++) {
-			if (check_race != race_no && !str_cmp(argument, race_table[check_race].name)) {
-				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
-				return;
-			}
+		if (find_race_by_name(argument) != NULL) {
+			printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
+			return;
 		}
 		
 		/* Free old name and set new name */
-		free_string(race_table[race_no].name);
-		race_table[race_no].name = str_dup(argument);
-		
-		/* Update PC race table name if it's a PC race */
-		if (race_table[race_no].pc_race && race_no < MAX_PC_RACE) {
-			free_string(pc_race_table[race_no].name);
-			pc_race_table[race_no].name = str_dup(argument);
-		}
+		free_string(race->name);
+		race->name = str_dup(argument);
 		
 		printf_to_char(ch, "OK, race renamed to '%s'.\n\r", argument);
 		
 		/* Save the race file */
-		save_race_to_file(race_no);
+		char filename[MIL];
+		sprintf(filename, "%s%s.race", RACE_DIR, argument);
+		save_race_file(filename, 0); /* Use 0 as dummy race_no for file-based system */
 	}
 	else {
 		send_to_char("Invalid field. Use: pcrace, points, size, tier, stat, maxstat, mult, skill, act, aff, off, imm, res, vuln, shd, form, parts, remove_act, remove_aff, remove_off, remove_imm, remove_res, remove_vuln, remove_shd, remove_form, remove_parts, rename, delete\n\r", ch);
@@ -759,7 +655,9 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 	}
 	
 	/* Save the race file after any modification */
-	save_race_to_file(race_no);
+	char filename[MIL];
+	sprintf(filename, "%s%s.race", RACE_DIR, race->name);
+	save_race_file(filename, 0); /* Use 0 as dummy race_no for file-based system */
 	
 } // do_rcedit()
 
@@ -777,59 +675,80 @@ void save_race_file(const char *filename, int race_no) {
 		return;
 	}
 	
+	/* Find the race in the race_list */
+	struct race_data *race = NULL;
+	if (race_list != NULL) {
+		/* Extract race name from filename */
+		char race_name[MIL];
+		strcpy(race_name, filename);
+		char *slash = strrchr(race_name, '/');
+		if (slash) slash++;
+		else slash = race_name;
+		char *dot = strrchr(slash, '.');
+		if (dot) *dot = '\0';
+		
+		race = find_race_by_name(slash);
+	}
+	
+	if (race == NULL) {
+		bug("save_race_file: race not found in race_list", 0);
+		fclose(fp);
+		return;
+	}
+	
 	/* Write race header */
 	fprintf(fp, "#RACE\n");
-	fprintf(fp, "Name %s~\n", race_table[race_no].name);
-	fprintf(fp, "PC_RACE %s\n", race_table[race_no].pc_race ? "yes" : "no");
-	fprintf(fp, "Act %ld\n", race_table[race_no].act);
-	fprintf(fp, "Aff %ld\n", race_table[race_no].aff);
-	fprintf(fp, "Off %ld\n", race_table[race_no].off);
-	fprintf(fp, "Imm %ld\n", race_table[race_no].imm);
-	fprintf(fp, "Res %ld\n", race_table[race_no].res);
-	fprintf(fp, "Vuln %ld\n", race_table[race_no].vuln);
-	fprintf(fp, "Shd %ld\n", race_table[race_no].shd);
-	fprintf(fp, "Form %ld\n", race_table[race_no].form);
-	fprintf(fp, "Parts %ld\n", race_table[race_no].parts);
+	fprintf(fp, "Name %s~\n", race->name);
+	fprintf(fp, "PC_RACE %s\n", race->pc_race ? "yes" : "no");
+	fprintf(fp, "Act %ld\n", race->act);
+	fprintf(fp, "Aff %ld\n", race->aff);
+	fprintf(fp, "Off %ld\n", race->off);
+	fprintf(fp, "Imm %ld\n", race->imm);
+	fprintf(fp, "Res %ld\n", race->res);
+	fprintf(fp, "Vuln %ld\n", race->vuln);
+	fprintf(fp, "Shd %ld\n", race->shd);
+	fprintf(fp, "Form %ld\n", race->form);
+	fprintf(fp, "Parts %ld\n", race->parts);
 	
 	/* Write PC race specific data if it's a PC race */
-	if (race_table[race_no].pc_race && race_no < MAX_PC_RACE) {
-		fprintf(fp, "Who_Name %s~\n", pc_race_table[race_no].who_name);
-		fprintf(fp, "Points %d\n", pc_race_table[race_no].points);
-		fprintf(fp, "Size %d\n", pc_race_table[race_no].size);
-		fprintf(fp, "Tier %d\n", pc_race_table[race_no].tier);
+	if (race->pc_race) {
+		fprintf(fp, "Who_Name %s~\n", race->who_name);
+		fprintf(fp, "Points %d\n", race->points);
+		fprintf(fp, "Size %d\n", race->size);
+		fprintf(fp, "Tier %d\n", race->tier);
 		
 		/* Write starting stats */
 		fprintf(fp, "Stats");
 		for (i = 0; i < MAX_STATS; i++) {
-			fprintf(fp, " %d", pc_race_table[race_no].stats[i]);
+			fprintf(fp, " %d", race->stats[i]);
 		}
 		fprintf(fp, "\n");
 		
 		/* Write max stats */
 		fprintf(fp, "Max_Stats");
 		for (i = 0; i < MAX_STATS; i++) {
-			fprintf(fp, " %d", pc_race_table[race_no].max_stats[i]);
+			fprintf(fp, " %d", race->max_stats[i]);
 		}
 		fprintf(fp, "\n");
 		
 		/* Write class multipliers */
 		fprintf(fp, "Class_Mult");
 		for (i = 0; i < MAX_CLASS; i++) {
-			fprintf(fp, " %d", pc_race_table[race_no].class_mult[i]);
+			fprintf(fp, " %d", race->class_mult[i]);
 		}
 		fprintf(fp, "\n");
 		
 		/* Write bonus skills */
 		fprintf(fp, "Skills");
 		for (i = 0; i < 5; i++) {
-			if (pc_race_table[race_no].skills[i] != NULL && pc_race_table[race_no].skills[i][0] != '\0') {
-				fprintf(fp, " %s", pc_race_table[race_no].skills[i]);
+			if (race->skills[i] != NULL && race->skills[i][0] != '\0') {
+				fprintf(fp, " %s", race->skills[i]);
 			}
 		}
 		fprintf(fp, "\n");
 	} else {
 		/* For NPC races, write default PC race data */
-		fprintf(fp, "Who_Name %s~\n", race_table[race_no].name);
+		fprintf(fp, "Who_Name %s~\n", race->name);
 		fprintf(fp, "Points 0\n");
 		fprintf(fp, "Size 2\n");  /* SIZE_MEDIUM */
 		fprintf(fp, "Tier 1\n");
@@ -864,22 +783,102 @@ void save_race_file(const char *filename, int race_no) {
 	
 } // save_race_file()
 
-/**/
-void load_race_file(const char *filename, int race_no) {
+/* File-based race system implementation */
+
+struct race_data *create_race_data(void) {
+	struct race_data *race;
+	
+	race = alloc_mem(sizeof(struct race_data));
+	race->next = NULL;
+	race->name = NULL;
+	race->pc_race = FALSE;
+	race->act = 0;
+	race->aff = 0;
+	race->off = 0;
+	race->imm = 0;
+	race->res = 0;
+	race->vuln = 0;
+	race->shd = 0;
+	race->form = 0;
+	race->parts = 0;
+	strcpy(race->who_name, "     ");
+	race->points = 0;
+	race->size = 2; /* SIZE_MEDIUM */
+	race->tier = 1;
+	
+	/* Initialize arrays */
+	int i;
+	for (i = 0; i < MAX_CLASS; i++) {
+		race->class_mult[i] = 100;
+	}
+	for (i = 0; i < MAX_STATS; i++) {
+		race->stats[i] = 13;
+		race->max_stats[i] = 18;
+	}
+	for (i = 0; i < 5; i++) {
+		race->skills[i] = NULL;
+	}
+	
+	return race;
+}
+
+void free_race_data(struct race_data *race) {
+	if (race == NULL) return;
+	
+	if (race->name) {
+		free_string(race->name);
+	}
+	
+	int i;
+	for (i = 0; i < 5; i++) {
+		if (race->skills[i]) {
+			free_string(race->skills[i]);
+		}
+	}
+	
+	free_mem(race, sizeof(struct race_data));
+}
+
+struct race_data *find_race_by_name(const char *race_name) {
+	struct race_data *race;
+	
+	for (race = race_list; race != NULL; race = race->next) {
+		if (!str_cmp(race_name, race->name)) {
+			return race;
+		}
+	}
+	
+	return NULL;
+}
+
+struct race_data *load_race_from_file(const char *race_name) {
+	char filename[MIL];
 	FILE *fp;
 	char *word;
 	bool fMatch;
 	int i;
-	int fields_loaded = 0;
+	struct race_data *race;
 	
-	if ((fp = fopen(filename, "r")) == NULL) {
-		bug("load_race_file: cannot open file for reading", 0);
-		return;
+	/* Check if race is already loaded */
+	race = find_race_by_name(race_name);
+	if (race != NULL) {
+		return race;
 	}
 	
-	printf("  Parsing race file: %s\n", filename);
-	fflush(stdout);  /* Ensure output is flushed immediately */
+	/* Create new race data */
+	race = create_race_data();
+	race->name = str_dup(race_name);
 	
+	/* Try to load from file */
+	sprintf(filename, "%s%s.race", RACE_DIR, race_name);
+	fp = fopen(filename, "r");
+	if (fp == NULL) {
+		/* File doesn't exist, use defaults */
+		free_race_data(race);
+		return NULL;
+	}
+	
+	/* Parse the race file */
 	for (;;) {
 		if (feof(fp)) {
 			word = "End";
@@ -890,21 +889,6 @@ void load_race_file(const char *filename, int race_no) {
 			}
 		}
 		fMatch = FALSE;
-		
-		/* Debug: Show what word we're processing */
-		if (strcmp(word, "End") != 0) {
-			printf("    Processing word: '%s'\n", word);
-			fflush(stdout);
-		}
-		
-		/* Check for race table corruption during parsing */
-		if (race_table[1].name == NULL) {
-			printf("    ERROR: Race table corrupted during parsing! race_table[1].name is NULL\n");
-			fflush(stdout);
-			/* Try to restore the race table */
-			race_table[1].name = "human";
-			race_table[1].pc_race = TRUE;
-		}
 		
 		switch (UPPER(word[0])) {
 			case '#':
@@ -919,26 +903,11 @@ void load_race_file(const char *filename, int race_no) {
 				
 			case 'A':
 				if (!str_cmp(word, "Act")) {
-					race_table[race_no].act = fread_number(fp);
-					fields_loaded++;
+					race->act = fread_number(fp);
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Aff")) {
-					race_table[race_no].aff = fread_number(fp);
-					fields_loaded++;
-					fMatch = TRUE;
-				}
-				break;
-				
-			case 'B':
-				if (!str_cmp(word, "bash") || !str_cmp(word, "berserk")) {
-					/* Find first empty skill slot */
-					for (i = 0; i < 5; i++) {
-						if (pc_race_table[race_no].skills[i] == NULL) {
-							pc_race_table[race_no].skills[i] = str_dup(word);
-							break;
-						}
-					}
+					race->aff = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
@@ -946,7 +915,7 @@ void load_race_file(const char *filename, int race_no) {
 			case 'C':
 				if (!str_cmp(word, "Class_Mult")) {
 					for (i = 0; i < MAX_CLASS; i++) {
-						pc_race_table[race_no].class_mult[i] = fread_number(fp);
+						race->class_mult[i] = fread_number(fp);
 					}
 					fMatch = TRUE;
 				}
@@ -955,61 +924,23 @@ void load_race_file(const char *filename, int race_no) {
 			case 'E':
 				if (!str_cmp(word, "End")) {
 					fclose(fp);
-					return;
-				}
-				else if (!str_cmp(word, "enhanced")) {
-					/* Read the next word to get "enhanced damage" */
-					char *next_word = fread_word(fp);
-					if (next_word && !str_cmp(next_word, "damage")) {
-						/* Find first empty skill slot */
-						for (i = 0; i < 5; i++) {
-							if (pc_race_table[race_no].skills[i] == NULL) {
-								pc_race_table[race_no].skills[i] = str_dup("enhanced damage");
-								break;
-							}
-						}
-					}
-					fMatch = TRUE;
+					/* Add to race list */
+					race->next = race_list;
+					race_list = race;
+					return race;
 				}
 				break;
 				
 			case 'F':
 				if (!str_cmp(word, "Form")) {
-					race_table[race_no].form = fread_number(fp);
-					fMatch = TRUE;
-				}
-				else if (!str_cmp(word, "fast")) {
-					/* Read the next word to get "fast healing" */
-					char *next_word = fread_word(fp);
-					if (next_word && !str_cmp(next_word, "healing")) {
-						/* Find first empty skill slot */
-						for (i = 0; i < 5; i++) {
-							if (pc_race_table[race_no].skills[i] == NULL) {
-								pc_race_table[race_no].skills[i] = str_dup("fast healing");
-								break;
-							}
-						}
-					}
-					fMatch = TRUE;
-				}
-				break;
-				
-			case 'H':
-				if (!str_cmp(word, "hide")) {
-					/* Find first empty skill slot */
-					for (i = 0; i < 5; i++) {
-						if (pc_race_table[race_no].skills[i] == NULL) {
-							pc_race_table[race_no].skills[i] = str_dup("hide");
-							break;
-						}
-					}
+					race->form = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
 				
 			case 'I':
 				if (!str_cmp(word, "Imm")) {
-					race_table[race_no].imm = fread_number(fp);
+					race->imm = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
@@ -1017,17 +948,7 @@ void load_race_file(const char *filename, int race_no) {
 			case 'M':
 				if (!str_cmp(word, "Max_Stats")) {
 					for (i = 0; i < MAX_STATS; i++) {
-						pc_race_table[race_no].max_stats[i] = fread_number(fp);
-					}
-					fMatch = TRUE;
-				}
-				else if (!str_cmp(word, "meditation")) {
-					/* Find first empty skill slot */
-					for (i = 0; i < 5; i++) {
-						if (pc_race_table[race_no].skills[i] == NULL) {
-							pc_race_table[race_no].skills[i] = str_dup("meditation");
-							break;
-						}
+						race->max_stats[i] = fread_number(fp);
 					}
 					fMatch = TRUE;
 				}
@@ -1036,13 +957,9 @@ void load_race_file(const char *filename, int race_no) {
 			case 'N':
 				if (!str_cmp(word, "Name")) {
 					char *new_name = fread_string(fp);
-					if (new_name == NULL) {
-						bug("load_race_file: fread_string returned NULL for race %d", race_no);
-						/* Keep the original name if fread_string fails */
-					} else {
-						race_table[race_no].name = new_name;
-						printf("    Race name: %s\n", race_table[race_no].name);
-						fields_loaded++;
+					if (new_name != NULL) {
+						free_string(race->name);
+						race->name = new_name;
 					}
 					fMatch = TRUE;
 				}
@@ -1050,8 +967,7 @@ void load_race_file(const char *filename, int race_no) {
 				
 			case 'O':
 				if (!str_cmp(word, "Off")) {
-					race_table[race_no].off = fread_number(fp);
-					fields_loaded++;
+					race->off = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
@@ -1059,71 +975,38 @@ void load_race_file(const char *filename, int race_no) {
 			case 'P':
 				if (!str_cmp(word, "PC_RACE")) {
 					char *pc_race_str = fread_word(fp);
-					race_table[race_no].pc_race = (!str_cmp(pc_race_str, "yes"));
-					fields_loaded++;
+					race->pc_race = (!str_cmp(pc_race_str, "yes"));
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Parts")) {
-					race_table[race_no].parts = fread_number(fp);
-					fields_loaded++;
+					race->parts = fread_number(fp);
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Points")) {
-					pc_race_table[race_no].points = fread_number(fp);
+					race->points = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
 				
 			case 'R':
 				if (!str_cmp(word, "Res")) {
-					race_table[race_no].res = fread_number(fp);
+					race->res = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
 				
 			case 'S':
 				if (!str_cmp(word, "Shd")) {
-					race_table[race_no].shd = fread_number(fp);
+					race->shd = fread_number(fp);
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Size")) {
-					pc_race_table[race_no].size = fread_number(fp);
-					fMatch = TRUE;
-				}
-				else if (!str_cmp(word, "Skills")) {
-					/* Initialize all skills to NULL first */
-					for (i = 0; i < 5; i++) {
-						pc_race_table[race_no].skills[i] = NULL;
-					}
+					race->size = fread_number(fp);
 					fMatch = TRUE;
 				}
 				else if (!str_cmp(word, "Stats")) {
 					for (i = 0; i < MAX_STATS; i++) {
-						pc_race_table[race_no].stats[i] = fread_number(fp);
-					}
-					fMatch = TRUE;
-				}
-				else if (!str_cmp(word, "sneak")) {
-					/* Find first empty skill slot */
-					for (i = 0; i < 5; i++) {
-						if (pc_race_table[race_no].skills[i] == NULL) {
-							pc_race_table[race_no].skills[i] = str_dup("sneak");
-							break;
-						}
-					}
-					fMatch = TRUE;
-				}
-				else if (!str_cmp(word, "second")) {
-					/* Read the next word to get "second attack" */
-					char *next_word = fread_word(fp);
-					if (next_word && !str_cmp(next_word, "attack")) {
-						/* Find first empty skill slot */
-						for (i = 0; i < 5; i++) {
-							if (pc_race_table[race_no].skills[i] == NULL) {
-								pc_race_table[race_no].skills[i] = str_dup("second attack");
-								break;
-							}
-						}
+						race->stats[i] = fread_number(fp);
 					}
 					fMatch = TRUE;
 				}
@@ -1131,323 +1014,61 @@ void load_race_file(const char *filename, int race_no) {
 				
 			case 'T':
 				if (!str_cmp(word, "Tier")) {
-					pc_race_table[race_no].tier = fread_number(fp);
+					race->tier = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
 				
 			case 'V':
 				if (!str_cmp(word, "Vuln")) {
-					race_table[race_no].vuln = fread_number(fp);
+					race->vuln = fread_number(fp);
 					fMatch = TRUE;
 				}
 				break;
 				
 			case 'W':
 				if (!str_cmp(word, "Who_Name")) {
-					strcpy(pc_race_table[race_no].who_name, fread_string(fp));
+					strcpy(race->who_name, fread_string(fp));
 					fMatch = TRUE;
 				}
 				break;
-				
-
 		}
 		
 		if (!fMatch) {
-			bug("load_race_file: no match for word '%s'", word);
 			fread_to_eol(fp);
 		}
 	}
 	
-	printf("    Loaded %d fields from %s\n", fields_loaded, filename);
 	fclose(fp);
-	
-} // load_race_file()
+	free_race_data(race);
+	return NULL;
+}
 
-/**/
-void load_race_files(void) {
-	char filename[MIL];
-	int race_no;
-	int loaded_count = 0;
-	int skipped_count = 0;
-	int list_loaded_count = 0;
+void list_available_races(CHAR_DATA *ch) {
+	struct race_data *race;
+	int count = 0;
 	
-	/* The pc_race_table is already initialized with hardcoded race data in const.c */
-	/* We don't need to overwrite it with "null race" - that destroys the existing data */
+	send_to_char("Available races:\n\r", ch);
 	
-	log_string("Race file loading starting...");
-	log_string("Race directory: " RACE_DIR);
-	
-	/* First, load races from the static table (existing races) */
-	log_string("Loading races from static table...");
-	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
-		
-		/* Safety check for NULL race name */
-		if (race_table[race_no].name == NULL) {
-			printf("WARNING: Found NULL race name at index %d, stopping\n", race_no);
-			break;
+	for (race = race_list; race != NULL; race = race->next) {
+		if (race->pc_race) {
+			printf_to_char(ch, "  %s (%s)\n\r", race->name, 
+				race->pc_race ? "PC" : "NPC");
+			count++;
 		}
-		
-		/* Additional safety check for race table integrity */
-		if (race_no > 0 && race_table[race_no-1].name == NULL) {
-			printf("WARNING: Previous race %d has NULL name, possible table corruption\n", race_no-1);
-			fflush(stdout);
-		}
-		
-		printf("Processing race %d: %s\n", race_no, race_table[race_no].name);
-		fflush(stdout);  /* Ensure output is flushed immediately */
-		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
-		
-		/* Try to load the race file - if it doesn't exist, skip it */
-		FILE *fp = fopen(filename, "r");
-		if (fp != NULL) {
-			fclose(fp);
-			printf("Loading race file: %s\n", filename);
-			fflush(stdout);  /* Ensure output is flushed immediately */
-			
-			/* Add error handling around race file loading */
-			printf("  About to call load_race_file for race %d\n", race_no);
-			fflush(stdout);
-			
-			/* Check if this is the problematic race file */
-			if (race_no == 29) {
-				printf("  WARNING: This is race 29 (fox) - potential problem race\n");
-				fflush(stdout);
-			}
-			
-			load_race_file(filename, race_no);
-			
-			printf("  Completed load_race_file for race %d\n", race_no);
-			fflush(stdout);
-			loaded_count++;
-			
-			/* Additional safety check after each race load */
-			printf("  Race %d loaded successfully, loaded_count=%d\n", race_no, loaded_count);
-			fflush(stdout);
-			
-			/* Check for race table corruption after each load */
-			if (race_table[1].name == NULL) {
-				printf("  ERROR: Race table corrupted after loading race %d! race_table[1].name is NULL\n", race_no);
-				fflush(stdout);
-				/* Try to restore the race table */
-				race_table[1].name = "human";
-				race_table[1].pc_race = TRUE;
-			}
-			
-			/* Additional check for race_table[2] corruption */
-			if (race_table[2].name == NULL) {
-				printf("  ERROR: Race table corrupted after loading race %d! race_table[2].name is NULL\n", race_no);
-				fflush(stdout);
-				/* Try to restore the race table */
-				race_table[2].name = "elf";
-				race_table[2].pc_race = TRUE;
-			}
-		} else {
-			printf("Race file not found: %s (using hardcoded values)\n", filename);
-			skipped_count++;
-		}
-		/* If file doesn't exist, race keeps its hardcoded values */
 	}
 	
-	printf("DEBUG: Exited race loading loop, race_no=%d\n", race_no);
-	fflush(stdout);
-	
-	printf("Finished processing static races. Processed %d races.\n", race_no);
-	fflush(stdout);
-	
-	/* Verify race table termination */
-	printf("DEBUG: Checking race table termination at index %d\n", race_no);
-	fflush(stdout);
-	
-	if (race_table[race_no].name != NULL) {
-		printf("ERROR: Race table not properly terminated! Race %d has name: %s\n", 
-			race_no, race_table[race_no].name);
-		/* Force termination to prevent crashes */
-		race_table[race_no].name = NULL;
-	} else {
-		printf("DEBUG: Race table properly terminated at index %d\n", race_no);
-		fflush(stdout);
+	if (count == 0) {
+		send_to_char("  No races available.\n\r", ch);
 	}
-	
-	/* Debug: Check if race table is accessible */
-	printf("DEBUG: Race table accessibility check:\n");
-	fflush(stdout);
-	
-	printf("  race_table[0].name = %s\n", race_table[0].name ? race_table[0].name : "NULL");
-	fflush(stdout);
-	
-	printf("  race_table[1].name = %s\n", race_table[1].name ? race_table[1].name : "NULL");
-	fflush(stdout);
-	
-	/* Add safety check before accessing race_table[2] */
-	printf("DEBUG: About to access race_table[2]\n");
-	fflush(stdout);
-	
-	/* Use a much simpler approach to access race_table[2] */
-	printf("DEBUG: Using simple array access\n");
-	fflush(stdout);
-	
-	/* Skip the problematic access for now */
-	printf("  race_table[2].name = (skipped to avoid segfault)\n");
-	fflush(stdout);
-	
-	printf("DEBUG: Successfully accessed race_table[2]\n");
-	fflush(stdout);
-	
-	printf("DEBUG: Completed race table accessibility check\n");
-	fflush(stdout);
-	
-	/* Add a simple test to see if we can continue */
-	printf("DEBUG: Testing basic operations\n");
-	fflush(stdout);
-	
-	int test_int = 42;
-	printf("DEBUG: Integer test: %d\n", test_int);
-	fflush(stdout);
-	
-	/* Check race table size and memory layout */
-	printf("DEBUG: Race table size check\n");
-	fflush(stdout);
-	printf("  MAX_PC_RACE = %d\n", MAX_PC_RACE);
-	fflush(stdout);
-	
-	printf("DEBUG: About to start race table structure check\n");
-	fflush(stdout);
-	
-	/* Debug: Check race table structure integrity */
-	printf("DEBUG: Checking race table structure integrity\n");
-	fflush(stdout);
-	
-	/* Skip the problematic race table loop for now */
-	printf("DEBUG: Skipping race table loop to avoid segfault\n");
-	fflush(stdout);
-	
-	printf("DEBUG: Completed race table structure check\n");
-	fflush(stdout);
-	
-	/* Test a simple operation to see if we can continue */
-	printf("DEBUG: Testing simple string operation\n");
-	fflush(stdout);
-	
-	char test_string[100];
-	strcpy(test_string, "test");
-	printf("DEBUG: String operation successful: %s\n", test_string);
-	fflush(stdout);
-	
-	/* Load additional races from a race list file */
-	/* This is a simpler cross-platform approach */
-	printf("DEBUG: About to load additional races from race list file\n");
-	fflush(stdout);
-	
-	printf("DEBUG: MIL constant value: %d\n", MIL);
-	fflush(stdout);
-	
-	printf("DEBUG: RACE_DIR constant: '%s'\n", RACE_DIR);
-	fflush(stdout);
-	
-	char list_filename[MIL];
-	
-	printf("DEBUG: About to call sprintf for list_filename\n");
-	fflush(stdout);
-	
-	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
-	
-	printf("DEBUG: Race list filename: %s\n", list_filename);
-	fflush(stdout);
-	
-	printf("DEBUG: Completed sprintf for list_filename\n");
-	fflush(stdout);
-	printf("Checking for race list file: %s\n", list_filename);
-	
-	FILE *list_fp = fopen(list_filename, "r");
-	if (list_fp != NULL) {
-		printf("Loading additional races from race list file...\n");
-		char line[MIL];
-		while (fgets(line, sizeof(line), list_fp) != NULL) {
-			/* Remove newline */
-			char *newline = strchr(line, '\n');
-			if (newline) *newline = '\0';
-			char *carriage = strchr(line, '\r');
-			if (carriage) *carriage = '\0';
-			
-			/* Skip empty lines and comments */
-			if (line[0] == '\0' || line[0] == '#') continue;
-			
-			/* Check if this race is already loaded */
-			int found = 0;
-			for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
-				if (!str_cmp(line, race_table[i].name)) {
-					found = 1;
-					break;
-				}
-			}
-			
-			/* If not found, add it to the race table */
-			if (!found) {
-				/* Find first empty slot within existing table bounds */
-				int empty_slot = 0;
-				for (empty_slot = 0; empty_slot < MAX_PC_RACE && race_table[empty_slot].name != NULL; empty_slot++) {
-					/* Keep going until we find the end */
-				}
-				
-				/* Check if we can extend the table */
-				if (empty_slot < MAX_PC_RACE) {
-					printf("Adding new race '%s' to slot %d\n", line, empty_slot);
-					/* Create the race entry */
-					race_table[empty_slot].name = str_dup(line);
-					race_table[empty_slot].pc_race = FALSE;
-					race_table[empty_slot].act = 0;
-					race_table[empty_slot].aff = 0;
-					race_table[empty_slot].off = 0;
-					race_table[empty_slot].imm = 0;
-					race_table[empty_slot].res = 0;
-					race_table[empty_slot].vuln = 0;
-					race_table[empty_slot].shd = 0;
-					race_table[empty_slot].form = 0;
-					race_table[empty_slot].parts = 0;
-					
-					/* Load the race file */
-					sprintf(filename, "%s%s.race", RACE_DIR, line);
-					printf("Loading race file: %s\n", filename);
-					load_race_file(filename, empty_slot);
-					list_loaded_count++;
-					
-					/* Mark end of table after loading */
-					race_table[empty_slot + 1].name = NULL;
-				} else {
-					printf("Cannot add race '%s': table full (MAX_PC_RACE=%d)\n", line, MAX_PC_RACE);
-				}
-			} else {
-				printf("Race '%s' already loaded, skipping\n", line);
-			}
-		}
-		fclose(list_fp);
-		printf("Race list file processing complete\n");
-	} else {
-		printf("Race list file not found: %s\n", list_filename);
-	}
-	
-	/* Count total races loaded */
-	int total_races = 0;
-	for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
-		total_races++;
-	}
-	
-	printf("Race loading complete: %d static races loaded, %d skipped, %d from list, %d total\n", 
-		loaded_count, skipped_count, list_loaded_count, total_races);
-	
-	/* Final flush to ensure all output is written */
-	fflush(stdout);
-	fflush(stderr);
-	
-} // load_race_files()
+}
 
-/**/
-void reload_race_list(void) {
+void load_all_races(void) {
 	char filename[MIL];
-	char list_filename[MIL];
+	char race_name[MIL];
 	
-	/* Load additional races from a race list file */
+	/* Load races from race_list.txt first */
+	char list_filename[MIL];
 	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
 	FILE *list_fp = fopen(list_filename, "r");
 	if (list_fp != NULL) {
@@ -1462,54 +1083,178 @@ void reload_race_list(void) {
 			/* Skip empty lines and comments */
 			if (line[0] == '\0' || line[0] == '#') continue;
 			
-			/* Check if this race is already loaded */
-			int found = 0;
-			for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
-				if (!str_cmp(line, race_table[i].name)) {
-					found = 1;
-					break;
-				}
-			}
-			
-			/* If not found, add it to the race table */
-			if (!found) {
-				/* Find first empty slot within existing table bounds */
-				int empty_slot = 0;
-				for (empty_slot = 0; empty_slot < MAX_PC_RACE && race_table[empty_slot].name != NULL; empty_slot++) {
-					/* Keep going until we find the end */
-				}
-				
-				/* Check if we can extend the table */
-				if (empty_slot < MAX_PC_RACE) {
-					/* Create the race entry */
-					race_table[empty_slot].name = str_dup(line);
-					race_table[empty_slot].pc_race = FALSE;
-					race_table[empty_slot].act = 0;
-					race_table[empty_slot].aff = 0;
-					race_table[empty_slot].off = 0;
-					race_table[empty_slot].imm = 0;
-					race_table[empty_slot].res = 0;
-					race_table[empty_slot].vuln = 0;
-					race_table[empty_slot].shd = 0;
-					race_table[empty_slot].form = 0;
-					race_table[empty_slot].parts = 0;
-					
-					/* Load the race file */
-					sprintf(filename, "%s%s.race", RACE_DIR, line);
-					load_race_file(filename, empty_slot);
-					
-					/* Mark end of table after loading */
-					race_table[empty_slot + 1].name = NULL;
-				}
-			}
+			load_race_from_file(line);
 		}
 		fclose(list_fp);
 	}
-} // reload_race_list()
+	
+	/* Load all race files from the race directory */
+	/* Use a simple approach that works on both Windows and Unix */
+	/* First, try to load all the race files we know exist */
+	const char *known_races[] = {
+		"human", "elf", "dwarf", "halfling", "gnome", "halfelf", "halforc",
+		"gnoll", "goblin", "hobgoblin", "kobold", "orc", "troll", "giant",
+		"dragon", "draconian", "minotaur", "centaur", "satyr", "pixie",
+		"kenku", "modron", "titan", "wyvern", "bat", "bear", "bovine",
+		"cat", "centipede", "deer", "dog", "doll", "fido", "fox",
+		"lizard", "pig", "rabbit", "rodent", "snake", "song bird",
+		"water fowl", "wolf", "avian", "school monster", "unique", "heucuva"
+	};
+	
+	int num_known_races = sizeof(known_races) / sizeof(known_races[0]);
+	
+	for (int i = 0; i < num_known_races; i++) {
+		/* Load the race if not already loaded */
+		if (find_race_by_name(known_races[i]) == NULL) {
+			load_race_from_file(known_races[i]);
+		}
+	}
+}
 
-/**/
-void save_race_to_file(int race_no) {
-	char filename[MIL];
-	sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
-	save_race_file(filename, race_no);
-} // save_race_to_file()
+struct race_data *get_race_by_index(int race_num) {
+	struct race_data *race;
+	int count = 0;
+	
+	/* Load all races if not already loaded */
+	if (race_list == NULL) {
+		load_all_races();
+	}
+	
+	for (race = race_list; race != NULL; race = race->next, count++) {
+		if (count == race_num) {
+			return race;
+		}
+	}
+	
+	return NULL;
+}
+
+/* Helper function to get race name by index */
+const char *get_race_name_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->name : NULL;
+}
+
+/* Helper function to check if race is PC race by index */
+bool is_pc_race_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->pc_race : FALSE;
+}
+
+/* Helper function to get race flags by index */
+long get_race_aff_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->aff : 0;
+}
+
+long get_race_shd_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->shd : 0;
+}
+
+long get_race_imm_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->imm : 0;
+}
+
+long get_race_res_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->res : 0;
+}
+
+long get_race_vuln_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->vuln : 0;
+}
+
+long get_race_form_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->form : 0;
+}
+
+long get_race_parts_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->parts : 0;
+}
+
+/* Helper function to get PC race data by index */
+int get_pc_race_tier_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->tier : 0;
+}
+
+int get_pc_race_points_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->points : 0;
+}
+
+int get_pc_race_size_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->size : 0;
+}
+
+const char *get_pc_race_who_name_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->who_name : NULL;
+}
+
+int get_pc_race_stat_by_index(int race_num, int stat) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL && stat >= 0 && stat < MAX_STATS) ? race->stats[stat] : 0;
+}
+
+const char *get_pc_race_skill_by_index(int race_num, int skill) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL && skill >= 0 && skill < MAX_SKILL) ? race->skills[skill] : NULL;
+}
+
+/* Helper function to get race act and off flags by index */
+long get_race_act_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->act : 0;
+}
+
+long get_race_off_by_index(int race_num) {
+	struct race_data *race = get_race_by_index(race_num);
+	return (race != NULL) ? race->off : 0;
+}
+
+/* Test function for file-based race system */
+void test_file_based_races(void) {
+	printf("Testing file-based race system...\n");
+	
+	/* Load all races */
+	load_all_races();
+	
+	/* Test finding races by name */
+	struct race_data *human = find_race_by_name("human");
+	if (human != NULL) {
+		printf("Found human race: %s (PC: %s)\n", human->name, human->pc_race ? "yes" : "no");
+	} else {
+		printf("ERROR: Could not find human race\n");
+	}
+	
+	struct race_data *elf = find_race_by_name("elf");
+	if (elf != NULL) {
+		printf("Found elf race: %s (PC: %s)\n", elf->name, elf->pc_race ? "yes" : "no");
+	} else {
+		printf("ERROR: Could not find elf race\n");
+	}
+	
+	/* Test race_lookup function */
+	int human_num = race_lookup("human");
+	int elf_num = race_lookup("elf");
+	printf("race_lookup results: human=%d, elf=%d\n", human_num, elf_num);
+	
+	/* Test get_race_by_index */
+	struct race_data *race0 = get_race_by_index(0);
+	struct race_data *race1 = get_race_by_index(1);
+	if (race0 != NULL) {
+		printf("Race 0: %s\n", race0->name);
+	}
+	if (race1 != NULL) {
+		printf("Race 1: %s\n", race1->name);
+	}
+	
+	printf("File-based race system test completed.\n");
+}

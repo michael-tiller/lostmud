@@ -1,3 +1,50 @@
 # Race List File
 # This file contains additional races that are loaded at startup
 # One race name per line, lines starting with # are comments
+
+human
+elf
+dwarf
+halfling
+gnome
+halfelf
+halforc
+gnoll
+goblin
+hobgoblin
+kobold
+orc
+troll
+giant
+dragon
+draconian
+minotaur
+centaur
+satyr
+pixie
+kenku
+modron
+titan
+wyvern
+bat
+bear
+bovine
+cat
+centipede
+deer
+dog
+doll
+fido
+fox
+lizard
+pig
+rabbit
+rodent
+snake
+song bird
+water fowl
+wolf
+avian
+school monster
+unique
+heucuva

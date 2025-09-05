@@ -1988,7 +1988,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 	"Vnum: %d  Format: %s  Race: %s  Group: %d  Sex: %s  Room: %d\n\r",
 	IS_NPC(victim) ? victim->pIndexData->vnum : 0,
 	IS_NPC(victim) ? victim->pIndexData->new_format ? "new" : "old" : "pc",
-	race_table[victim->race].name,
+	get_race_by_index(victim->race) ? get_race_by_index(victim->race)->name : "unknown",
 	IS_NPC(victim) ? victim->group : 0, sex_table[victim->sex].name,
 	victim->in_room == NULL    ?        0 : victim->in_room->vnum
 	);
@@ -4671,10 +4671,12 @@ void do_mset( CHAR_DATA *ch, char *argument )
 	    return;
 	}
 
-	if (!IS_NPC(victim) && !race_table[race].pc_race)
-	{
-	    send_to_char("That is not a valid player race.\n\r",ch);
-	    return;
+	if (!IS_NPC(victim)) {
+	    struct race_data *race_data = get_race_by_index(race);
+	    if (race_data == NULL || !race_data->pc_race) {
+		send_to_char("That is not a valid player race.\n\r",ch);
+		return;
+	    }
 	}
 
 	victim->race = race;

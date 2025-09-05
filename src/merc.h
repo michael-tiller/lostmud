@@ -570,6 +570,35 @@ struct pc_race_type  /* additional data for pc races */
 	sh_int	tier;				/* tiers this race is available at	*/
 };
 
+/* Forward declaration for file-based race data structure */
+struct race_data;
+
+/* File-based race data structure */
+struct race_data
+{
+    struct race_data *	next;		/* linked list */
+    char *	name;			/* race name */
+    bool	pc_race;		/* can be chosen by pcs */
+    long	act;			/* act bits for the race */
+    long	aff;			/* aff bits for the race */
+    long	off;			/* off bits for the race */
+    long	imm;			/* imm bits for the race */
+    long	res;			/* res bits for the race */
+    long	vuln;			/* vuln bits for the race */
+    long	shd;			/* shd bits for the race */
+    long	form;			/* default form flag for the race */
+    long	parts;			/* default parts for the race */
+    /* PC race specific data */
+    char	who_name[6];
+    sh_int	points;			/* cost in points of the race */
+    sh_int	class_mult[MAX_CLASS];	/* exp multiplier for class, * 100 */
+    char *	skills[5];		/* bonus skills for the race */
+    sh_int	stats[MAX_STATS];	/* starting stats */
+    sh_int	max_stats[MAX_STATS];	/* maximum stats */
+    sh_int	size;			/* size of the race */
+    sh_int	tier;			/* tiers this race is available at */
+};
+
 
 struct spec_type
 {
@@ -2329,8 +2358,8 @@ extern	const	struct	weapon_type	weapon_table	[];
 extern  const   struct  item_type	item_table	[];
 extern	const	struct	wiznet_type	wiznet_table	[];
 extern	const	struct	attack_type	attack_table	[];
-extern	struct  race_type	race_table	[];
-extern	struct	pc_race_type	pc_race_table	[];
+/* race_table[] and pc_race_table[] removed - now using file-based race system */
+extern	struct race_data *	race_list;		/* file-based race list */
 extern  const	struct	spec_type	spec_table	[];
 extern	const	struct	liq_type	liq_table	[];
 extern	struct	skill_type	skill_table	[MAX_SKILL];
@@ -3050,6 +3079,35 @@ char	*olc_ed_vnum	args( ( CHAR_DATA *ch ) );
 int	race_lookup	args( ( const char *name) );
 int	item_lookup	args( ( const char *name) );
 int	liq_lookup	args( ( const char *name) );
+
+/* file-based race system */
+struct race_data *	load_race_from_file	args( ( const char *race_name ) );
+struct race_data *	find_race_by_name	args( ( const char *race_name ) );
+void		free_race_data		args( ( struct race_data *race ) );
+struct race_data *	create_race_data	args( ( void ) );
+void		list_available_races	args( ( CHAR_DATA *ch ) );
+void		load_all_races		args( ( void ) );
+struct race_data *	get_race_by_index	args( ( int race_num ) );
+void		test_file_based_races	args( ( void ) );
+
+/* Helper functions for race data access */
+const char *	get_race_name_by_index		args( ( int race_num ) );
+bool		is_pc_race_by_index		args( ( int race_num ) );
+long		get_race_aff_by_index		args( ( int race_num ) );
+long		get_race_shd_by_index		args( ( int race_num ) );
+long		get_race_imm_by_index		args( ( int race_num ) );
+long		get_race_res_by_index		args( ( int race_num ) );
+long		get_race_vuln_by_index		args( ( int race_num ) );
+long		get_race_form_by_index		args( ( int race_num ) );
+long		get_race_parts_by_index		args( ( int race_num ) );
+int		get_pc_race_tier_by_index	args( ( int race_num ) );
+int		get_pc_race_points_by_index	args( ( int race_num ) );
+int		get_pc_race_size_by_index	args( ( int race_num ) );
+const char *	get_pc_race_who_name_by_index	args( ( int race_num ) );
+int		get_pc_race_stat_by_index	args( ( int race_num, int stat ) );
+const char *	get_pc_race_skill_by_index	args( ( int race_num, int skill ) );
+long		get_race_act_by_index		args( ( int race_num ) );
+long		get_race_off_by_index		args( ( int race_num ) );
 
 /* sedit */
 void load_social_table();

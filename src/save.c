@@ -200,7 +200,13 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     	fprintf( fp, "Desc %s~\n",	ch->description	);
     if (ch->prompt != NULL || !str_cmp(ch->prompt,"<%hhp %mm %vmv> {Y(%X) {R(%e){x> "))
         fprintf( fp, "Prom %s~\n",      ch->prompt  	);
-    fprintf( fp, "Race %s~\n", pc_race_table[ch->race].name );
+    /* Get race name from file-based system */
+    struct race_data *race = get_race_by_index(ch->race);
+    if (race != NULL) {
+        fprintf( fp, "Race %s~\n", race->name );
+    } else {
+        fprintf( fp, "Race human~\n" ); /* Default fallback */
+    }
     if (ch->clan)
     {
     	fprintf( fp, "Clan %s~\n",clan_table[ch->clan].name);
@@ -461,8 +467,15 @@ void fwrite_pet( CHAR_DATA *pet, FILE *fp)
     	fprintf(fp,"LnD  %s~\n", pet->long_descr);
     if (pet->description != pet->pIndexData->description)
     	fprintf(fp,"Desc %s~\n", pet->description);
-    if (pet->race != pet->pIndexData->race)
-    	fprintf(fp,"Race %s~\n", race_table[pet->race].name);
+    if (pet->race != pet->pIndexData->race) {
+        /* Get race name from file-based system */
+        struct race_data *race = get_race_by_index(pet->race);
+        if (race != NULL) {
+            fprintf(fp,"Race %s~\n", race->name);
+        } else {
+            fprintf(fp,"Race human~\n"); /* Default fallback */
+        }
+    }
     if (pet->clan)
         fprintf( fp, "Clan %s~\n",clan_table[pet->clan].name);
     fprintf(fp,"Sex  %d\n", pet->sex);
@@ -779,43 +792,38 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name )
 	    ch->race = race_lookup("human");
 	}
 
-	/* Comprehensive race validation */
+	/* Comprehensive race validation using file-based system */
 	bool race_changed = FALSE;
-	if (ch->race < 0 || ch->race >= MAX_PC_RACE) {
+	struct race_data *race = get_race_by_index(ch->race);
+	if (race == NULL) {
 	    bug("Load_char_obj: invalid race %d, defaulting to human", ch->race);
-	    ch->race = 1; /* human is race 1 */
+	    ch->race = race_lookup("human");
 	    race_changed = TRUE;
 	}
-	else if (race_table[ch->race].name == NULL) {
-	    /* Race has been deleted */
-	    bug("Load_char_obj: race %d has been deleted, defaulting to human", ch->race);
-	    ch->race = 1; /* human is race 1 */
-	    race_changed = TRUE;
-	}
-	else if (!race_table[ch->race].pc_race) {
+	else if (!race->pc_race) {
 	    /* Race is no longer a PC race */
 	    bug("Load_char_obj: race %s is no longer a PC race, defaulting to human", 
-		race_table[ch->race].name);
-	    ch->race = 1; /* human is race 1 */
+		race->name);
+	    ch->race = race_lookup("human");
 	    race_changed = TRUE;
 	}
-	ch->size = pc_race_table[ch->race].size;
+	ch->size = race->size;
 	ch->dam_type = 17; /*punch */
 
 	for (i = 0; i < 5; i++)
 	{
-	    if (pc_race_table[ch->race].skills[i] == NULL)
+	    if (race->skills[i] == NULL)
 		break;
-	    group_add(ch,pc_race_table[ch->race].skills[i],FALSE);
+	    group_add(ch, race->skills[i], FALSE);
 	}
 	
-	ch->affected_by = ch->affected_by|race_table[ch->race].aff;
-	ch->shielded_by = ch->shielded_by|race_table[ch->race].shd;
-	ch->imm_flags	= ch->imm_flags | race_table[ch->race].imm;
-	ch->res_flags	= ch->res_flags | race_table[ch->race].res;
-	ch->vuln_flags	= ch->vuln_flags | race_table[ch->race].vuln;
-	ch->form	= race_table[ch->race].form;
-	ch->parts	= race_table[ch->race].parts;
+	ch->affected_by = ch->affected_by|race->aff;
+	ch->shielded_by = ch->shielded_by|race->shd;
+	ch->imm_flags	= ch->imm_flags | race->imm;
+	ch->res_flags	= ch->res_flags | race->res;
+	ch->vuln_flags	= ch->vuln_flags | race->vuln;
+	ch->form	= race->form;
+	ch->parts	= race->parts;
 	
 	/* Notify player if race was changed */
 	if (race_changed) {
