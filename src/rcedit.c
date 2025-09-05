@@ -1281,12 +1281,29 @@ void load_race_files(void) {
 	printf("DEBUG: Completed race table accessibility check\n");
 	fflush(stdout);
 	
+	/* Add a simple test to see if we can continue */
+	printf("DEBUG: Testing basic operations\n");
+	fflush(stdout);
+	
+	int test_int = 42;
+	printf("DEBUG: Integer test: %d\n", test_int);
+	fflush(stdout);
+	
+	printf("DEBUG: About to start race table structure check\n");
+	fflush(stdout);
+	
 	/* Debug: Check race table structure integrity */
 	printf("DEBUG: Checking race table structure integrity\n");
 	fflush(stdout);
 	
 	/* Check if we can safely access the race table */
+	printf("DEBUG: Starting race table loop\n");
+	fflush(stdout);
+	
 	for (int i = 0; i < 3; i++) {
+		printf("DEBUG: Loop iteration %d\n", i);
+		fflush(stdout);
+		
 		if (race_table[i].name != NULL) {
 			printf("  Race %d: name='%s', pc_race=%d\n", i, race_table[i].name, race_table[i].pc_race);
 			fflush(stdout);
@@ -1294,7 +1311,13 @@ void load_race_files(void) {
 			printf("  Race %d: name is NULL\n", i);
 			fflush(stdout);
 		}
+		
+		printf("DEBUG: Completed loop iteration %d\n", i);
+		fflush(stdout);
 	}
+	
+	printf("DEBUG: Completed race table loop\n");
+	fflush(stdout);
 	
 	printf("DEBUG: Completed race table structure check\n");
 	fflush(stdout);
