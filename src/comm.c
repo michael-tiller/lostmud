@@ -374,6 +374,21 @@ int main( int argc, char **argv )
     malloc_debug( 2 );
 #endif
 
+	/* Are we recovering from a copyover? */
+ 	if (argv[2] && argv[2][0])
+ 	{
+ 		fCopyOver = TRUE;
+ 		control = atoi(argv[3]);
+ 		printf("DEBUG: Copyover recovery detected, argv[2]='%s', control=%d\n", argv[2], control);
+		fflush(stdout);
+ 	}
+ 	else
+ 	{
+ 		fCopyOver = FALSE;
+ 		printf("DEBUG: Fresh boot detected\n");
+		fflush(stdout);
+ 	}
+
     /*
      * Init time.
      */
@@ -482,21 +497,6 @@ int main( int argc, char **argv )
 	    exit( 1 );
 	}
 
-	/* Are we recovering from a copyover? */
- 	if (argv[2] && argv[2][0])
- 	{
- 		fCopyOver = TRUE;
- 		control = atoi(argv[3]);
- 		printf("DEBUG: Copyover recovery detected, argv[2]='%s', control=%d\n", argv[2], control);
-		fflush(stdout);
- 	}
- 	else
- 	{
- 		fCopyOver = FALSE;
- 		printf("DEBUG: Fresh boot detected\n");
-		fflush(stdout);
- 	}
-	
     }
 
     /*
