@@ -379,7 +379,9 @@ int main( int argc, char **argv )
      */
     gettimeofday( &now_time, NULL );
     current_time 	= (time_t) now_time.tv_sec;
-    startup_time 	= current_time;
+    if (fCopyOver == FALSE) {
+			startup_time 	= current_time;
+    }
     last_reset_time 	= current_time;
     strcpy( str_boot_time, ctime( &current_time ) );
 
