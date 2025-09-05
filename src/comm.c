@@ -1882,6 +1882,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 			
 			/* Display uptime information */
 			show_uptime( d );
+		send_to_desc( "\n\r", d );
 			
 			if ( help_login[0] == '.' )
 				send_to_desc(  help_login+1, d );
