@@ -5821,9 +5821,6 @@ void copyover_recover ()
 		
 	}
 	
-	/* Read the startup_time from the copyover file */
-	fscanf (fp, "%ld\n", (long*)&startup_time);
-	
    fclose (fp);
 }
 

@@ -400,7 +400,24 @@ int main( int argc, char **argv )
 			printf("DEBUG: Fresh boot - startup_time=%ld, last_reset_time=%ld\n", (long)startup_time, (long)last_reset_time);
 			fflush(stdout);
     } else {
-			/* During copyover recovery, only update last_reset_time */
+			/* During copyover recovery, restore startup_time from copyover file */
+			FILE *fp = fopen("copyover.data", "r");
+			if (fp) {
+				char line[256];
+				/* Skip all the descriptor lines until we find the startup_time */
+				while (fgets(line, sizeof(line), fp)) {
+					if (strcmp(line, "-1\n") == 0) {
+						/* Found the separator, next line is startup_time */
+						if (fgets(line, sizeof(line), fp)) {
+							startup_time = (time_t)strtoul(line, NULL, 10);
+							printf("DEBUG: Restored startup_time from copyover file: %ld\n", (long)startup_time);
+							fflush(stdout);
+						}
+						break;
+					}
+				}
+				fclose(fp);
+			}
 			last_reset_time = current_time;
 			printf("DEBUG: Copyover recovery - startup_time=%ld, last_reset_time=%ld\n", (long)startup_time, (long)last_reset_time);
 			fflush(stdout);
