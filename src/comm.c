@@ -3990,14 +3990,16 @@ void show_uptime( DESCRIPTOR_DATA *d )
     minutes = (uptime % 3600) / 60;
     seconds = uptime % 60;
     
-    sprintf(buf, "{YUptime since startup: {x");
+    sprintf(buf, "{YUptime: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dd, ", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
-    if (minutes > 0 || hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
-    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dh", hours);
+    if (minutes > 0 && days == 0 && hours == 0)
+        sprintf(buf + strlen(buf), "%dm", minutes);
+    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
+        sprintf(buf + strlen(buf), "%ds", seconds);
+    sprintf(buf + strlen(buf), "\n\r");
     send_to_desc(buf, d);
     
     /* Calculate uptime since last reset/copyover */
@@ -4007,14 +4009,16 @@ void show_uptime( DESCRIPTOR_DATA *d )
     minutes = (reset_uptime % 3600) / 60;
     seconds = reset_uptime % 60;
     
-    sprintf(buf, "{YUptime since last reset: {x");
+    sprintf(buf, "{YSince Reboot: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dd, ", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
-    if (minutes > 0 || hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
-    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dh", hours);
+    if (minutes > 0 && days == 0 && hours == 0)
+        sprintf(buf + strlen(buf), "%dm", minutes);
+    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
+        sprintf(buf + strlen(buf), "%ds", seconds);
+    sprintf(buf + strlen(buf), "\n\r");
     send_to_desc(buf, d);
 }
 
@@ -4034,14 +4038,16 @@ void show_uptime_char( CHAR_DATA *ch )
     minutes = (uptime % 3600) / 60;
     seconds = uptime % 60;
     
-    sprintf(buf, "{YUptime since startup: {x");
+    sprintf(buf, "{YUptime: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dd, ", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
-    if (minutes > 0 || hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
-    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dh", hours);
+    if (minutes > 0 && days == 0 && hours == 0)
+        sprintf(buf + strlen(buf), "%dm", minutes);
+    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
+        sprintf(buf + strlen(buf), "%ds", seconds);
+    sprintf(buf + strlen(buf), "\n\r");
     send_to_char(buf, ch);
     
     /* Calculate uptime since last reset/copyover */
@@ -4051,13 +4057,15 @@ void show_uptime_char( CHAR_DATA *ch )
     minutes = (reset_uptime % 3600) / 60;
     seconds = reset_uptime % 60;
     
-    sprintf(buf, "{YUptime since last reset: {x");
+    sprintf(buf, "{YSince Reboot: {x");
     if (days > 0)
-        sprintf(buf + strlen(buf), "%d day%s, ", days, (days == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dd, ", days);
     if (hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d hour%s, ", hours, (hours == 1) ? "" : "s");
-    if (minutes > 0 || hours > 0 || days > 0)
-        sprintf(buf + strlen(buf), "%d minute%s, ", minutes, (minutes == 1) ? "" : "s");
-    sprintf(buf + strlen(buf), "%d second%s\n\r", seconds, (seconds == 1) ? "" : "s");
+        sprintf(buf + strlen(buf), "%dh", hours);
+    if (minutes > 0 && days == 0 && hours == 0)
+        sprintf(buf + strlen(buf), "%dm", minutes);
+    if (seconds > 0 && days == 0 && hours == 0 && minutes == 0)
+        sprintf(buf + strlen(buf), "%ds", seconds);
+    sprintf(buf + strlen(buf), "\n\r");
     send_to_char(buf, ch);
 }
