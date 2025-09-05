@@ -1307,8 +1307,6 @@ void load_race_files(void) {
 	fflush(stdout);
 	printf("  sizeof(race_table[0]) = %ld\n", sizeof(race_table[0]));
 	fflush(stdout);
-	printf("  sizeof(race_table) = %ld\n", sizeof(race_table));
-	fflush(stdout);
 	printf("  MAX_PC_RACE = %d\n", MAX_PC_RACE);
 	fflush(stdout);
 	
