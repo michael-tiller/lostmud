@@ -1238,6 +1238,15 @@ void load_race_files(void) {
 				race_table[1].name = "human";
 				race_table[1].pc_race = TRUE;
 			}
+			
+			/* Additional check for race_table[2] corruption */
+			if (race_table[2].name == NULL) {
+				printf("  ERROR: Race table corrupted after loading race %d! race_table[2].name is NULL\n", race_no);
+				fflush(stdout);
+				/* Try to restore the race table */
+				race_table[2].name = "elf";
+				race_table[2].pc_race = TRUE;
+			}
 		} else {
 			printf("Race file not found: %s (using hardcoded values)\n", filename);
 			skipped_count++;
@@ -1279,12 +1288,24 @@ void load_race_files(void) {
 	printf("DEBUG: About to access race_table[2]\n");
 	fflush(stdout);
 	
-	/* Check if we can safely access race_table[2] */
-	if (race_table[2].name != NULL) {
-		printf("  race_table[2].name = %s\n", race_table[2].name);
+	/* Use a safer approach to access race_table[2] */
+	printf("DEBUG: Using safe pointer arithmetic\n");
+	fflush(stdout);
+	
+	/* Check if the race table pointer is valid */
+	if (race_table == NULL) {
+		printf("ERROR: race_table is NULL!\n");
+		fflush(stdout);
+		return;
+	}
+	
+	/* Check if we can safely access race_table[2] using pointer arithmetic */
+	struct race_type *race_ptr = &race_table[2];
+	if (race_ptr != NULL && race_ptr->name != NULL) {
+		printf("  race_table[2].name = %s\n", race_ptr->name);
 		fflush(stdout);
 	} else {
-		printf("  race_table[2].name = NULL\n");
+		printf("  race_table[2].name = NULL or invalid pointer\n");
 		fflush(stdout);
 	}
 	
