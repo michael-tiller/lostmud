@@ -5650,9 +5650,9 @@ void do_prefix (CHAR_DATA *ch, char *argument)
 
 /* This is the executable file */
 #ifdef WIN32
-#define EXE_FILE	  "WinRot.exe"
+#define EXE_FILE	  "../WinRot.exe"
 #else
-#define EXE_FILE	  "rot"
+#define EXE_FILE	  "./rot"
 #endif
 
 
@@ -5721,6 +5721,54 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	/* Close reserve and other always-open files and release other resources */
 	
 	fclose (fpReserve);
+	
+	/* Copy latest build to active location before copyover */
+#ifdef WIN32
+	{
+		FILE *batch_fp;
+		char batch_cmd[512];
+		
+		/* Create a batch file to handle the replacement after we exit */
+		batch_fp = fopen("update_mud.bat", "w");
+		if (batch_fp)
+		{
+			fprintf(batch_fp, "@echo off\n");
+			fprintf(batch_fp, "timeout /t 2 /nobreak >nul\n");
+			fprintf(batch_fp, "copy /Y ..\\Debug\\WinRot.exe ..\\WinRot.exe\n");
+			fprintf(batch_fp, "del update_mud.bat\n");
+			fclose(batch_fp);
+			
+			/* Start the batch file in the background */
+			sprintf(batch_cmd, "start /min update_mud.bat");
+			system(batch_cmd);
+			logf("Copyover: Created update batch file to replace executable");
+		}
+		else
+		{
+			logf("Copyover: Failed to create update batch file");
+			send_to_char("Copyover: Failed to create update script, aborted.\n\r", ch);
+			fpReserve = fopen(NULL_FILE, "r");
+			return;
+		}
+	}
+#else
+	{
+		char copy_cmd[512];
+		
+		/* Use Unix cp command - we're in area/ directory, copy to current directory */
+		sprintf(copy_cmd, "cp -f ../bin/rot ./rot");
+		
+		/* Copy the latest build to the active location */
+		if (system(copy_cmd) != 0)
+		{
+			logf("Copyover: Failed to copy ../bin/rot to ./rot");
+			send_to_char("Copyover: Failed to update executable, aborted.\n\r", ch);
+			fpReserve = fopen(NULL_FILE, "r");
+			return;
+		}
+		logf("Copyover: Successfully copied ../bin/rot to ./rot");
+	}
+#endif
 	
 	/* exec - descriptors are inherited */
 	
