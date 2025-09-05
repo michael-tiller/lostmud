@@ -3113,6 +3113,10 @@ char *fread_word( FILE *fp )
 	    return word;
 	}
     }
+    
+    /* Safety check: if we reach here, the word was too long */
+    printf("WARNING: fread_word encountered word longer than MAX_INPUT_LENGTH (%d)\n", MAX_INPUT_LENGTH);
+    fflush(stdout);
 
     bug( "Fread_word: word too long.", 0 );
     exit( 1 );

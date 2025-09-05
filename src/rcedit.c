@@ -897,6 +897,15 @@ void load_race_file(const char *filename, int race_no) {
 			fflush(stdout);
 		}
 		
+		/* Check for race table corruption during parsing */
+		if (race_table[1].name == NULL) {
+			printf("    ERROR: Race table corrupted during parsing! race_table[1].name is NULL\n");
+			fflush(stdout);
+			/* Try to restore the race table */
+			race_table[1].name = "human";
+			race_table[1].pc_race = TRUE;
+		}
+		
 		switch (UPPER(word[0])) {
 			case '#':
 				fMatch = TRUE;
@@ -1220,6 +1229,15 @@ void load_race_files(void) {
 			/* Additional safety check after each race load */
 			printf("  Race %d loaded successfully, loaded_count=%d\n", race_no, loaded_count);
 			fflush(stdout);
+			
+			/* Check for race table corruption after each load */
+			if (race_table[1].name == NULL) {
+				printf("  ERROR: Race table corrupted after loading race %d! race_table[1].name is NULL\n", race_no);
+				fflush(stdout);
+				/* Try to restore the race table */
+				race_table[1].name = "human";
+				race_table[1].pc_race = TRUE;
+			}
 		} else {
 			printf("Race file not found: %s (using hardcoded values)\n", filename);
 			skipped_count++;
