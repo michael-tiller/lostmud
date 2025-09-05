@@ -382,9 +382,11 @@ int main( int argc, char **argv )
     if (fCopyOver == FALSE) {
 			startup_time 	= current_time;
 			last_reset_time = current_time;
+			printf("DEBUG: Fresh boot - startup_time=%ld, last_reset_time=%ld\n", (long)startup_time, (long)last_reset_time);
     } else {
 			/* During copyover recovery, only update last_reset_time */
 			last_reset_time = current_time;
+			printf("DEBUG: Copyover recovery - startup_time=%ld, last_reset_time=%ld\n", (long)startup_time, (long)last_reset_time);
     }
     strcpy( str_boot_time, ctime( &current_time ) );
 
@@ -483,9 +485,13 @@ int main( int argc, char **argv )
  	{
  		fCopyOver = TRUE;
  		control = atoi(argv[3]);
+ 		printf("DEBUG: Copyover recovery detected, argv[2]='%s', control=%d\n", argv[2], control);
  	}
  	else
+ 	{
  		fCopyOver = FALSE;
+ 		printf("DEBUG: Fresh boot detected\n");
+ 	}
 	
     }
 
