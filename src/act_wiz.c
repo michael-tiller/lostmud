@@ -5715,6 +5715,7 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	}
 	
 	fprintf (fp, "-1\n");
+	fprintf (fp, "%ld\n", (long)startup_time);
 	fclose (fp);
 	
 	/* Close reserve and other always-open files and release other resources */
@@ -5819,6 +5820,10 @@ void copyover_recover ()
 		}
 		
 	}
+	
+	/* Read the startup_time from the copyover file */
+	fscanf (fp, "%ld\n", (long*)&startup_time);
+	
    fclose (fp);
 }
 
