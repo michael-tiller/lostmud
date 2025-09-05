@@ -1249,9 +1249,37 @@ void load_race_files(void) {
 	
 	/* Debug: Check if race table is accessible */
 	printf("DEBUG: Race table accessibility check:\n");
+	fflush(stdout);
+	
 	printf("  race_table[0].name = %s\n", race_table[0].name ? race_table[0].name : "NULL");
+	fflush(stdout);
+	
 	printf("  race_table[1].name = %s\n", race_table[1].name ? race_table[1].name : "NULL");
+	fflush(stdout);
+	
 	printf("  race_table[2].name = %s\n", race_table[2].name ? race_table[2].name : "NULL");
+	fflush(stdout);
+	
+	printf("DEBUG: Completed race table accessibility check\n");
+	fflush(stdout);
+	
+	/* Debug: Check race table structure integrity */
+	printf("DEBUG: Checking race table structure integrity\n");
+	fflush(stdout);
+	
+	/* Check if we can safely access the race table */
+	for (int i = 0; i < 3; i++) {
+		if (race_table[i].name != NULL) {
+			printf("  Race %d: name='%s', pc_race=%d\n", i, race_table[i].name, race_table[i].pc_race);
+			fflush(stdout);
+		} else {
+			printf("  Race %d: name is NULL\n", i);
+			fflush(stdout);
+		}
+	}
+	
+	printf("DEBUG: Completed race table structure check\n");
+	fflush(stdout);
 	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
@@ -1259,9 +1287,16 @@ void load_race_files(void) {
 	fflush(stdout);
 	
 	char list_filename[MIL];
+	
+	printf("DEBUG: About to call sprintf for list_filename\n");
+	fflush(stdout);
+	
 	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
 	
 	printf("DEBUG: Race list filename: %s\n", list_filename);
+	fflush(stdout);
+	
+	printf("DEBUG: Completed sprintf for list_filename\n");
 	fflush(stdout);
 	printf("Checking for race list file: %s\n", list_filename);
 	
