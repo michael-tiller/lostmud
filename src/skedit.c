@@ -91,12 +91,15 @@ void load_groups( void )
 		load_group(fp, i);
 
 	}
+	
+	// Debug: List all loaded groups
 } // load_groups
 /**/
 
 /**/
 void load_group(FILE *fp, int id ) {
-	int i;		
+	int i;
+	char buf[MSL];		
 	for ( ;; )
 	{
 	    char letter;
@@ -128,7 +131,6 @@ void load_group(FILE *fp, int id ) {
 					group_table[id].rating[i] = fread_number( fp );
 				}
 			}
-			
 			// if is end, stop
 		    else if ( !str_cmp( field, "End~" ) )
 			break;
@@ -150,6 +152,7 @@ void load_group(FILE *fp, int id ) {
 					exit(1);
 				
 				group_table[id].spells[j] = spell;
+				
 		    }
 			break;
 		}

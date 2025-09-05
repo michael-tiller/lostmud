@@ -1014,7 +1014,7 @@ void gn_add( CHAR_DATA *ch, int gn)
     int i;
     
     if (gn < 0 || gn >= MAX_GROUP) {
-        bug("gn_add: invalid group number %d", gn);
+        bugf("gn_add: invalid group number %d", gn);
         return;
     }
     
@@ -1065,7 +1065,7 @@ void group_add( CHAR_DATA *ch, const char *name, bool deduct)
     if (sn != -1)
     {
 	if (sn < 0 || sn >= MAX_SKILL) {
-	    bug("group_add: invalid skill number for skill '%s'", name);
+	    bugf("group_add: invalid skill number for skill '%s'", name);
 	    return;
 	}
 	if (ch->pcdata->learned[sn] == 0) /* i.e. not known */
@@ -1085,11 +1085,14 @@ void group_add( CHAR_DATA *ch, const char *name, bool deduct)
     {
 	if (ch->pcdata->group_known[gn] == FALSE)  
 	{
-	    ch->pcdata->group_known[gn] = TRUE;
 	    if (deduct)
 		ch->pcdata->points += group_table[gn].rating[ch->class];
 	}
 	gn_add(ch,gn); /* make sure all skills in the group are known */
+    }
+    else
+    {
+	bugf("group_add: group '%s' not found", name);
     }
 }
 
