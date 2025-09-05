@@ -1047,14 +1047,19 @@ struct race_data *load_race_from_file(const char *race_name) {
 void list_available_races(CHAR_DATA *ch) {
 	struct race_data *race;
 	int pc_count = 0, npc_count = 0;
+	struct race_data *pc_races[100];  /* Assuming max 100 races */
+	struct race_data *npc_races[100];  /* Assuming max 100 races */
+	int pc_index = 0, npc_index = 0;
+	int max_count, i;
+	char line[200];
+	char pc_name[50];
+	char npc_name[50];
 	
 	send_to_char("Available races:\n\r", ch);
 	send_to_char("PC Races:                    NPC Races:\n\r", ch);
 	send_to_char("----------                   ----------\n\r", ch);
 	
 	/* First pass: collect PC races */
-	struct race_data *pc_races[100];  /* Assuming max 100 races */
-	int pc_index = 0;
 	for (race = race_list; race != NULL; race = race->next) {
 		if (race->pc_race && pc_index < 100) {
 			pc_races[pc_index++] = race;
@@ -1063,8 +1068,6 @@ void list_available_races(CHAR_DATA *ch) {
 	}
 	
 	/* Second pass: collect NPC races */
-	struct race_data *npc_races[100];  /* Assuming max 100 races */
-	int npc_index = 0;
 	for (race = race_list; race != NULL; race = race->next) {
 		if (!race->pc_race && npc_index < 100) {
 			npc_races[npc_index++] = race;
@@ -1073,12 +1076,12 @@ void list_available_races(CHAR_DATA *ch) {
 	}
 	
 	/* Display races side by side */
-	int max_count = (pc_count > npc_count) ? pc_count : npc_count;
+	max_count = (pc_count > npc_count) ? pc_count : npc_count;
 	
-	for (int i = 0; i < max_count; i++) {
-		char line[200];
-		char pc_name[50] = "";
-		char npc_name[50] = "";
+	for (i = 0; i < max_count; i++) {
+		/* Initialize strings */
+		strcpy(pc_name, "");
+		strcpy(npc_name, "");
 		
 		/* Get PC race name if available */
 		if (i < pc_count) {
