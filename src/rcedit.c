@@ -1275,7 +1275,20 @@ void load_race_files(void) {
 	printf("  race_table[1].name = %s\n", race_table[1].name ? race_table[1].name : "NULL");
 	fflush(stdout);
 	
-	printf("  race_table[2].name = %s\n", race_table[2].name ? race_table[2].name : "NULL");
+	/* Add safety check before accessing race_table[2] */
+	printf("DEBUG: About to access race_table[2]\n");
+	fflush(stdout);
+	
+	/* Check if we can safely access race_table[2] */
+	if (race_table[2].name != NULL) {
+		printf("  race_table[2].name = %s\n", race_table[2].name);
+		fflush(stdout);
+	} else {
+		printf("  race_table[2].name = NULL\n");
+		fflush(stdout);
+	}
+	
+	printf("DEBUG: Successfully accessed race_table[2]\n");
 	fflush(stdout);
 	
 	printf("DEBUG: Completed race table accessibility check\n");
@@ -1287,6 +1300,16 @@ void load_race_files(void) {
 	
 	int test_int = 42;
 	printf("DEBUG: Integer test: %d\n", test_int);
+	fflush(stdout);
+	
+	/* Check race table size and memory layout */
+	printf("DEBUG: Race table size check\n");
+	fflush(stdout);
+	printf("  sizeof(race_table[0]) = %ld\n", sizeof(race_table[0]));
+	fflush(stdout);
+	printf("  sizeof(race_table) = %ld\n", sizeof(race_table));
+	fflush(stdout);
+	printf("  MAX_PC_RACE = %d\n", MAX_PC_RACE);
 	fflush(stdout);
 	
 	printf("DEBUG: About to start race table structure check\n");
