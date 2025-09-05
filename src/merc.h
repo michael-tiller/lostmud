@@ -3090,6 +3090,7 @@ struct race_data *	find_race_by_name	args( ( const char *race_name ) );
 void		free_race_data		args( ( struct race_data *race ) );
 struct race_data *	create_race_data	args( ( void ) );
 void		list_available_races	args( ( CHAR_DATA *ch ) );
+void		list_pc_races_only	args( ( CHAR_DATA *ch ) );
 void		load_all_races		args( ( void ) );
 struct race_data *	get_race_by_index	args( ( int race_num ) );
 void		test_file_based_races	args( ( void ) );

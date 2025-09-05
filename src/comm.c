@@ -2305,8 +2305,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	ch->pcdata->socket = str_dup( d->host );
 	write_to_buffer( d, echo_on_str, 0 );
 	send_to_desc( "The following races are available:\n\r", d );
-	/* Use the new file-based race system to list races */
-	list_available_races(ch);
+	/* Use the new file-based race system to list PC races only */
+	list_pc_races_only(ch);
 	send_to_desc("\n\r",d);
 	send_to_desc("What is your race (help for more information)? ",d);
 	d->connected = CON_GET_NEW_RACE;
@@ -2316,8 +2316,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	ch->level= 0; // fix to force the player to restart at level 1
 	send_to_desc( "Now beginning the rerolling process.\n\r\n\r", d );
 	send_to_desc( "The following races are available:\n\r", d );
-	/* Use the new file-based race system to list races */
-	list_available_races(ch);
+	/* Use the new file-based race system to list PC races only */
+	list_pc_races_only(ch);
 	send_to_desc("\n\r",d);
 	send_to_desc("What is your race (help for more information)? ",d);
 	d->connected = CON_GET_NEW_RACE;
@@ -2345,8 +2345,8 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    write_to_buffer(d,"That is not a valid race.\n\r",0);
 		
 		send_to_desc( "The following races are available:\n\r", d );
-		/* Use the new file-based race system to list races */
-		list_available_races(ch);
+		/* Use the new file-based race system to list PC races only */
+		list_pc_races_only(ch);
 		send_to_desc("\n\r",d);
 		send_to_desc("What is your race (help for more information)? ",d);
 		d->connected = CON_GET_NEW_RACE;

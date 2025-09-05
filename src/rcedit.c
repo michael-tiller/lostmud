@@ -1105,6 +1105,35 @@ void list_available_races(CHAR_DATA *ch) {
 	}
 }
 
+void list_pc_races_only(CHAR_DATA *ch) {
+	struct race_data *race;
+	int pc_count = 0;
+	struct race_data *pc_races[100];  /* Assuming max 100 races */
+	int pc_index = 0;
+	int i;
+	char line[200];
+		
+	/* Collect PC races only */
+	for (race = race_list; race != NULL; race = race->next) {
+		if (race->pc_race && pc_index < 100) {
+			pc_races[pc_index++] = race;
+			pc_count++;
+		}
+	}
+	
+	/* Display PC races */
+	for (i = 0; i < pc_count; i++) {
+		sprintf(line, "  %s\n\r", pc_races[i]->name);
+		send_to_char(line, ch);
+	}
+	
+	if (pc_count == 0) {
+		send_to_char("  No PC races available.\n\r", ch);
+	} else {
+		printf_to_char(ch, "\nTotal: %d PC races available\n\r", pc_count);
+	}
+}
+
 void load_all_races(void) {
 	char filename[MIL];
 	char race_name[MIL];
