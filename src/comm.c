@@ -2112,7 +2112,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	    send_to_desc( echo_on_str, d );
 	    send_to_desc("The following races are available:\n\r\n\r",d);
 	    pos = 0;
-	    for ( race = 1; race_table[race].name != NULL; race++ )
+	    for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
 	    {
 		if (!race_table[race].pc_race)
 		    break;
@@ -2270,7 +2270,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	write_to_buffer( d, echo_on_str, 0 );
 	send_to_desc( "The following races are available:\n\r", d );
 	pos = 0;
-	for ( race = 1; race_table[race].name != NULL; race++ )
+	for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
 	{
 	    if (!race_table[race].pc_race)
 		break;
@@ -2300,7 +2300,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	send_to_desc( "Now beginning the rerolling process.\n\r\n\r", d );
 	send_to_desc( "The following races are available:\n\r", d );
 	pos = 0;
-	for ( race = 1; race_table[race].name != NULL; race++ )
+	for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
 	{
 	    if (!race_table[race].pc_race)
 		break;
@@ -2348,7 +2348,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 		
 		send_to_desc( "The following races are available:\n\r", d );
 		pos = 0;
-		for ( race = 1; race_table[race].name != NULL; race++ )
+		for ( race = 1; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
 		{
 			if (!race_table[race].pc_race)
 			break;

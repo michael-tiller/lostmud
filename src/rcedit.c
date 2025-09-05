@@ -44,7 +44,7 @@ void do_race_info( CHAR_DATA *ch, char *argument ) {
 
 	argument = one_argument (argument, race_name);
 	
-	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
 		if (!str_cmp(race_name, race_table[race_no].name)) {
 			break;
 		}
@@ -118,7 +118,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		
 		/* Check if race already exists and find first empty slot */
 		race_no = 0;
-		for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
 			if (!str_cmp(argument, race_table[race_no].name)) {
 				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
 				return;
@@ -214,7 +214,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		printf("DEBUG: Starting delete for race '%s'\n", argument);
 		
 		/* Find the race to delete */
-		for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+		for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
 			if (!str_cmp(argument, race_table[race_no].name)) {
 				break;
 			}
@@ -350,7 +350,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 	/* Special handling for list command */
 	if (!str_cmp(race_name, "list")) {
 		send_to_char("Available races:\n\r", ch);
-		for (int i = 0; race_table[i].name != NULL; i++) {
+		for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
 			printf_to_char(ch, "  %d: %s (%s)\n\r", i, race_table[i].name, 
 				race_table[i].pc_race ? "PC" : "NPC");
 		}
@@ -371,7 +371,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 	}
 	
 	/* Find the race */
-	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
+	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
 		if (!str_cmp(race_name, race_table[race_no].name)) {
 			break;
 		}
@@ -731,7 +731,7 @@ void do_rcedit(CHAR_DATA *ch ,char * argument) {
 		
 		/* Check if new name already exists */
 		int check_race;
-		for (check_race = 0; race_table[check_race].name != NULL; check_race++) {
+		for (check_race = 0; check_race < MAX_PC_RACE && race_table[check_race].name != NULL; check_race++) {
 			if (check_race != race_no && !str_cmp(argument, race_table[check_race].name)) {
 				printf_to_char(ch, "A race named '%s' already exists.\n\r", argument);
 				return;
@@ -1180,12 +1180,7 @@ void load_race_files(void) {
 	
 	/* First, load races from the static table (existing races) */
 	log_string("Loading races from static table...");
-	for (race_no = 0; race_table[race_no].name != NULL; race_no++) {
-		/* Safety check to prevent infinite loops or crashes */
-		if (race_no >= MAX_PC_RACE) {
-			printf("WARNING: Race table appears to be corrupted, stopping at race %d\n", race_no);
-			break;
-		}
+	for (race_no = 0; race_no < MAX_PC_RACE && race_table[race_no].name != NULL; race_no++) {
 		
 		/* Safety check for NULL race name */
 		if (race_table[race_no].name == NULL) {
@@ -1380,7 +1375,7 @@ void load_race_files(void) {
 			
 			/* Check if this race is already loaded */
 			int found = 0;
-			for (int i = 0; race_table[i].name != NULL; i++) {
+			for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
 				if (!str_cmp(line, race_table[i].name)) {
 					found = 1;
 					break;
@@ -1391,7 +1386,7 @@ void load_race_files(void) {
 			if (!found) {
 				/* Find first empty slot within existing table bounds */
 				int empty_slot = 0;
-				for (empty_slot = 0; race_table[empty_slot].name != NULL; empty_slot++) {
+				for (empty_slot = 0; empty_slot < MAX_PC_RACE && race_table[empty_slot].name != NULL; empty_slot++) {
 					/* Keep going until we find the end */
 				}
 				
@@ -1434,32 +1429,12 @@ void load_race_files(void) {
 	
 	/* Count total races loaded */
 	int total_races = 0;
-	for (int i = 0; race_table[i].name != NULL; i++) {
+	for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
 		total_races++;
 	}
 	
 	printf("Race loading complete: %d static races loaded, %d skipped, %d from list, %d total\n", 
 		loaded_count, skipped_count, list_loaded_count, total_races);
-	
-	/* Debug: Test race_lookup function */
-	printf("Testing race_lookup('human'): %d\n", race_lookup("human"));
-	printf("Testing race_lookup('elf'): %d\n", race_lookup("elf"));
-	printf("Testing race_lookup('dwarf'): %d\n", race_lookup("dwarf"));
-	
-	/* Debug: Check race table state */
-	printf("DEBUG: Race table state:\n");
-	for (int i = 0; i < 5 && race_table[i].name != NULL; i++) {
-		printf("  Race %d: name='%s', pc_race=%d\n", i, race_table[i].name, race_table[i].pc_race);
-	}
-	
-	/* Debug: Test race_lookup with direct string comparison */
-	printf("DEBUG: Direct race table search test:\n");
-	for (int i = 0; race_table[i].name != NULL; i++) {
-		if (!str_cmp("human", race_table[i].name)) {
-			printf("  Found 'human' at index %d\n", i);
-			break;
-		}
-	}
 	
 	/* Final flush to ensure all output is written */
 	fflush(stdout);
@@ -1489,7 +1464,7 @@ void reload_race_list(void) {
 			
 			/* Check if this race is already loaded */
 			int found = 0;
-			for (int i = 0; race_table[i].name != NULL; i++) {
+			for (int i = 0; i < MAX_PC_RACE && race_table[i].name != NULL; i++) {
 				if (!str_cmp(line, race_table[i].name)) {
 					found = 1;
 					break;
@@ -1500,7 +1475,7 @@ void reload_race_list(void) {
 			if (!found) {
 				/* Find first empty slot within existing table bounds */
 				int empty_slot = 0;
-				for (empty_slot = 0; race_table[empty_slot].name != NULL; empty_slot++) {
+				for (empty_slot = 0; empty_slot < MAX_PC_RACE && race_table[empty_slot].name != NULL; empty_slot++) {
 					/* Keep going until we find the end */
 				}
 				

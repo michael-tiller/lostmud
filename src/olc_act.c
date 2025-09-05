@@ -4876,7 +4876,7 @@ MEDIT( medit_race )
 
 	send_to_char( "Available races are:", ch );
 
-	for ( race = 0; race_table[race].name != NULL; race++ )
+	for ( race = 0; race < MAX_PC_RACE && race_table[race].name != NULL; race++ )
 	{
 	    if ( ( race % 3 ) == 0 )
 		send_to_char( "\n\r", ch );

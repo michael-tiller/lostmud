@@ -120,24 +120,10 @@ int race_lookup (const char *name)
 	printf("DEBUG: race_lookup called with name='%s'\n", name);
 	fflush(stdout);
 	
-	for ( race = 0; race_table[race].name != NULL; race++)
+	for ( race = 0; race < MAX_PC_RACE && race_table[race].name != NULL; race++)
 	{
-		/* Safety check to prevent infinite loops */
-		if (race >= MAX_PC_RACE) {
-			printf("DEBUG: Reached MAX_PC_RACE limit, stopping\n");
-			fflush(stdout);
-			break;
-		}
-		
 		printf("DEBUG: Checking race %d: name='%s'\n", race, race_table[race].name);
 		fflush(stdout);
-		
-		/* Safety check for NULL name */
-		if (race_table[race].name == NULL) {
-			printf("DEBUG: Found NULL name at race %d, stopping\n", race);
-			fflush(stdout);
-			break;
-		}
 		
 		if (LOWER(name[0]) == LOWER(race_table[race].name[0])
 			&&  !str_prefix( name,race_table[race].name))
