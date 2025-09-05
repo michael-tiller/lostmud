@@ -1184,6 +1184,12 @@ void load_race_files(void) {
 			break;
 		}
 		
+		/* Additional safety check for race table integrity */
+		if (race_no > 0 && race_table[race_no-1].name == NULL) {
+			printf("WARNING: Previous race %d has NULL name, possible table corruption\n", race_no-1);
+			fflush(stdout);
+		}
+		
 		printf("Processing race %d: %s\n", race_no, race_table[race_no].name);
 		fflush(stdout);  /* Ensure output is flushed immediately */
 		sprintf(filename, "%s%s.race", RACE_DIR, race_table[race_no].name);
@@ -1210,6 +1216,10 @@ void load_race_files(void) {
 			printf("  Completed load_race_file for race %d\n", race_no);
 			fflush(stdout);
 			loaded_count++;
+			
+			/* Additional safety check after each race load */
+			printf("  Race %d loaded successfully, loaded_count=%d\n", race_no, loaded_count);
+			fflush(stdout);
 		} else {
 			printf("Race file not found: %s (using hardcoded values)\n", filename);
 			skipped_count++;
@@ -1217,14 +1227,24 @@ void load_race_files(void) {
 		/* If file doesn't exist, race keeps its hardcoded values */
 	}
 	
+	printf("DEBUG: Exited race loading loop, race_no=%d\n", race_no);
+	fflush(stdout);
+	
 	printf("Finished processing static races. Processed %d races.\n", race_no);
+	fflush(stdout);
 	
 	/* Verify race table termination */
+	printf("DEBUG: Checking race table termination at index %d\n", race_no);
+	fflush(stdout);
+	
 	if (race_table[race_no].name != NULL) {
 		printf("ERROR: Race table not properly terminated! Race %d has name: %s\n", 
 			race_no, race_table[race_no].name);
 		/* Force termination to prevent crashes */
 		race_table[race_no].name = NULL;
+	} else {
+		printf("DEBUG: Race table properly terminated at index %d\n", race_no);
+		fflush(stdout);
 	}
 	
 	/* Debug: Check if race table is accessible */
@@ -1235,8 +1255,14 @@ void load_race_files(void) {
 	
 	/* Load additional races from a race list file */
 	/* This is a simpler cross-platform approach */
+	printf("DEBUG: About to load additional races from race list file\n");
+	fflush(stdout);
+	
 	char list_filename[MIL];
 	sprintf(list_filename, "%srace_list.txt", RACE_DIR);
+	
+	printf("DEBUG: Race list filename: %s\n", list_filename);
+	fflush(stdout);
 	printf("Checking for race list file: %s\n", list_filename);
 	
 	FILE *list_fp = fopen(list_filename, "r");
