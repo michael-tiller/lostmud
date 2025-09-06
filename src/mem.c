@@ -107,6 +107,7 @@ AREA_DATA *new_area( void )
     pArea->area_flags       =   AREA_ADDED;
     pArea->security         =   1;
     pArea->builders         =   str_dup( "None" );
+    pArea->repop_msg        =   str_dup( "0" );
     pArea->min_vnum            =   0;
     pArea->max_vnum            =   0;
     pArea->age              =   0;
@@ -127,6 +128,7 @@ void free_area( AREA_DATA *pArea )
     free_string( pArea->file_name );
     free_string( pArea->builders );
     free_string( pArea->credits );
+    free_string( pArea->repop_msg );
 
     pArea->next         =   area_free->next;
     area_free           =   pArea;
