@@ -1061,8 +1061,8 @@ void spell_burning_hands(int sn,int level, CHAR_DATA *ch, void *vo, int target)
 
 
 
-    potency = 1/3;
-    temp = level * potency;
+    potency = 1;
+    temp = level * potency / 3;
     dam = number_range(temp / 2, temp * 2);
 
     if ( saves_spell( level, victim,DAM_FIRE) )
@@ -4128,8 +4128,8 @@ void spell_magic_missile( int sn, int level, CHAR_DATA *ch,void *vo,int target)
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     int dam, temp, potency;
 
-    potency = 1/10;
-    temp = level * potency;
+    potency = 1;
+    temp = level * potency / 10;
     dam = number_range(temp / 2, temp * 2);
     if ( saves_spell( level, victim,DAM_ENERGY) )
 	dam /= 2;
