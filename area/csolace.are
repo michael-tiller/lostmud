@@ -18,7 +18,7 @@ A black snake slithers in the sand.
 ~
 lizard~
 AG DF 0 -800 0
-40 18 0 45d6+74 18d10+3 2d2+4 bite
+30 18 0 45d6+74 18d10+3 2d2+4 bite
 -2 -2 -2 0
 FHM 0 L I
 stand stand female 0
@@ -33,7 +33,7 @@ A black feathered bird with a bald head glares at you menacingly.
 ~
 song bird~
 AG DFJLT 0 -500 0
-50 28 0 70d9+115 28d10+5 4d2+6 bite
+35 28 0 70d9+115 28d10+5 4d2+6 bite
 -9 -9 -9 -3
 FH 0 J LQ
 stand stand either 0
@@ -46,7 +46,7 @@ A coyote shies away from you.
 ~
 dog~
 AGH 0 0 200 0
-40 18 0 45d6+74 18d10+3 2d2+4 bite
+30 18 0 45d6+74 18d10+3 2d2+4 bite
 -2 -2 -2 0
 H 0 0 0
 stand stand either 0
@@ -59,7 +59,7 @@ A huge lizard rests here, paying you no mind.
 ~
 lizard~
 A F 0 200 0
-45 23 0 57d7+95 23d10+4 3d2+5 bite
+30 23 0 57d7+95 23d10+4 3d2+5 bite
 -5 -5 -5 -1
 0 0 L I
 stand stand either 0
@@ -72,7 +72,7 @@ A large brown snake rests here, almost invisible in the sand.
 ~
 snake~
 ABF DFMPQ 0 -1000 0
-45 23 0 57d7+95 23d10+4 3d2+5 bite
+40 23 0 57d7+95 23d10+4 3d2+5 bite
 -5 -5 -5 -1
 FHMN AB L I
 stand stand either 0
@@ -85,7 +85,7 @@ A giant sandworm is pushing through the sand like it's water.
 ~
 unique~
 AFUW DF H 0 0
-45 23 0 57d7+95 23d10+4 3d2+5 digestion
+40 23 0 57d7+95 23d10+4 3d2+5 digestion
 -5 -5 -5 -1
 HO AB HQ I
 stand stand either 0
@@ -98,7 +98,7 @@ There is a giant rat burrowed here.
 ~
 rodent~
 ACS PQ 0 -200 0
-40 18 0 45d6+74 18d10+3 2d2+4 none
+30 18 0 45d6+74 18d10+3 2d2+4 none
 -2 -2 -2 0
 FHR 0 0 0
 stand stand either 0
@@ -117,9 +117,9 @@ armor G AM
 BC BC BC AB 0
 22 30 26 0 P
 A
-2 1
-A
 20 -1
+A
+2 1
 #901
 coyote paw~
 a coyote paw~
@@ -129,9 +129,9 @@ jewelry 0 AC
 0 0 0 0 0
 18 18 0 0 P
 A
-20 -2
-A
 2 1
+A
+20 -2
 #902
 vulture eye~
 a vulture's eye~
@@ -177,9 +177,9 @@ weapon 0 AN
 dagger 4 12 stab H
 25 35 1 15 P
 A
-18 2
-A
 19 2
+A
+18 2
 #0
 
 
