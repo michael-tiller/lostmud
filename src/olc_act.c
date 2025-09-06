@@ -821,7 +821,6 @@ AEDIT( aedit_create )
 
     SET_BIT( pArea->area_flags, AREA_ADDED );
     send_to_char( "Area Created.\n\r", ch );
-    pArea->repop_msg = "0";
     return FALSE;
 }
 
