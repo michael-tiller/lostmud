@@ -1473,9 +1473,7 @@ void spell_chill_touch( int sn, int level, CHAR_DATA *ch, void *vo,int target )
     int dam, temp, potency;
 	AFFECT_DATA af;
 
-    potency = 1/5;
-    temp = level * potency;
-    dam = number_range(temp / 2, temp * 2);
+    dam = dice(level / 10 + 2, 4)+(level / 10 + 1);
 
     if ( !saves_spell( level, victim,DAM_COLD ) )
     {
