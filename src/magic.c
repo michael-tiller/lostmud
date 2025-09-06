@@ -4128,9 +4128,7 @@ void spell_magic_missile( int sn, int level, CHAR_DATA *ch,void *vo,int target)
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     int dam, temp, potency;
 
-    potency = 1;
-    temp = level * potency / 10;
-    dam = number_range(temp / 2, temp * 2);
+    dam = dice(level / 10 + 1, 8);
     if ( saves_spell( level, victim,DAM_ENERGY) )
 	dam /= 2;
     if ( ( ch->fighting == NULL )
