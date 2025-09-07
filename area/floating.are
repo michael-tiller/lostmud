@@ -59,7 +59,7 @@ There is a thin birdman here, clad in leather rags.
 ~
 avian~
 AGH DFHJLOT 0 600 0
-60 35 0 75d11+74 35d9+3 3d2+3 peck
+50 35 0 75d11+74 35d9+3 3d2+3 peck
 -12 -12 -12 -5
 HR SUW JSUW LQ
 stand stand either 250
@@ -183,9 +183,9 @@ jewelry GMY AE
 0 0 0 0 0
 50 80 8 2100 P
 A
-5 2
-A
 20 -3
+A
+5 2
 #1002
 winged blade sword~
 {xa {Wwinged{w blade{x~
@@ -195,9 +195,9 @@ weapon 0 AN
 sword 9 13 slice E
 50 80 8 83 P
 A
-19 7
-A
 18 7
+A
+19 7
 #1003
 servants loincloth rag~
 a servant's loincloth~
@@ -207,9 +207,9 @@ armor 0 AF
 AE AE AE D 0
 50 80 8 0 P
 A
-4 -1
-A
 2 2
+A
+4 -1
 #1004
 purple robes~
 {mpurple {xrobes~
@@ -228,10 +228,10 @@ nether~
 jewelry Y AC
 0 0 0 0 0
 50 60 0 500 P
-F
-A 0 0 L
 A
 3 1
+F
+A 0 0 L
 #1006
 flowing red robes~
 {rflowing {Rred{x {rrobes{x~
@@ -240,14 +240,14 @@ unknown~
 armor G AK
 AE AE AE D 0
 50 80 8 20 P
-F
-S 0 0 D
 A
-3 2
+5 -1
 A
 4 1
 A
-5 -1
+3 2
+F
+S 0 0 D
 #1007
 steel ankle bracelet~
 a set of steel ankle bracelets~
@@ -257,11 +257,11 @@ armor Y AG
 AE AE AE D 0
 50 80 8 20 P
 A
-14 100
+5 1
 A
 13 50
 A
-5 1
+14 100
 #1008
 storm pillar spear~
 {bS{Btor{bm {CP{cilla{Cr{x~
@@ -271,9 +271,9 @@ weapon G AN
 staff 11 15 stab DFG
 50 80 8 300 P
 A
-18 7
-A
 19 7
+A
+18 7
 #1009
 kitchen knife~
 a kitchen knife~
@@ -283,9 +283,9 @@ weapon Y AN
 dagger 8 12 stab DH
 50 80 8 83 P
 A
-18 7
-A
 19 7
+A
+18 7
 #1010
 jewel encrusted ring~
 {cA {CJewel {WEncrusted {cRing{x~
@@ -295,9 +295,9 @@ jewelry Y AB
 0 0 0 0 0
 50 80 2 1200 P
 A
-5 2
-A
 20 2
+A
+5 2
 #1011
 jade owl~
 {cA {gjade{c owl{x~
@@ -323,9 +323,9 @@ jewelry BY AC
 0 0 0 0 0
 50 80 3 1000 P
 A
-5 2
-A
 20 -7
+A
+5 2
 #1097
 portal~
 a {Yglowing {xportal~

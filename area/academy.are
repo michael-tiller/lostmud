@@ -23,8 +23,8 @@ ABZ DFJVa CDEHNO 751 0
 0 0 0 0
 stand stand male 0
 AHMV ABCDEFGHIJK medium unknown
-M RANDOM 201 10~
 M GREET 200 100~
+M RANDOM 201 10~
 #201
 instructor~
 The Instructor of {8Chaos{x~
@@ -415,9 +415,9 @@ weapon 0 AN
 dagger 1 7 stab 0
 0 6 1 5 P
 A
-19 1
-A
 18 1
+A
+19 1
 #211
 apprentice short sword~
 an apprentice's shortsword~
@@ -579,9 +579,11 @@ jewelry U AB
 0 0 0 0 0
 0 5 1 0 P
 A
-20 -1
+18 2
 A
 17 -1
+A
+20 -1
 #231
 trainee pendant~
 a trainee's pendant~
@@ -591,9 +593,9 @@ jewelry U AC
 0 0 0 0 0
 1 1 1 0 P
 A
-17 -1
-A
 20 -1
+A
+17 -1
 #232
 trainee stone~
 a trainee's stone~
@@ -735,9 +737,11 @@ jewelry 0 AB
 0 0 0 0 0
 1 1 1 0 P
 A
-20 -1
+18 3
 A
 17 -3
+A
+20 -1
 #251
 apprentice pendant~
 an apprentice's pendant~
@@ -747,9 +751,9 @@ jewelry 0 AC
 0 0 0 0 0
 1 1 1 0 P
 A
-17 -3
-A
 20 -1
+A
+17 -3
 #252
 apprentice stone~
 an apprentice's stone~
