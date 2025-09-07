@@ -1061,9 +1061,9 @@ void spell_burning_hands(int sn,int level, CHAR_DATA *ch, void *vo, int target)
 
 
 
-    potency = 1;
-    temp = level * potency / 3;
-    dam = number_range(temp / 2, temp * 2);
+    /* Burning Hands: dice(level/4 + 2, 8) */
+    int dice_count = level / 4 + 2;
+    dam = dice(dice_count, 8);
 
     if ( saves_spell( level, victim,DAM_FIRE) )
 	dam /= 2;
@@ -1473,7 +1473,10 @@ void spell_chill_touch( int sn, int level, CHAR_DATA *ch, void *vo,int target )
     int dam, temp, potency;
 	AFFECT_DATA af;
 
-    dam = dice(level / 10 + 2, 4)+(level / 10 + 1);
+    /* Chill Touch: dice(level/7 + 3, 6) + (level/7 + 2) */
+    int dice_count = level / 7 + 3;
+    int bonus = level / 7 + 2;
+    dam = dice(dice_count, 6) + bonus;
 
     if ( !saves_spell( level, victim,DAM_COLD ) )
     {
@@ -4126,7 +4129,9 @@ void spell_magic_missile( int sn, int level, CHAR_DATA *ch,void *vo,int target)
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     int dam, temp, potency;
 
-    dam = dice(level / 10 + 1, 6)+(level / 10 + 1);
+    /* Magic Missile: dice(level/5 + 1, 6) + (level/5 + 1) */
+    int dice_count = level / 5 + 1;
+    dam = dice(dice_count, 6) + dice_count;
     if ( saves_spell( level, victim,DAM_ENERGY) )
 	dam /= 2;
     if ( ( ch->fighting == NULL )
