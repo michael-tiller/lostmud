@@ -6,6 +6,8 @@ A derivative MUD (Multi-User Dungeon) based on the Diku/ROM/ROT family, featurin
 
 Lost Legends is a text-based online roleplaying game that runs on a C89 codebase. Players can create characters, explore areas, fight monsters, cast spells, and interact with other players in a persistent fantasy world.
 
+**Status**: legacy/archival; the server can still be compiled and run for local or hobby use.
+
 ## Game Features
 
 - **Multi-Tiers**: Reroll for enhanced abilities
@@ -94,7 +96,7 @@ Or use specialized MUD clients like:
 
 ## Contributing
 
-This is a legacy codebase that follows strict C89 standards. When contributing:
+This is a legacy C89 codebase kept primarily for archival and reference purposes. If you do contribute:
 
 - Maintain existing code structure and conventions
 - Use the custom memory management system (`alloc_mem`, `free_mem`)
@@ -106,7 +108,7 @@ This is a legacy codebase that follows strict C89 standards. When contributing:
 
 This codebase is derived from the Diku/ROM/ROT MUD family and remains subject to their original license terms (including attribution and non-commercial restrictions). See the original license files and headers in the source for details.
 
-Additional changes and extensions by Michael Tiller are provided under the MIT License.
+Additional changes and extensions by Michael Tiller are provided under the MIT License, to the extent permitted by the original licenses.
 
 See `LICENSE` for the MIT license text.
 
